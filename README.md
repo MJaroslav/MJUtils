@@ -1,3 +1,3 @@
-# FishingController
+# MJUtils
 
-API for working with FishingHooks
+Mod-lib for MJaroslav's mods

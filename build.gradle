@@ -73,6 +73,6 @@ processResources
 }
 
 jar {
-    manifest.attributes('FMLAT': 'fishingcontroller_at.cfg')
+    manifest.attributes('FMLAT': 'mjutils_at.cfg')
 }
 

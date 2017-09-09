@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.fishingcontroller.api;
+package mjaroslav.mcmods.mjutils.common.fishing;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import net.minecraftforge.common.FishingHooks.FishableCategory;
  * 
  * @author MJaroslav
  */
-public class FishingControllerApi {
+public class FishingUtils {
 	/** Default ItemStack for FISH list */
 	public static final ItemStack defaultFish = new ItemStack(Items.fish, 1, 0);
 	/** Default ItemStack for JUNK list */
@@ -63,19 +63,19 @@ public class FishingControllerApi {
 	public static void removeItemFromCategory(ItemStack itemStack, FishableCategory category, boolean checkOnEmpty) {
 		switch (category) {
 		case FISH: {
-			FishingHooks.removeFish(Predicates.not(new ItemStackEqualTo(itemStack)));
+			FishingHooks.removeFish(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
 				addItemToCategory(defaultFish, rarityFish, category);
 		}
 			break;
 		case JUNK: {
-			FishingHooks.removeJunk(Predicates.not(new ItemStackEqualTo(itemStack)));
+			FishingHooks.removeJunk(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
 				addItemToCategory(defaultJunk, rarityJunk, category);
 		}
 			break;
 		case TREASURE: {
-			FishingHooks.removeTreasure(Predicates.not(new ItemStackEqualTo(itemStack)));
+			FishingHooks.removeTreasure(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
 				addItemToCategory(defaultTreasure, rarityTreasure, category);
 		}

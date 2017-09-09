@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.fishingcontroller.api;
+package mjaroslav.mcmods.mjutils.common.fishing;
 
 import com.google.common.base.Predicate;
 
@@ -6,19 +6,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 
 /**
- * Apply returns true if {@link ItemStackEqualTo#itemStack itemStack} equals
+ * Apply returns true if {@link FishableStackEqualTo#itemStack itemStack} equals
  * itemStack from input
  * 
  * @author MJaroslav
  */
-public class ItemStackEqualTo implements Predicate<WeightedRandomFishable> {
-	
+public class FishableStackEqualTo implements Predicate<WeightedRandomFishable> {
 	public ItemStack itemStack;
 
 	/**
-	 * @param itemStack - Internal itemStack. Used for {@link #apply(WeightedRandomFishable)}.
+	 * @param itemStack
+	 *            - Internal itemStack. Used for
+	 *            {@link #apply(WeightedRandomFishable)}.
 	 */
-	public ItemStackEqualTo(ItemStack itemStack) {
+	public FishableStackEqualTo(ItemStack itemStack) {
 		this.itemStack = itemStack;
 	}
 
