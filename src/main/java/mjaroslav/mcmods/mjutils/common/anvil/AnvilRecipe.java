@@ -83,26 +83,32 @@ public class AnvilRecipe {
 	public boolean equals(ItemStack left, ItemStack right, String name) {
 		if (this.nameUsed() && !(name.toLowerCase().replace(" ", "").equals(this.name[0])))
 			return false;
+		int count = 0;
 		boolean flag1 = false;
-		int size1 = 0, size2 = 0;
 		if (this.left == null && left == null)
-			flag1 = true; else
-		if (MJUtils.itemStackNotNullAndEquals(this.left, left)) {
+			flag1 = true;
+		else if (MJUtils.itemStackNotNullAndEquals(this.left, left)) {
 			if (this.leftNameUsed() && !left.getDisplayName().toLowerCase().replace(" ", "").equals(this.getLeftName()))
 				return false;
+			if (this.left.stackSize < left.stackSize)
+				if (left.stackSize % this.left.stackSize == 0)
+					count = (int) left.stackSize / this.left.stackSize;
+				else
+					return false;
 			flag1 = true;
-			size1 = left.stackSize;
 		}
 		boolean flag2 = false;
 		if (this.right == null && right == null)
-			flag2 = true; else
-		if (MJUtils.itemStackNotNullAndEquals(this.right, right)) {
+			flag2 = true;
+		else if (MJUtils.itemStackNotNullAndEquals(this.right, right)) {
 			if (this.rightNameUsed()
 					&& !right.getDisplayName().toLowerCase().replace(" ", "").equals(this.getRightName()))
 				return false;
+			if (this.right.stackSize < right.stackSize)
+				if (count * this.right.stackSize > right.stackSize)
+					return false;
 			flag2 = true;
-			size2 = right.stackSize;
 		}
-		return flag1 && flag2 && size2 == size1;
+		return flag1 && flag2;
 	}
 }
