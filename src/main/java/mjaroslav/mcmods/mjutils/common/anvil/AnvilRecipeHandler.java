@@ -11,7 +11,7 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.MJUtils;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils.AnvilResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -78,7 +78,7 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
-		return new ResourceLocation(MJUtils.MODID, "textures/gui/nei/anvil.png").toString();
+		return new ResourceLocation(MJInfo.MODID, "textures/gui/nei/anvil.png").toString();
 	}
 
 	@Override

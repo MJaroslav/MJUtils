@@ -2,6 +2,7 @@ package mjaroslav.mcmods.mjutils.common.anvil;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
 
 public class AnvilEvent {
@@ -12,6 +13,11 @@ public class AnvilEvent {
 			ItemStack output = result.copy();
 			output.stackSize = output.stackSize * event.left.stackSize;
 			if (output.stackSize <= output.getMaxStackSize()) {
+				AnvilCraftingEvent newEvent = new AnvilCraftingEvent(
+						AnvilUtils.instance().getRecipe(event.left, event.right, event.name));
+				MinecraftForge.EVENT_BUS.post(newEvent);
+				if (newEvent.isCanceled())
+					return;
 				event.output = output;
 				event.materialCost = AnvilUtils.instance().getRightCount(event.left, event.right, event.name)
 						* event.left.stackSize;

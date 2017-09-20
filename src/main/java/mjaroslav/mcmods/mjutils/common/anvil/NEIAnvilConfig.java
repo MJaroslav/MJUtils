@@ -2,18 +2,18 @@ package mjaroslav.mcmods.mjutils.common.anvil;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
-import mjaroslav.mcmods.mjutils.MJUtils;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import net.minecraft.client.gui.GuiRepair;
 
 public class NEIAnvilConfig implements IConfigureNEI {
 	@Override
 	public String getName() {
-		return MJUtils.NAME + ":Anvil";
+		return MJInfo.NAME + ":Anvil";
 	}
 
 	@Override
 	public String getVersion() {
-		return MJUtils.VERSION;
+		return MJInfo.VERSION;
 	}
 
 	@Override

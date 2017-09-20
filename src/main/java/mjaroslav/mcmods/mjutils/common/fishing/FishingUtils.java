@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.base.Predicates;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.init.Items;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
@@ -20,20 +20,6 @@ import net.minecraftforge.common.FishingHooks.FishableCategory;
  * @author MJaroslav
  */
 public class FishingUtils {
-	/** Default ItemStack for FISH list */
-	public static final ItemStack defaultFish = new ItemStack(Items.fish, 1, 0);
-	/** Default ItemStack for JUNK list */
-	public static final ItemStack defaultJunk = new ItemStack(Items.stick, 1, 0);
-	/** Default ItemStack for TREASURE list */
-	public static final ItemStack defaultTreasure = new ItemStack(Items.name_tag, 1, 0);
-
-	/** Default weight (rarity) for FISH list */
-	public static final int rarityFish = 60;
-	/** Default weight (rarity) for JUNK list */
-	public static final int rarityJunk = 10;
-	/** Default weight (rarity) for TREASURE list */
-	public static final int rarityTreasure = 1;
-
 	/**
 	 * Remove item from all categories
 	 * 
@@ -65,19 +51,19 @@ public class FishingUtils {
 		case FISH: {
 			FishingHooks.removeFish(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(defaultFish, rarityFish, category);
+				addItemToCategory(MJInfo.fishingDefaultFish, MJInfo.fishingRarityFish, category);
 		}
 			break;
 		case JUNK: {
 			FishingHooks.removeJunk(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(defaultJunk, rarityJunk, category);
+				addItemToCategory(MJInfo.fishingDefaultJunk, MJInfo.fishingRarityJunk, category);
 		}
 			break;
 		case TREASURE: {
 			FishingHooks.removeTreasure(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(defaultTreasure, rarityTreasure, category);
+				addItemToCategory(MJInfo.fishingDefaultTreasure, MJInfo.fishingRarityTreasure, category);
 		}
 			break;
 		}
@@ -149,13 +135,13 @@ public class FishingUtils {
 		if (addDefaults)
 			switch (category) {
 			case FISH:
-				addItemToCategory(defaultFish, rarityFish, category);
+				addItemToCategory(MJInfo.fishingDefaultFish, MJInfo.fishingRarityFish, category);
 				break;
 			case JUNK:
-				addItemToCategory(defaultJunk, rarityJunk, category);
+				addItemToCategory(MJInfo.fishingDefaultJunk, MJInfo.fishingRarityJunk, category);
 				break;
 			case TREASURE:
-				addItemToCategory(defaultTreasure, rarityTreasure, category);
+				addItemToCategory(MJInfo.fishingDefaultTreasure, MJInfo.fishingRarityTreasure, category);
 				break;
 			}
 	}

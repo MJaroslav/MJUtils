@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.mjutils.common.anvil;
 
-import mjaroslav.mcmods.mjutils.MJUtils;
+import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
 import net.minecraft.item.ItemStack;
 
 public class AnvilRecipe {
@@ -87,7 +87,7 @@ public class AnvilRecipe {
 		boolean flag1 = false;
 		if (this.left == null && left == null)
 			flag1 = true;
-		else if (MJUtils.itemStackNotNullAndEquals(this.left, left)) {
+		else if (GameUtils.itemStackNotNullAndEquals(this.left, left)) {
 			if (this.leftNameUsed() && !left.getDisplayName().toLowerCase().replace(" ", "").equals(this.getLeftName()))
 				return false;
 			if (this.left.stackSize < left.stackSize)
@@ -100,7 +100,7 @@ public class AnvilRecipe {
 		boolean flag2 = false;
 		if (this.right == null && right == null)
 			flag2 = true;
-		else if (MJUtils.itemStackNotNullAndEquals(this.right, right)) {
+		else if (GameUtils.itemStackNotNullAndEquals(this.right, right)) {
 			if (this.rightNameUsed()
 					&& !right.getDisplayName().toLowerCase().replace(" ", "").equals(this.getRightName()))
 				return false;
