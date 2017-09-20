@@ -9,10 +9,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilModule;
 import mjaroslav.mcmods.mjutils.common.fuel.FuelModule;
-import mjaroslav.mcmods.mjutils.common.fuel.FuelUtils;
 import mjaroslav.mcmods.mjutils.common.init.IInitBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import mjaroslav.mcmods.mjutils.common.tooltip.TooltipModule;
 
 @Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION)
 public class MJUtils {
@@ -21,6 +19,7 @@ public class MJUtils {
 	public void initModules() {
 		this.modules.add(new AnvilModule());
 		this.modules.add(new FuelModule());
+		this.modules.add(new TooltipModule());
 	}
 
 	@EventHandler
@@ -40,6 +39,5 @@ public class MJUtils {
 	public void postInit(FMLPostInitializationEvent event) {
 		for (IInitBase module : this.modules)
 			module.postInit(event);
-		FuelUtils.addFuel(new ItemStack(Items.diamond), 3F);
 	}
 }

@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
 
-public class AnvilEvent {
+public class AnvilEventHandler {
 	@SubscribeEvent
 	public void onAnvilUpdateEvent(AnvilUpdateEvent event) {
 		ItemStack result = AnvilUtils.instance().getResult(event.left, event.right, event.name);
