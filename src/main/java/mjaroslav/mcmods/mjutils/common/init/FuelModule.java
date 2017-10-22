@@ -1,12 +1,11 @@
-package mjaroslav.mcmods.mjutils.common.fuel;
+package mjaroslav.mcmods.mjutils.common.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import mjaroslav.mcmods.mjutils.common.init.IInitBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import mjaroslav.mcmods.mjutils.common.fuel.FuelHandler;
+import mjaroslav.mcmods.mjutils.common.objects.IInitBase;
 
 public class FuelModule implements IInitBase {
 	@Override
@@ -24,4 +23,8 @@ public class FuelModule implements IInitBase {
 		GameRegistry.registerFuelHandler(new FuelHandler());
 	}
 
+	@Override
+	public String getModuleName() {
+		return "Fuel";
+	}
 }

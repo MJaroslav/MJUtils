@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.common.init;
+package mjaroslav.mcmods.mjutils.common.objects;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;

@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils;
+package mjaroslav.mcmods.test.mjutils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,12 +10,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mjaroslav.mcmods.mjutils.common.objects.InitHandler;
 
-@Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION)
-public class MJUtils {
-	public static Logger log = LogManager.getLogger(MJInfo.NAME);
+@Mod(name = "MJUtilsTest", modid = "mjutilstest", version = "1.7.10-1", useMetadata = false)
+public class MJUtilsTest {
+	public static Logger log = LogManager.getLogger("MJUtilsTest");
 	private static InitHandler initHandler = new InitHandler(
-			MJUtils.class.getProtectionDomain().getCodeSource().getLocation(), MJInfo.MODID, MJInfo.MODULEPACKAGE, log,
-			true);
+			MJUtilsTest.class.getProtectionDomain().getCodeSource().getLocation(), "mjutilstest",
+			"mjaroslav.mcmods.test.mjutils", log, true);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

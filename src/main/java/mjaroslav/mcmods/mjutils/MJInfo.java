@@ -10,6 +10,8 @@ public class MJInfo {
 	public static final String NAME = "MJUtils";
 	/** MJUtils: mod version */
 	public static final String VERSION = "1.7.10-1";
+	/** MJUtils: Mod package for modules */
+	public static final String MODULEPACKAGE = "mjaroslav.mcmods.mjutils.common.init";
 
 	/** Ticks in one second */
 	public static final int ticksInSecond = 20;

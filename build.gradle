@@ -25,8 +25,8 @@ repositories {
 apply plugin: 'forge'
 
 version = "1.7.10-1"
-group= "mjaroslav.mcmods.fishingcontroller" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "fishingcontroller-api"
+group= "mjaroslav.mcmods.mjutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "mjutils"
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
