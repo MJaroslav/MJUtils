@@ -9,12 +9,14 @@ import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils.AnvilResult;
 import mjaroslav.mcmods.mjutils.common.fishing.FishingUtils;
 import mjaroslav.mcmods.mjutils.common.fuel.FuelUtils;
-import mjaroslav.mcmods.mjutils.common.objects.IInitBase;
+import mjaroslav.mcmods.mjutils.common.objects.IModModule;
+import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.FishingHooks.FishableCategory;
 
-public class TestModule implements IInitBase {
+@ModInitModule(modid = "mjutilstest")
+public class TestModule implements IModModule {
 	@Override
 	public String getModuleName() {
 		return "TestBase";
