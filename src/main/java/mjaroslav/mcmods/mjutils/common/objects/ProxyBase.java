@@ -10,4 +10,9 @@ public abstract class ProxyBase implements IModModule {
 	public abstract EntityPlayer getEntityPlayer(MessageContext ctx);
 
 	public abstract void spawnParticle(String name, double x, double y, double z, Object... args);
+
+	@Override
+	public final String getModuleName() {
+		return "Proxy";
+	}
 }

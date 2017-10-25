@@ -37,5 +37,4 @@ public class TestModule implements IModModule {
 		AnvilUtils.instance().addRecipe(new AnvilResult(new ItemStack(Items.iron_helmet), 3),
 				new AnvilRecipe(new ItemStack(Items.chainmail_helmet), new ItemStack(Items.iron_ingot)));
 	}
-
 }

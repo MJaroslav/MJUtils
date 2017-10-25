@@ -38,7 +38,9 @@ public class ModInitHandler {
 					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 						e.printStackTrace();
 					}
-					if (instance != null && instance instanceof IModModule) {
+					if (instance != null && instance instanceof IModModule
+							&& !((IModModule) instance).getModuleName().equals("Config")
+							&& !((IModModule) instance).getModuleName().equals("Proxy")) {
 						modules.add((IModModule) instance);
 						this.logger.info("Found module for \"" + this.modid + "\": \""
 								+ ((IModModule) instance).getModuleName() + "\"");
