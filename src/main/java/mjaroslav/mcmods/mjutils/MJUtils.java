@@ -15,7 +15,13 @@ import mjaroslav.mcmods.mjutils.common.CommonProxy;
 import mjaroslav.mcmods.mjutils.common.config.Config;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
 
-@Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION)
+/**
+ * MJUtils mod. Mod-lib for MJaroslav's mods.
+ * 
+ * @author MJaroslav
+ *
+ */
+@Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION, guiFactory = MJInfo.GUIFACTORY)
 public class MJUtils {
 	public static Logger log = LogManager.getLogger(MJInfo.NAME);
 

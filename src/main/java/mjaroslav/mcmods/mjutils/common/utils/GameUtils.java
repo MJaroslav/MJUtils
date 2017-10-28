@@ -19,7 +19,17 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
+/**
+ * 
+ * @author MJaroslav
+ *
+ */
 public class GameUtils {
+	/**
+	 * Inaccurate copy of the method of multi-purpose attack from Thaumcraft.
+	 * 
+	 * @author Azanor
+	 */
 	public static void attackEntity(Entity target, EntityPlayer player) {
 		if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, target)))
 			return;
@@ -96,36 +106,64 @@ public class GameUtils {
 		player.addExhaustion(0.3F);
 	}
 
+	/**
+	 * Inaccurate copy.
+	 * 
+	 * @author Azanor
+	 */
 	public static boolean isCricticalDamage(Entity target, EntityPlayer player) {
 		return player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater()
 				&& !player.isPotionActive(Potion.blindness) && player.ridingEntity == null
 				&& target instanceof EntityLivingBase;
 	}
 
+	/**
+	 * Inaccurate copy.
+	 * 
+	 * @author Azanor
+	 */
 	public static boolean canFireEntity(Entity target) {
 		return target instanceof EntityLivingBase && !target.isBurning();
 	}
 
+	/**
+	 * @return Seconds to ticks.
+	 */
 	public static int getTicksFromSeconds(int seconds) {
 		return seconds * MJInfo.ticksInSecond;
 	}
 
+	/**
+	 * @return Minutes to ticks.
+	 */
 	public static int getTicksFromMinutes(int minutes) {
 		return minutes * MJInfo.ticksInMinute;
 	}
 
+	/**
+	 * @return Seconds and milliseconds to ticks.
+	 */
 	public static int getTicksFromSeconds(int seconds, int mills) {
 		return seconds * MJInfo.ticksInSecond + Math.round((mills / 1000) * MJInfo.ticksInSecond);
 	}
 
+	/**
+	 * @return Minutes and seconds to ticks.
+	 */
 	public static int getTicksFromMinutes(int minutes, int seconds) {
 		return minutes * MJInfo.ticksInMinute + seconds * MJInfo.ticksInSecond;
 	}
 
+	/**
+	 * @return Item count to smelt ticks.
+	 */
 	public static int getTicksFromSmelting(int count) {
 		return count * MJInfo.ticksInSmelt;
 	}
 
+	/**
+	 * @return Item count to smelt ticks.
+	 */
 	public static int getTicksFromSmelting(float count) {
 		return Math.round(count * MJInfo.ticksInSmelt);
 	}
@@ -135,21 +173,19 @@ public class GameUtils {
 	}
 
 	public static boolean itemStackNotNullAndEquals(ItemStack first, ItemStack second) {
-		return first != null && second != null
-				? first.getItem() != null && second.getItem() != null ? first.getItem() == second.getItem() : false
-				: false;
+		return first != null && second != null ? itemStacksEquals(first, second) ? true : false : false;
 	}
 
 	public static boolean itemStackNotNullAndEquals(ItemStack first, Item second) {
-		return first != null ? first.getItem() != null ? first.getItem() == second : false : false;
+		return first != null ? itemStacksEquals(first, new ItemStack(second, 1, MJInfo.anyMeta)) ? true : false : false;
 	}
 
-	public static boolean itemStackNotNullAndEquals(ItemStack first, Block block) {
-		return itemStackNotNullAndEquals(first, Item.getItemFromBlock(block));
+	public static boolean itemStackNotNullAndEquals(ItemStack first, Block second) {
+		return first != null ? itemStacksEquals(first, new ItemStack(second, 1, MJInfo.anyMeta)) ? true : false : false;
 	}
 
 	public static boolean itemStacksEquals(ItemStack itemStack, ItemStack itemStack1) {
-		return itemStack1.getItem() == itemStack.getItem()
-				&& (itemStack1.getItemDamage() == MJInfo.anyMeta || itemStack1.getItemDamage() == itemStack.getItemDamage());
+		return itemStack1.getItem() == itemStack.getItem() && (itemStack1.getItemDamage() == MJInfo.anyMeta
+				|| itemStack1.getItemDamage() == itemStack.getItemDamage());
 	}
 }

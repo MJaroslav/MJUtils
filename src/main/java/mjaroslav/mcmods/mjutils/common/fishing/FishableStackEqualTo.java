@@ -7,7 +7,7 @@ import net.minecraft.util.WeightedRandomFishable;
 
 /**
  * Apply returns true if {@link FishableStackEqualTo#itemStack itemStack} equals
- * itemStack from input
+ * itemStack from input.
  * 
  * @author MJaroslav
  */
@@ -16,7 +16,7 @@ public class FishableStackEqualTo implements Predicate<WeightedRandomFishable> {
 
 	/**
 	 * @param itemStack
-	 *            - Internal itemStack. Used for
+	 *            - internal itemStack. Used for
 	 *            {@link #apply(WeightedRandomFishable)}.
 	 */
 	public FishableStackEqualTo(ItemStack itemStack) {
@@ -34,13 +34,13 @@ public class FishableStackEqualTo implements Predicate<WeightedRandomFishable> {
 
 	/**
 	 * Check equality between two itemStacks. Ignoring: NBT and damage (not
-	 * meta)
+	 * meta).
 	 * 
 	 * @param first
-	 *            - first itemStack
+	 *            - first itemStack.
 	 * @param second
-	 *            - second itemStack
-	 * @return true of itemStacks equals
+	 *            - second itemStack.
+	 * @return True of itemStacks equals.
 	 */
 	public static boolean itemStackEquals(ItemStack first, ItemStack second) {
 		return first != null && second != null && first.getItem() != null && second.getItem() != null

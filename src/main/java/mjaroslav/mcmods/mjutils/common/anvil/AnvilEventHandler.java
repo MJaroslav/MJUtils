@@ -5,6 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
 
+/**
+ * 
+ * @author MJaroslav
+ *
+ */
 public class AnvilEventHandler {
 	@SubscribeEvent
 	public void onAnvilUpdateEvent(AnvilUpdateEvent event) {

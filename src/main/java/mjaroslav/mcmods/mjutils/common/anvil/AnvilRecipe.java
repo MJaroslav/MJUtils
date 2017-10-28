@@ -3,10 +3,19 @@ package mjaroslav.mcmods.mjutils.common.anvil;
 import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
 import net.minecraft.item.ItemStack;
 
+/**
+ * 
+ * @author MJaroslav
+ *
+ */
 public class AnvilRecipe {
+	/** Left anvil slot. */
 	private ItemStack left;
+	/** Right anvil slot. */
 	private ItemStack right;
+	/** Names: text field, left and right slots. */
 	private String[] name = new String[] { "", "", "" };
+	/** Switches for using names. */
 	private boolean[] useName = new boolean[] { false, false, false };
 
 	public AnvilRecipe(ItemStack left, ItemStack right) {
@@ -14,10 +23,16 @@ public class AnvilRecipe {
 		this.right = right;
 	}
 
+	/**
+	 * @return Left anvil item.
+	 */
 	public ItemStack getLeft() {
 		return left;
 	}
 
+	/**
+	 * @return Right anvil item.
+	 */
 	public ItemStack getRight() {
 		return right;
 	}
@@ -28,42 +43,65 @@ public class AnvilRecipe {
 		return this;
 	}
 
+	/** Change mandatory name in text field. */
 	public String getName() {
 		return name[0];
 	}
 
+	/** Change mandatory name of left item. */
 	public AnvilRecipe setLeftName(String leftName) {
 		this.name[1] = leftName;
 		this.useName[1] = leftName.length() <= 0 ? false : true;
 		return this;
 	}
 
+	/**
+	 * @return Name of left item.
+	 */
 	public String getLeftName() {
 		return this.name[1];
 	}
 
+	/** Change mandatory name of right item. */
 	public AnvilRecipe setRightName(String rightName) {
 		this.name[2] = rightName;
 		this.useName[2] = rightName.length() <= 0 ? false : true;
 		return this;
 	}
 
+	/**
+	 * @return Name of right item.
+	 */
 	public String getRightName() {
 		return this.name[2];
 	}
 
+	/**
+	 * Is the mandatory name used: text field.
+	 */
 	public boolean nameUsed() {
 		return this.useName[0];
 	}
 
+	/**
+	 * Is the mandatory name used: left item name.
+	 */
 	public boolean leftNameUsed() {
 		return this.useName[1];
 	}
 
+	/**
+	 * Is the mandatory name used: right item name.
+	 */
 	public boolean rightNameUsed() {
 		return this.useName[2];
 	}
 
+	/**
+	 * @param recipe
+	 *            - second recipe.
+	 * @return Recipes is equals.
+	 */
 	public boolean equals(AnvilRecipe recipe) {
 		if (recipe == null)
 			return false;
@@ -80,6 +118,9 @@ public class AnvilRecipe {
 		return true;
 	}
 
+	/**
+	 * @return Ingredients are suitable for prescription.
+	 */
 	public boolean equals(ItemStack left, ItemStack right, String name) {
 		if (this.nameUsed() && !(name.toLowerCase().replace(" ", "").equals(this.name[0])))
 			return false;

@@ -13,21 +13,19 @@ import net.minecraftforge.common.FishingHooks.FishableCategory;
 
 /**
  * Wrap-around class for FishingHooks. Use for get/add/remove/clear itemStacks
- * and categories from fishing lists
- * 
- * @version 1.7.10-1
+ * and categories from fishing lists.
  * 
  * @author MJaroslav
  */
 public class FishingUtils {
 	/**
-	 * Remove item from all categories
+	 * Remove item from all categories.
 	 * 
 	 * @param itemStack
-	 *            - itemStack that should be removed
+	 *            - itemStack that should be removed.
 	 * @param checkOnEmpty
 	 *            - add default itemStack if category is empty (empty list
-	 *            causes crash when fishing)
+	 *            causes crash when fishing).
 	 */
 	public static void removeItemFromAllCategories(ItemStack itemStack, boolean checkOnEmpty) {
 		removeItemFromCategory(itemStack, FishableCategory.FISH, checkOnEmpty);
@@ -36,15 +34,15 @@ public class FishingUtils {
 	}
 
 	/**
-	 * Remove item from category
+	 * Remove item from category.
 	 * 
 	 * @param itemStack
-	 *            - itemStack that should be removed
+	 *            - itemStack that should be removed.
 	 * @param category
-	 *            - category from which itemStack should be deleted
+	 *            - category from which itemStack should be deleted.
 	 * @param checkOnEmpty
 	 *            - add default itemStack if category is empty (empty list
-	 *            causes crash)
+	 *            causes crash).
 	 */
 	public static void removeItemFromCategory(ItemStack itemStack, FishableCategory category, boolean checkOnEmpty) {
 		switch (category) {
@@ -70,16 +68,16 @@ public class FishingUtils {
 	}
 
 	/**
-	 * Add new itemStack to category
+	 * Add new itemStack to category.
 	 * 
 	 * @param itemStack
-	 *            - itemStack that should be added
+	 *            - itemStack that should be added.
 	 * @param weight
 	 *            - rarity of itemStack (You can use {@link #rarityFish},
-	 *            {@link #rarityJunk} and {@link #rarityTreasure} for defaults
+	 *            {@link #rarityJunk} and {@link #rarityTreasure} for defaults.
 	 *            values)
 	 * @param category
-	 *            - category in which the itemStack should be added
+	 *            - category in which the itemStack should be added.
 	 */
 	public static void addItemToCategory(ItemStack itemStack, int weight, FishableCategory category) {
 		WeightedRandomFishable fishable = new WeightedRandomFishable(itemStack, weight);
@@ -96,11 +94,11 @@ public class FishingUtils {
 	}
 
 	/**
-	 * Get category in list format
+	 * Get category in list format.
 	 * 
 	 * @param category
-	 *            - category to receive
-	 * @return Copy of category
+	 *            - category to receive.
+	 * @return Copy of category.
 	 */
 	public static ArrayList<WeightedRandomFishable> getCategory(FishableCategory category) {
 		try {
@@ -121,13 +119,13 @@ public class FishingUtils {
 	}
 
 	/**
-	 * Remove all itemStacks from category
+	 * Remove all itemStacks from category.
 	 * 
 	 * @param category
-	 *            - category to be cleared
+	 *            - category to be cleared.
 	 * @param addDefaults
 	 *            - add default itemStack if category is empty (empty list
-	 *            causes crash)
+	 *            causes crash).
 	 */
 	public static void clearCategory(FishableCategory category, boolean addDefaults) {
 		for (WeightedRandomFishable fishable : getCategory(category))
@@ -147,11 +145,11 @@ public class FishingUtils {
 	}
 
 	/**
-	 * Clear all categories
+	 * Clear all categories.
 	 * 
 	 * @param addDefaults
 	 *            - add default itemStack if category is empty (empty list
-	 *            causes crash)
+	 *            causes crash).
 	 */
 	public static void clearAllCategories(boolean addDefaults) {
 		clearCategory(FishableCategory.FISH, addDefaults);

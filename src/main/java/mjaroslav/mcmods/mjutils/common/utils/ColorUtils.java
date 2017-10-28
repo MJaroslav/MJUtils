@@ -2,11 +2,22 @@ package mjaroslav.mcmods.mjutils.common.utils;
 
 import java.awt.Color;
 
+/**
+ * 
+ * @author MJaroslav
+ *
+ */
 public class ColorUtils {
+	/**
+	 * @return Integer color from hex.
+	 */
 	public static int getColorInt(String hex) {
 		return getColor(hex).getRGB();
 	}
 
+	/**
+	 * @return Color from hex (AARRGGBB or RRGGBB).
+	 */
 	public static Color getColor(String hex) {
 		int colorInt;
 		boolean hasAlpha = false;
@@ -26,22 +37,37 @@ public class ColorUtils {
 		return hasAlpha ? new Color(temp.getRed(), temp.getGreen(), temp.getBlue(), alpha) : temp;
 	}
 
+	/**
+	 * @return Red color value from hex.
+	 */
 	public static int getRed(String hex) {
 		return getColor(hex).getRed();
 	}
 
+	/**
+	 * @return Green color value from hex.
+	 */
 	public static int getGreen(String hex) {
 		return getColor(hex).getGreen();
 	}
 
+	/**
+	 * @return Blue color value from hex.
+	 */
 	public static int getBlue(String hex) {
 		return getColor(hex).getBlue();
 	}
 
+	/**
+	 * @return Alpha value from hex.
+	 */
 	public static int getAlpha(String hex) {
 		return getColor(hex).getAlpha();
 	}
 
+	/**
+	 * @return hex string from color.
+	 */
 	public static String getHEXString(Color color) {
 		String result = "";
 		int alpha = 255;

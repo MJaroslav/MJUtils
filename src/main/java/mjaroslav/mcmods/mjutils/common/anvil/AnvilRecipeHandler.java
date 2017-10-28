@@ -22,6 +22,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 
+/**
+ * NEI Integration with anvil recipes
+ * 
+ * @author MJaroslav
+ *
+ */
 public class AnvilRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public String getRecipeName() {
@@ -133,10 +139,16 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 		return "anvil";
 	}
 
+	/**
+	 * 
+	 * @author MJaroslav
+	 *
+	 */
 	public class AnvilPair extends TemplateRecipeHandler.CachedRecipe {
 		PositionedStack left;
 		PositionedStack right;
 		PositionedStack result;
+		/** Exp levels */
 		public int cost;
 		public String name;
 		public boolean lNamed;

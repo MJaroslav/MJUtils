@@ -9,6 +9,12 @@ import mjaroslav.mcmods.mjutils.common.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Client proxy for MJUtils mod.
+ * 
+ * @author MJaroslav
+ *
+ */
 public class ClientProxy extends CommonProxy {
 	@Override
 	public EntityPlayer getEntityPlayer(MessageContext ctx) {

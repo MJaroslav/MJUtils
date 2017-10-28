@@ -12,9 +12,18 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.common.config.Configuration;
 
+/**
+ * Base of configuration handler.
+ * 
+ * @author MJaroslav
+ *
+ */
 public abstract class ConfigurationBase implements IModModule {
-	public Configuration config;
+	/** Instance of configuration file. */
+	public Configuration instance;
+	/** Modification id of handler. */
 	public String modid;
+	/** Logger of handler. */
 	private Logger logger;
 
 	public ConfigurationBase(String modid, Logger logger) {
@@ -29,15 +38,15 @@ public abstract class ConfigurationBase implements IModModule {
 
 	@Override
 	public final void preInit(FMLPreInitializationEvent event) {
-		if (config == null)
-			config = new Configuration(new File(event.getModConfigurationDirectory() + "/" + this.modid + ".cfg"));
+		if (instance == null)
+			instance = new Configuration(new File(event.getModConfigurationDirectory() + "/" + this.modid + ".cfg"));
 		try {
-			config.load();
+			instance.load();
 		} catch (Exception e) {
 			logger.error("Unable to load configuration!");
 		} finally {
-			if (config.hasChanged()) {
-				config.save();
+			if (instance.hasChanged()) {
+				instance.save();
 			}
 		}
 		sync();
@@ -52,12 +61,16 @@ public abstract class ConfigurationBase implements IModModule {
 	public final void postInit(FMLPostInitializationEvent event) {
 	}
 
+	/**
+	 * In this method, you assign values to your fields from the configuration
+	 * (instance).
+	 */
 	public abstract void readFields();
 
 	private final void sync() {
 		readFields();
-		if (config.hasChanged())
-			config.save();
+		if (instance.hasChanged())
+			instance.save();
 	}
 
 	@SubscribeEvent

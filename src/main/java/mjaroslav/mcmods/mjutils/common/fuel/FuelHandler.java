@@ -6,6 +6,11 @@ import cpw.mods.fml.common.IFuelHandler;
 import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
 import net.minecraft.item.ItemStack;
 
+/**
+ * 
+ * @author MJaroslav
+ *
+ */
 public class FuelHandler implements IFuelHandler {
 	@Override
 	public int getBurnTime(ItemStack fuel) {

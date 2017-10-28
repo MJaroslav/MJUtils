@@ -1,0 +1,12 @@
+[
+{
+  "modid": "mjutils",
+  "name": "MJUtils",
+  "description": "Mod-lib for MJaroslav's mods",
+  "version": "1.7.10-1",
+  "mcversion": "1.7.10",
+  "url": "https://minecraft.curseforge.com/projects/mjutils",
+  "authorList": ["MJaroslav"],
+  "logoFile": "assets/mjutils/logo.png"
+}
+]
