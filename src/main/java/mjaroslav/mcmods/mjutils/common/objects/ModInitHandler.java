@@ -26,12 +26,22 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
  *
  */
 public class ModInitHandler {
-	/** Modification id. */
+	/**
+	 * Modification id.
+	 */
 	private String modid;
-	private static Logger logger = LogManager.getLogger("MJUtils Module System");
+	/**
+	 * Logger for module system
+	 */
+	public static Logger logger = LogManager.getLogger("MJUtils Module System");
+	/**
+	 * List of mod modules, use {@link ModInitHandler#getModules()}.
+	 */
 	private ArrayList<IModModule> modules = new ArrayList<IModModule>();
 
 	/**
+	 * New modification initialization handler.
+	 * 
 	 * @param modid
 	 *            - ID of modification. Do not use someone else's ID.
 	 */
@@ -42,10 +52,13 @@ public class ModInitHandler {
 	/**
 	 * Find all modules for this handler (modification). Called in
 	 * {@link FMLConstructionEvent}.
+	 * 
+	 * @param event
+	 *            - main class construction event.
 	 */
 	public void findModules(FMLConstructionEvent event) {
 		this.modules.clear();
-		this.logger.log(Level.INFO, "Looking for modules for \"" + this.modid + "\"");
+		logger.log(Level.INFO, "Looking for modules for \"" + this.modid + "\"");
 		Iterator<ASMData> iterator = event.getASMHarvestedData().getAll(ModInitModule.class.getName()).iterator();
 		ASMData data = null;
 		Object instance = null;
@@ -62,45 +75,78 @@ public class ModInitHandler {
 					if (instance != null && instance instanceof IModModule
 							&& !((IModModule) instance).getModuleName().equals("Config")
 							&& !((IModModule) instance).getModuleName().equals("Proxy")) {
-						modules.add((IModModule) instance);
-						this.logger.info("Found module for \"" + this.modid + "\": \""
-								+ ((IModModule) instance).getModuleName() + "\"");
+						this.modules.add((IModModule) instance);
+						logger.info(
+								"Found module for \"" + this.modid + "\": \"" + ((IModModule) instance).getModuleName()
+										+ "\" with priority " + ((IModModule) instance).getPriority());
 						count++;
 					}
 				}
 			}
 		}
-		this.logger.info("Search finished, found " + count + " module" + (count == 1 ? "" : "s"));
+		sort();
+		logger.info("Search finished, found " + count + " module" + (count == 1 ? "" : "s"));
+	}
+
+	/**
+	 * Sort modules by priority.
+	 */
+	public void sort() {
+		ArrayList<IModModule> copyList = (ArrayList<IModModule>) this.modules.clone();
+		this.modules.clear();
+		int max = 0;
+		int n = 0;
+		while (!copyList.isEmpty()) {
+			for (int id = 0; id < copyList.size(); id++) {
+				max = Math.max(max, copyList.get(id).getPriority());
+				if (max == copyList.get(id).getPriority())
+					n = id;
+			}
+			this.modules.add(0, copyList.get(n));
+			copyList.remove(n);
+			max = 0;
+		}
 	}
 
 	/**
 	 * Called in a similar event of the main class.
+	 * 
+	 * @param event
+	 *            - mail class pre init event.
 	 */
 	public void preInit(FMLPreInitializationEvent event) {
-		this.logger.info("Pre initialization of \"" + this.modid + "\"");
+		logger.info("Pre initialization of \"" + this.modid + "\"");
 		for (IModModule module : modules)
 			module.preInit(event);
 	}
 
 	/**
 	 * Called in a similar event of the main class.
+	 * 
+	 * @param event
+	 *            - mail class init event.
 	 */
 	public void init(FMLInitializationEvent event) {
-		this.logger.info("Initialization of \"" + this.modid + "\"");
+		logger.info("Initialization of \"" + this.modid + "\"");
 		for (IModModule module : modules)
 			module.init(event);
 	}
 
 	/**
 	 * Called in a similar event of the main class.
+	 * 
+	 * @param event
+	 *            - mail class post init event.
 	 */
 	public void postInit(FMLPostInitializationEvent event) {
-		this.logger.info("Post initialization of \"" + this.modid + "\"");
+		logger.info("Post initialization of \"" + this.modid + "\"");
 		for (IModModule module : modules)
 			module.postInit(event);
 	}
 
 	/**
+	 * Get handler mod id.
+	 * 
 	 * @return Modification id of this handler.
 	 */
 	public String getModid() {
@@ -108,6 +154,9 @@ public class ModInitHandler {
 	}
 
 	/**
+	 * Get list of modules. Use
+	 * {@link ModInitHandler#findModules(FMLConstructionEvent)} for search.
+	 * 
 	 * @return List of found modules of this handler.
 	 */
 	public ArrayList<IModModule> getModules() {

@@ -6,9 +6,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
 
 /**
+ * Class with events for anvil recipes.
  * 
  * @author MJaroslav
- *
+ * 
  */
 public class AnvilEventHandler {
 	@SubscribeEvent
@@ -28,7 +29,7 @@ public class AnvilEventHandler {
 						* event.left.stackSize;
 				int levels = AnvilUtils.instance().getLevels(event.left, event.right, event.name);
 				event.cost = levels + (event.left.stackSize > 1 ? (int) (levels * event.left.stackSize / 2) : 0);
-				if(event.cost < 1)
+				if (event.cost < 1)
 					event.cost = 1;
 			}
 		}

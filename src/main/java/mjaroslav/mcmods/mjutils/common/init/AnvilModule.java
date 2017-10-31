@@ -3,17 +3,23 @@ package mjaroslav.mcmods.mjutils.common.init;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilEventHandler;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilRecipe;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils;
-import mjaroslav.mcmods.mjutils.common.config.Config;
+import mjaroslav.mcmods.mjutils.common.config.MJUtilsConfig;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
+/**
+ * MJUtils anvil module.
+ * 
+ * @author MJaroslav
+ *
+ */
 @ModInitModule(modid = MJInfo.MODID)
 public class AnvilModule implements IModModule {
 	@Override
@@ -27,7 +33,7 @@ public class AnvilModule implements IModModule {
 
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {
-		if (Config.chainToIron) {
+		if (MJUtilsConfig.chainToIron) {
 			AnvilUtils.instance().addRecipe(new ItemStack(Items.iron_helmet, 1),
 					new AnvilRecipe(new ItemStack(Items.chainmail_helmet, 1, 0), new ItemStack(Items.iron_ingot, 1)));
 			AnvilUtils.instance().addRecipe(new ItemStack(Items.iron_chestplate, 1), new AnvilRecipe(
@@ -42,5 +48,10 @@ public class AnvilModule implements IModModule {
 	@Override
 	public String getModuleName() {
 		return "Anvil";
+	}
+	
+	@Override
+	public int getPriority() {
+		return 0;
 	}
 }

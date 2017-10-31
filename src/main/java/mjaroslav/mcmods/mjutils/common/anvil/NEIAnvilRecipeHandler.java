@@ -11,8 +11,8 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils.AnvilResult;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiRepair;
@@ -23,12 +23,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 
 /**
- * NEI Integration with anvil recipes
+ * Anvil recipe NEI handler.
  * 
  * @author MJaroslav
  *
  */
-public class AnvilRecipeHandler extends TemplateRecipeHandler {
+public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public String getRecipeName() {
 		return I18n.format("container.repair", new Object[0]);
@@ -47,7 +47,7 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		if ((outputId.equals("anvil")) && (super.getClass() == AnvilRecipeHandler.class)) {
+		if ((outputId.equals("anvil")) && (super.getClass() == NEIAnvilRecipeHandler.class)) {
 			Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.instance().getRecipes();
 			for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet()) {
 				this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
@@ -98,11 +98,11 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 			int i1 = 176 - 8 - fonts.getStringWidth(s);
 			byte b0 = 67;
 			if (!fonts.getUnicodeFlag()) {
-				fonts.drawString(s, i1 - 5, b0 + 1 - 11, l);
-				fonts.drawString(s, i1 + 1 - 5, b0 - 11, l);
-				fonts.drawString(s, i1 + 1 - 5, b0 + 1 - 11, l);
+				fonts.drawString(s, i1 - 5, b0 + 1 - 12, l);
+				fonts.drawString(s, i1 + 1 - 5, b0 - 12, l);
+				fonts.drawString(s, i1 + 1 - 5, b0 + 1 - 12, l);
 			}
-			fonts.drawString(s, i1 - 5, b0 - 11, k);
+			fonts.drawString(s, i1 - 5, b0 - 12, k);
 		}
 		s = ((AnvilPair) this.arecipes.get(recipe)).name;
 		if (!StringUtils.isNullOrEmpty(s))
@@ -123,8 +123,8 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 			if (fonts.getUnicodeFlag()) {
 				int i1 = 176 - 8 - fonts.getStringWidth(s);
 				byte b0 = 67;
-				GuiDraw.drawRect(i1 - 8, b0 - 13, 176 - 8 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
-				GuiDraw.drawRect(i1 - 7, b0 - 12, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
+				GuiDraw.drawRect(i1 - 8, b0 - 14, 176 - 12 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
+				GuiDraw.drawRect(i1 - 7, b0 - 13, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
 			}
 		if (((AnvilPair) this.arecipes.get(recipe)).lNamed) {
 			GuiDraw.drawTexturedModalRect(21, 35, 0, 198, 18, 18);
@@ -140,6 +140,7 @@ public class AnvilRecipeHandler extends TemplateRecipeHandler {
 	}
 
 	/**
+	 * Anvil recipe blank in NEI helping.
 	 * 
 	 * @author MJaroslav
 	 *

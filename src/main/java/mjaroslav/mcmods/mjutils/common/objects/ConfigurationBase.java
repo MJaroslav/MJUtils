@@ -1,15 +1,16 @@
 package mjaroslav.mcmods.mjutils.common.objects;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mjaroslav.mcmods.mjutils.MJUtils;
 import net.minecraftforge.common.config.Configuration;
 
 /**
@@ -19,17 +20,41 @@ import net.minecraftforge.common.config.Configuration;
  *
  */
 public abstract class ConfigurationBase implements IModModule {
-	/** Instance of configuration file. */
-	public Configuration instance;
-	/** Modification id of handler. */
-	public String modid;
-	/** Logger of handler. */
-	private Logger logger;
-
-	public ConfigurationBase(String modid, Logger logger) {
-		this.modid = modid;
-		this.logger = logger;
+	/**
+	 * Automatic registration in the configuration update event.
+	 */
+	public ConfigurationBase() {
+		ConfigurationEventHandler.addConfig(this);
 	}
+
+	/**
+	 * Instance of configuration file.
+	 * 
+	 * @return - configuration file.
+	 */
+	public abstract Configuration getInstance();
+
+	/**
+	 * Set new Configuration instance.
+	 * 
+	 * @param newConfig
+	 *            - new configuration file.
+	 */
+	public abstract void setInstance(Configuration newConfig);
+
+	/**
+	 * Configuration mod id.
+	 * 
+	 * @return Mod id of configuration.
+	 */
+	public abstract String getModId();
+
+	/**
+	 * Configuration logger.
+	 * 
+	 * @return Logger for configuration.
+	 */
+	public abstract Logger getLogger();
 
 	@Override
 	public final String getModuleName() {
@@ -38,19 +63,18 @@ public abstract class ConfigurationBase implements IModModule {
 
 	@Override
 	public final void preInit(FMLPreInitializationEvent event) {
-		if (instance == null)
-			instance = new Configuration(new File(event.getModConfigurationDirectory() + "/" + this.modid + ".cfg"));
+		if (getInstance() == null)
+			setInstance(new Configuration(new File(event.getModConfigurationDirectory() + "/" + getModId() + ".cfg")));
 		try {
-			instance.load();
+			getInstance().load();
 		} catch (Exception e) {
-			logger.error("Unable to load configuration!");
+			this.getLogger().error("Unable to load configuration!");
 		} finally {
-			if (instance.hasChanged()) {
-				instance.save();
+			if (getInstance().hasChanged()) {
+				getInstance().save();
 			}
 		}
 		sync();
-		FMLCommonHandler.instance().bus().register(this);
 	}
 
 	@Override
@@ -67,17 +91,44 @@ public abstract class ConfigurationBase implements IModModule {
 	 */
 	public abstract void readFields();
 
-	private final void sync() {
+	/**
+	 * Synchronize configuration fields and save in file.
+	 */
+	public final void sync() {
 		readFields();
-		if (instance.hasChanged())
-			instance.save();
+		if (getInstance().hasChanged())
+			getInstance().save();
 	}
 
-	@SubscribeEvent
-	public final void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if (event.modID.equals(this.modid)) {
-			sync();
-			logger.info("Configuration reloaded");
+	@Override
+	public final int getPriority() {
+		return 0;
+	}
+
+	public static class ConfigurationEventHandler {
+
+		private static ArrayList<ConfigurationBase> list = new ArrayList<ConfigurationBase>();
+
+		public static boolean addConfig(ConfigurationBase newConfig) {
+			for (ConfigurationBase config : list)
+				if (config.getModId().equals(newConfig.getModId()))
+					return false;
+			list.add(newConfig);
+			MJUtils.log.info("Added configuration for " + newConfig.getModId());
+			return true;
+		}
+
+		public static ArrayList<ConfigurationBase> getList() {
+			return list;
+		}
+
+		@SubscribeEvent
+		public void onConfigChanged(OnConfigChangedEvent event) {
+			for (ConfigurationBase config : list)
+				if (event.modID.equals(config.getModId())) {
+					config.sync();
+					config.getLogger().info("Configuration reloaded");
+				}
 		}
 	}
 }

@@ -7,6 +7,7 @@ import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
 import net.minecraft.item.ItemStack;
 
 /**
+ * Fuel handler for FuelUtils.
  * 
  * @author MJaroslav
  *

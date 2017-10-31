@@ -15,6 +15,8 @@ public class FishableStackEqualTo implements Predicate<WeightedRandomFishable> {
 	public ItemStack itemStack;
 
 	/**
+	 * Container for first item.
+	 * 
 	 * @param itemStack
 	 *            - internal itemStack. Used for
 	 *            {@link #apply(WeightedRandomFishable)}.
@@ -23,6 +25,11 @@ public class FishableStackEqualTo implements Predicate<WeightedRandomFishable> {
 		this.itemStack = itemStack;
 	}
 
+	/**
+	 * Get first item.
+	 * 
+	 * @return First item (in this instance).
+	 */
 	public ItemStack getInternalItem() {
 		return itemStack;
 	}

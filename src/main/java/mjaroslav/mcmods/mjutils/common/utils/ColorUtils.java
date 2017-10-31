@@ -3,12 +3,17 @@ package mjaroslav.mcmods.mjutils.common.utils;
 import java.awt.Color;
 
 /**
+ * Color utils (hex and int values).
  * 
  * @author MJaroslav
  *
  */
 public class ColorUtils {
 	/**
+	 * Change hex color value to int.
+	 * 
+	 * @param hex
+	 *            - hex color.
 	 * @return Integer color from hex.
 	 */
 	public static int getColorInt(String hex) {
@@ -16,6 +21,10 @@ public class ColorUtils {
 	}
 
 	/**
+	 * Change hex color value to color instance.
+	 * 
+	 * @param hex
+	 *            - hex color.
 	 * @return Color from hex (AARRGGBB or RRGGBB).
 	 */
 	public static Color getColor(String hex) {
@@ -38,35 +47,57 @@ public class ColorUtils {
 	}
 
 	/**
-	 * @return Red color value from hex.
+	 * Get red int value from hex color.
+	 * 
+	 * @param hex
+	 *            - hex color.
+	 * @return Red from hex.
 	 */
 	public static int getRed(String hex) {
 		return getColor(hex).getRed();
 	}
 
 	/**
-	 * @return Green color value from hex.
+	 * Get green int value from hex color.
+	 * 
+	 * @param hex
+	 *            - hex color.
+	 * @return Green from hex.
 	 */
 	public static int getGreen(String hex) {
 		return getColor(hex).getGreen();
 	}
 
 	/**
-	 * @return Blue color value from hex.
+	 * Get blue int value from hex color.
+	 * 
+	 * @param hex
+	 *            - hex color.
+	 * 
+	 * @return Blue from hex.
 	 */
 	public static int getBlue(String hex) {
 		return getColor(hex).getBlue();
 	}
 
 	/**
-	 * @return Alpha value from hex.
+	 * Get alpha int value from hex color.
+	 * 
+	 * @param hex
+	 *            - hex color.
+	 * 
+	 * @return Alpha from hex.
 	 */
 	public static int getAlpha(String hex) {
 		return getColor(hex).getAlpha();
 	}
 
 	/**
-	 * @return hex string from color.
+	 * Get hex string from color
+	 * 
+	 * @param color
+	 *            - color.
+	 * @return Hex string.
 	 */
 	public static String getHEXString(Color color) {
 		String result = "";

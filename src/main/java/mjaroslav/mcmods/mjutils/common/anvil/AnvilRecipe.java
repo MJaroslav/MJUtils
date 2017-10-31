@@ -4,20 +4,38 @@ import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
 import net.minecraft.item.ItemStack;
 
 /**
+ * Blank for anvil recipe.
  * 
  * @author MJaroslav
- *
+ * 
  */
 public class AnvilRecipe {
-	/** Left anvil slot. */
+	/**
+	 * Left anvil slot.
+	 */
 	private ItemStack left;
-	/** Right anvil slot. */
+	/**
+	 * Right anvil slot.
+	 */
 	private ItemStack right;
-	/** Names: text field, left and right slots. */
+	/**
+	 * Names: anvil text field, left and right slots. Format: lower case without
+	 * spaces.
+	 */
 	private String[] name = new String[] { "", "", "" };
-	/** Switches for using names. */
+	/**
+	 * Switches for using names.
+	 */
 	private boolean[] useName = new boolean[] { false, false, false };
 
+	/**
+	 * New anvil recipe.
+	 * 
+	 * @param left
+	 *            - item in left anvil slot.
+	 * @param right
+	 *            - item in right anvil slot.
+	 */
 	public AnvilRecipe(ItemStack left, ItemStack right) {
 		this.left = left;
 		this.right = right;
@@ -37,18 +55,33 @@ public class AnvilRecipe {
 		return right;
 	}
 
+	/**
+	 * Change mandatory name of anvil text field.
+	 * 
+	 * @param name
+	 *            - format: lower case without spaces.
+	 * @return AnvilRecipe with new mandatory name of text field .
+	 */
 	public AnvilRecipe setName(String name) {
 		this.name[0] = name;
 		this.useName[0] = name.length() <= 0 ? false : true;
 		return this;
 	}
 
-	/** Change mandatory name in text field. */
+	/**
+	 * @return Mandatory name in text field.
+	 */
 	public String getName() {
 		return name[0];
 	}
 
-	/** Change mandatory name of left item. */
+	/**
+	 * Change mandatory name of left item.
+	 * 
+	 * @param leftName
+	 *            - format: lower case without spaces.
+	 * @return AnvilRecipe with new left item name.
+	 */
 	public AnvilRecipe setLeftName(String leftName) {
 		this.name[1] = leftName;
 		this.useName[1] = leftName.length() <= 0 ? false : true;
@@ -56,13 +89,21 @@ public class AnvilRecipe {
 	}
 
 	/**
-	 * @return Name of left item.
+	 * Get mandatory name of right item.
+	 * 
+	 * @return Left item name in format: lower case without spaces.
 	 */
 	public String getLeftName() {
 		return this.name[1];
 	}
 
-	/** Change mandatory name of right item. */
+	/**
+	 * Change mandatory name of right item.
+	 * 
+	 * @param rightName
+	 *            - format: lower case without spaces.
+	 * @return AnvilRecipe with new right item name.
+	 */
 	public AnvilRecipe setRightName(String rightName) {
 		this.name[2] = rightName;
 		this.useName[2] = rightName.length() <= 0 ? false : true;
@@ -70,7 +111,9 @@ public class AnvilRecipe {
 	}
 
 	/**
-	 * @return Name of right item.
+	 * Get mandatory name of right item.
+	 * 
+	 * @return Right item name in format: lower case without spaces.
 	 */
 	public String getRightName() {
 		return this.name[2];
@@ -78,29 +121,37 @@ public class AnvilRecipe {
 
 	/**
 	 * Is the mandatory name used: text field.
+	 * 
+	 * @return True if the text field must contain text.
 	 */
 	public boolean nameUsed() {
 		return this.useName[0];
 	}
 
 	/**
-	 * Is the mandatory name used: left item name.
+	 * Is the mandatory name used: left item.
+	 * 
+	 * @return True if the left item has to be with a certain name.
 	 */
 	public boolean leftNameUsed() {
 		return this.useName[1];
 	}
 
 	/**
-	 * Is the mandatory name used: right item name.
+	 * Is the mandatory name used: right item.
+	 * 
+	 * @return True if the right item has to be with a certain name.
 	 */
 	public boolean rightNameUsed() {
 		return this.useName[2];
 	}
 
 	/**
+	 * Compare two AnvilRecipe.
+	 * 
 	 * @param recipe
 	 *            - second recipe.
-	 * @return Recipes is equals.
+	 * @return True if recipes is equals.
 	 */
 	public boolean equals(AnvilRecipe recipe) {
 		if (recipe == null)
@@ -110,16 +161,24 @@ public class AnvilRecipe {
 		if (this.right != recipe.right)
 			return false;
 		for (int id = 0; id < 3; id++) {
-			if (!this.name[0].equals(recipe.name[0]))
+			if (!this.name[id].equals(recipe.name[id]))
 				return false;
-			if (!this.useName[0] == recipe.useName[0])
+			if (!this.useName[id] == recipe.useName[id])
 				return false;
 		}
 		return true;
 	}
 
 	/**
-	 * @return Ingredients are suitable for prescription.
+	 * Compare two AnvilRecipe.
+	 * 
+	 * @param left
+	 *            - item in left slot.
+	 * @param right
+	 *            - item in right slot.
+	 * @param name
+	 *            - text field of anvil.
+	 * @return True if ingredients are suitable for this recipe.
 	 */
 	public boolean equals(ItemStack left, ItemStack right, String name) {
 		if (this.nameUsed() && !(name.toLowerCase().replace(" ", "").equals(this.name[0])))

@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author MJaroslav
  *
  */
-public class CommonProxy extends ProxyBase {
+public class MJUtilsCommonProxy extends ProxyBase {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 	}
@@ -40,5 +40,4 @@ public class CommonProxy extends ProxyBase {
 	@Override
 	public void spawnParticle(String name, double x, double y, double z, Object... args) {
 	}
-
 }

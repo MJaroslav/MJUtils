@@ -3,6 +3,7 @@ package mjaroslav.mcmods.mjutils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -11,9 +12,11 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import mjaroslav.mcmods.mjutils.common.CommonProxy;
-import mjaroslav.mcmods.mjutils.common.config.Config;
+import mjaroslav.mcmods.mjutils.common.MJUtilsCommonProxy;
+import mjaroslav.mcmods.mjutils.common.config.MJUtilsConfig;
+import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase.ConfigurationEventHandler;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
 
 /**
  * MJUtils mod. Mod-lib for MJaroslav's mods.
@@ -23,16 +26,32 @@ import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
  */
 @Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION, guiFactory = MJInfo.GUIFACTORY)
 public class MJUtils {
+
+	/**
+	 * Logger for MJUtils.
+	 */
 	public static Logger log = LogManager.getLogger(MJInfo.NAME);
 
+	/**
+	 * MJUtils mod instance.
+	 */
 	@Instance(MJInfo.MODID)
 	public static MJUtils instance;
 
-	public static Config config = new Config();
+	/**
+	 * MJUtils configuration.
+	 */
+	public static MJUtilsConfig config = new MJUtilsConfig();
 
+	/**
+	 * MJUtils proxy.
+	 */
 	@SidedProxy(clientSide = MJInfo.CLIENTPROXY, serverSide = MJInfo.COMMONPROXY)
-	public static CommonProxy proxy = new CommonProxy();
+	public static MJUtilsCommonProxy proxy = new MJUtilsCommonProxy();
 
+	/**
+	 * MJUtils init handler.
+	 */
 	private static ModInitHandler initHandler = new ModInitHandler(MJInfo.MODID);
 
 	@EventHandler
@@ -44,6 +63,7 @@ public class MJUtils {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		FMLCommonHandler.instance().bus().register(new ConfigurationEventHandler());
 		config.init(event);
 		this.initHandler.init(event);
 		proxy.init(event);

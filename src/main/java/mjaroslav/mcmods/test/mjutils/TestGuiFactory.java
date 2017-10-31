@@ -1,26 +1,30 @@
-package mjaroslav.mcmods.mjutils.client.gui;
+package mjaroslav.mcmods.test.mjutils;
 
 import java.util.Set;
 
 import cpw.mods.fml.client.IModGuiFactory;
+import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigElement;
 
-/**
- * 
- * @author MJaroslav
- *
- */
-public class GuiFactory implements IModGuiFactory {
+public class TestGuiFactory implements IModGuiFactory {
+	public static class TestGuiScreen extends GuiConfig {
 
-	@Override
-	public void initialize(Minecraft minecraftInstance) {
+		public TestGuiScreen(GuiScreen parentScreen) {
+			super(parentScreen, new ConfigElement(MJUtilsTest.config.getInstance().getCategory("gig")).getChildElements(),
+					"mjutilstest", false, false, "MJUtils");
+		}
 
 	}
 
 	@Override
+	public void initialize(Minecraft minecraftInstance) {
+	}
+
+	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return ModGuiConfig.class;
+		return TestGuiScreen.class;
 	}
 
 	@Override
@@ -32,5 +36,4 @@ public class GuiFactory implements IModGuiFactory {
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
 		return null;
 	}
-
 }

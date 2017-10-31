@@ -1,36 +1,41 @@
 package mjaroslav.mcmods.mjutils.common.json;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Reader for JSON files.
+ * Reader (wrapper) for JSON files.
  * 
  * @author MJaroslav
  */
 public class JSONReader<T> {
-	/** JSON object/ */
+	/**
+	 * JSON object
+	 */
 	public T json;
-	/** Default JSON object. */
-	private T defaults;
-	/** Class of JSON object. */
-	private Class<T> clazz;
+	/**
+	 * Default JSON object.
+	 */
+	public T defaults;
 
-	/** JSON file path. */
+	/**
+	 * JSON file path.
+	 */
 	private String filePath;
-	/** JSON file. */
+	/**
+	 * JSON file.
+	 */
 	private File file;
-	/** JSON file folder. */
+	/**
+	 * JSON file folder.
+	 */
 	private File folder;
 
 	private Gson gson;
@@ -45,8 +50,7 @@ public class JSONReader<T> {
 	 * @param isPretty
 	 *            - pretty syntax of JSON string.
 	 */
-	public JSONReader(T object, Class<T> clazz, File file, boolean isPretty) {
-		this.clazz = clazz;
+	public JSONReader(T object, File file, boolean isPretty) {
 		this.json = object;
 		this.defaults = object;
 		this.file = file;
@@ -69,15 +73,7 @@ public class JSONReader<T> {
 	}
 
 	/**
-	 * Set new default JSON object.
-	 */
-	public JSONReader setNewDefault(T newValue) {
-		this.defaults = newValue;
-		return this;
-	}
-
-	/**
-	 * Initialization of reader. Creating or reading JSON file.
+	 * Initialization of reader. Creating or/and reading JSON file.
 	 * 
 	 * @return True of done.
 	 */
@@ -105,8 +101,8 @@ public class JSONReader<T> {
 	 */
 	public boolean read() {
 		try {
-			Reader reader = new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			json = gson.fromJson(reader, clazz);
+			Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
+			json = gson.fromJson(reader, (Class<T>) json.getClass());
 			reader.close();
 			return true;
 		} catch (IOException e) {
@@ -122,8 +118,7 @@ public class JSONReader<T> {
 	 */
 	public boolean write() {
 		try {
-			Writer writer = new OutputStreamWriter(new FileOutputStream(file.getAbsolutePath()),
-					StandardCharsets.UTF_8);
+			Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
 			gson.toJson(json, writer);
 			writer.close();
 			return true;
@@ -134,13 +129,8 @@ public class JSONReader<T> {
 	}
 
 	/**
-	 * @return Default JSON object.
-	 */
-	public T getDefaults() {
-		return defaults;
-	}
-
-	/**
+	 * Get reader JSON file.
+	 * 
 	 * @return JSON file.
 	 */
 	public File getFile() {
@@ -148,6 +138,8 @@ public class JSONReader<T> {
 	}
 
 	/**
+	 * Get reader folder.
+	 * 
 	 * @return JSON file folder.
 	 */
 	public File getFolder() {
@@ -156,8 +148,12 @@ public class JSONReader<T> {
 
 	/**
 	 * Set JSON file.
+	 * 
+	 * @param file
+	 *            - new file.
+	 * @return JSONReader with new file.
 	 */
-	public JSONReader setFile(File file) {
+	public JSONReader<T> setFile(File file) {
 		this.file = file;
 		this.filePath = file.getAbsolutePath();
 		this.folder = getFolder(file);
@@ -165,22 +161,22 @@ public class JSONReader<T> {
 	}
 
 	/**
-	 * Set new class of JSON object.
-	 */
-	public JSONReader setClazz(Class<T> clazz) {
-		this.clazz = clazz;
-		return this;
-	}
-
-	/**
 	 * Set new GSON.
+	 * 
+	 * @param gson
+	 *            - new gson.
+	 * @return This reader with new gson.
 	 */
-	public JSONReader setGson(Gson gson) {
+	public JSONReader<T> setGson(Gson gson) {
 		this.gson = gson;
 		return this;
 	}
 
 	/**
+	 * Get folder from file.
+	 * 
+	 * @param file
+	 *            - file.
 	 * @return Folder of file.
 	 */
 	public static File getFolder(File file) {

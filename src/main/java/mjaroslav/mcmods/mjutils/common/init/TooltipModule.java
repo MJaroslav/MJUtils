@@ -3,12 +3,18 @@ package mjaroslav.mcmods.mjutils.common.init;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 import mjaroslav.mcmods.mjutils.common.tooltip.TooltipEventHandler;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraftforge.common.MinecraftForge;
 
+/**
+ * MJUtils tooltip module.
+ * 
+ * @author MJaroslav
+ *
+ */
 @ModInitModule(modid = MJInfo.MODID)
 public class TooltipModule implements IModModule {
 	@Override
@@ -27,5 +33,10 @@ public class TooltipModule implements IModModule {
 	@Override
 	public String getModuleName() {
 		return "Tooltip";
+	}
+	
+	@Override
+	public int getPriority() {
+		return 2;
 	}
 }

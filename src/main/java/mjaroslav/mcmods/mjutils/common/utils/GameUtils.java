@@ -1,6 +1,7 @@
 package mjaroslav.mcmods.mjutils.common.utils;
 
-import mjaroslav.mcmods.mjutils.MJInfo;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
+import mjaroslav.mcmods.mjutils.lib.TimeConstants;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 /**
+ * Minecraft game utils.
  * 
  * @author MJaroslav
  *
@@ -28,6 +30,10 @@ public class GameUtils {
 	/**
 	 * Inaccurate copy of the method of multi-purpose attack from Thaumcraft.
 	 * 
+	 * @param target
+	 *            - target entity.
+	 * @param player
+	 *            - attacker.
 	 * @author Azanor
 	 */
 	public static void attackEntity(Entity target, EntityPlayer player) {
@@ -107,9 +113,14 @@ public class GameUtils {
 	}
 
 	/**
-	 * Inaccurate copy.
+	 * Check critical attack.
 	 * 
+	 * @param target
+	 *            - target entity.
+	 * @param player
+	 *            - attacker.
 	 * @author Azanor
+	 * @return True if attack is critical.
 	 */
 	public static boolean isCricticalDamage(Entity target, EntityPlayer player) {
 		return player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater()
@@ -118,54 +129,98 @@ public class GameUtils {
 	}
 
 	/**
-	 * Inaccurate copy.
+	 * Can fire entity.
 	 * 
+	 * @param target
+	 *            - target entity.
+	 * @param player
+	 *            - attacker.
 	 * @author Azanor
+	 * @return True if can fire target.
 	 */
 	public static boolean canFireEntity(Entity target) {
 		return target instanceof EntityLivingBase && !target.isBurning();
 	}
 
 	/**
-	 * @return Seconds to ticks.
+	 * Change seconds to ticks.
+	 * 
+	 * @param seconds
+	 *            - seconds to change.
+	 * @return Seconds in ticks.
 	 */
 	public static int getTicksFromSeconds(int seconds) {
-		return seconds * MJInfo.ticksInSecond;
+		return seconds * TimeConstants.SECOND;
 	}
 
 	/**
-	 * @return Minutes to ticks.
+	 * Change minutes to ticks.
+	 * 
+	 * @param minutes
+	 *            - minutes to change.
+	 * @return Minutes in ticks.
 	 */
 	public static int getTicksFromMinutes(int minutes) {
-		return minutes * MJInfo.ticksInMinute;
+		return minutes * TimeConstants.MINUTE;
 	}
 
 	/**
-	 * @return Seconds and milliseconds to ticks.
+	 * Change seconds and milliseconds to ticks.
+	 * 
+	 * @param seconds
+	 *            - seconds to change.
+	 * @param mills
+	 *            - milliseconds to change.
+	 * @return Seconds and milliseconds in ticks.
 	 */
 	public static int getTicksFromSeconds(int seconds, int mills) {
-		return seconds * MJInfo.ticksInSecond + Math.round((mills / 1000) * MJInfo.ticksInSecond);
+		return seconds * TimeConstants.SECOND + Math.round((mills / 1000) * TimeConstants.SECOND);
 	}
 
 	/**
-	 * @return Minutes and seconds to ticks.
+	 * Change minutes and seconds to ticks.
+	 * 
+	 * @param minutes
+	 *            - minutes to change.
+	 * @param seconds
+	 *            - seconds to change.
+	 * @return Seconds to ticks.
 	 */
 	public static int getTicksFromMinutes(int minutes, int seconds) {
-		return minutes * MJInfo.ticksInMinute + seconds * MJInfo.ticksInSecond;
+		return minutes * TimeConstants.MINUTE + seconds * TimeConstants.SECOND;
 	}
 
 	/**
-	 * @return Item count to smelt ticks.
+	 * Change burnt items to ticks.
+	 * 
+	 * @param count
+	 *            - burnt items.
+	 * @return Burnt items in ticks.
 	 */
 	public static int getTicksFromSmelting(int count) {
-		return count * MJInfo.ticksInSmelt;
+		return count * TimeConstants.ONE_SMELT;
 	}
 
 	/**
-	 * @return Item count to smelt ticks.
+	 * Change burnt items to ticks.
+	 * 
+	 * @param count
+	 *            - burnt items.
+	 * @return Burnt items in ticks.
 	 */
 	public static int getTicksFromSmelting(float count) {
-		return Math.round(count * MJInfo.ticksInSmelt);
+		return Math.round(count * TimeConstants.ONE_SMELT);
+	}
+
+	/**
+	 * Change ticks to burnt items.
+	 * 
+	 * @param ticks
+	 *            - ticks to change.
+	 * @return Ticks in burnt items.
+	 */
+	public static float getSmeltingCountFromTicks(int ticks) {
+		return ticks / TimeConstants.ONE_SMELT;
 	}
 
 	public static boolean itemStackNotNull(ItemStack stack) {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.base.Predicates;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import mjaroslav.mcmods.mjutils.MJInfo;
+import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;

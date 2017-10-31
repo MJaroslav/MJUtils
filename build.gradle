@@ -24,7 +24,7 @@ repositories {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1"
+version = "1.7.10-2"
 group= "mjaroslav.mcmods.mjutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "mjutils"
 
@@ -34,6 +34,18 @@ targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+task devJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+    manifest {
+    }
+}
+
+task srcJar(type: Jar, dependsOn:classes) {
+    classifier = 'src'
+    from sourceSets.main.allJava
 }
 
 minecraft {
