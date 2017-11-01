@@ -128,7 +128,7 @@ public class AnvilUtils {
 		int levels = ((AnvilResult) entry.getValue()).levels;
 		if (levels < 1)
 			levels = 1;
-		return 1;
+		return levels;
 	}
 
 	/**
