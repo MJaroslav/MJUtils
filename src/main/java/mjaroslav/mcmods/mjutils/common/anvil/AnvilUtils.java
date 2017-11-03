@@ -17,7 +17,7 @@ public class AnvilUtils {
 	/**
 	 * Anvil recipes map, use {@link AnvilUtils#getRecipes()}.
 	 */
-	private Map<AnvilRecipe, AnvilResult> recipes = new HashMap();
+	private static Map<AnvilRecipe, AnvilResult> recipes = new HashMap();
 
 	/**
 	 * Instance of this handler, use {@link AnvilUtils#instance()}.
@@ -25,20 +25,11 @@ public class AnvilUtils {
 	private static final AnvilUtils instance = new AnvilUtils();
 
 	/**
-	 * Get instance of this handler.
-	 * 
-	 * @return Instance of this handler. All recipes are added through it.
-	 */
-	public static AnvilUtils instance() {
-		return instance;
-	}
-
-	/**
 	 * Get anvil recipe map.
 	 * 
 	 * @return Recipe - result map.
 	 */
-	public Map<AnvilRecipe, AnvilResult> getRecipes() {
+	public static Map<AnvilRecipe, AnvilResult> getRecipes() {
 		return recipes;
 	}
 
@@ -50,8 +41,8 @@ public class AnvilUtils {
 	 * @param recipe
 	 *            - anvil recipe.
 	 */
-	public void addRecipe(ItemStack result, AnvilRecipe recipe) {
-		this.addRecipe(result, 1, recipe);
+	public static void addRecipe(ItemStack result, AnvilRecipe recipe) {
+		addRecipe(result, 1, recipe);
 	}
 
 	/**
@@ -64,10 +55,10 @@ public class AnvilUtils {
 	 * @param recipe
 	 *            - anvil recipe.
 	 */
-	public void addRecipe(ItemStack result, int levels, AnvilRecipe recipe) {
+	public static void addRecipe(ItemStack result, int levels, AnvilRecipe recipe) {
 		if (levels < 1)
 			levels = 1;
-		this.addRecipe(new AnvilResult(result, levels), recipe);
+		addRecipe(new AnvilResult(result, levels), recipe);
 	}
 
 	/**
@@ -78,8 +69,8 @@ public class AnvilUtils {
 	 * @param recipe
 	 *            - anvil recipe.
 	 */
-	public void addRecipe(AnvilResult result, AnvilRecipe recipe) {
-		this.recipes.put(recipe, result);
+	public static void addRecipe(AnvilResult result, AnvilRecipe recipe) {
+		recipes.put(recipe, result);
 	}
 
 	/**
@@ -93,8 +84,8 @@ public class AnvilUtils {
 	 *            - text field of anvil.
 	 * @return Result or null.
 	 */
-	public ItemStack getResult(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = this.recipes.entrySet().iterator();
+	public static ItemStack getResult(ItemStack left, ItemStack right, String name) {
+		Iterator iterator = recipes.entrySet().iterator();
 		Entry entry;
 		do {
 			if (!iterator.hasNext()) {
@@ -116,8 +107,8 @@ public class AnvilUtils {
 	 *            - text field of anvil.
 	 * @return Cost [1;+).
 	 */
-	public int getLevels(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = this.recipes.entrySet().iterator();
+	public static int getLevels(ItemStack left, ItemStack right, String name) {
+		Iterator iterator = recipes.entrySet().iterator();
 		Entry entry;
 		do {
 			if (!iterator.hasNext()) {
@@ -142,8 +133,8 @@ public class AnvilUtils {
 	 *            - text field of anvil.
 	 * @return StackSize of right item or 0.
 	 */
-	public int getRightCount(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = this.recipes.entrySet().iterator();
+	public static int getRightCount(ItemStack left, ItemStack right, String name) {
+		Iterator iterator = recipes.entrySet().iterator();
 		Entry entry;
 		do {
 			if (!iterator.hasNext()) {
@@ -165,8 +156,8 @@ public class AnvilUtils {
 	 *            - text field of anvil.
 	 * @return Recipe or null.
 	 */
-	public AnvilRecipe getRecipe(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = this.recipes.entrySet().iterator();
+	public static AnvilRecipe getRecipe(ItemStack left, ItemStack right, String name) {
+		Iterator iterator = recipes.entrySet().iterator();
 		Entry entry;
 		do {
 			if (!iterator.hasNext()) {

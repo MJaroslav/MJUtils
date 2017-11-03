@@ -48,7 +48,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
 		if ((outputId.equals("anvil")) && (super.getClass() == NEIAnvilRecipeHandler.class)) {
-			Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.instance().getRecipes();
+			Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
 			for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet()) {
 				this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
 			}
@@ -59,7 +59,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void loadCraftingRecipes(ItemStack result) {
-		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.instance().getRecipes();
+		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
 		for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet())
 			if (NEIServerUtils.areStacksSameType(recipe.getValue().result, result))
 				this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
@@ -67,7 +67,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
-		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.instance().getRecipes();
+		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
 		for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet())
 			if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getKey().getLeft(), ingredient)) {
 				AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());

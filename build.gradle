@@ -24,7 +24,7 @@ repositories {
 
 apply plugin: 'forge'
 
-version = "1.7.10-3"
+version = "1.4.0"
 group= "mjaroslav.mcmods.mjutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "mjutils"
 
