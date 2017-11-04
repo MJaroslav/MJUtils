@@ -1,23 +1,23 @@
-package mjaroslav.mcmods.test.mjutils;
+package mjaroslav.mcmods.example.mjutils;
 
 import org.apache.logging.log4j.Logger;
 
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase;
 import net.minecraftforge.common.config.Configuration;
 
-public class TestConfig extends ConfigurationBase {
+public class ExampleConfig extends ConfigurationBase {
 	private Configuration instance;
 
 	boolean lol = true;
 
 	@Override
 	public String getModId() {
-		return "mjutilstest";
+		return "mjutilsexample";
 	}
 
 	@Override
 	public Logger getLogger() {
-		return MJUtilsTest.log;
+		return MJUtilsExample.log;
 	}
 
 	@Override

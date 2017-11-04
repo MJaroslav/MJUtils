@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.test.mjutils;
+package mjaroslav.mcmods.example.mjutils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,11 +11,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
 
-@Mod(name = "MJUtilsTest", modid = "mjutilstest", version = "1.7.10-1", guiFactory = "mjaroslav.mcmods.test.mjutils.TestGuiFactory")
-public class MJUtilsTest {
-	public static Logger log = LogManager.getLogger("MJUtilsTest");
-	private static ModInitHandler initHandler = new ModInitHandler("mjutilstest");
-	public static TestConfig config = new TestConfig();
+@Mod(name = "MJUtilsExample", modid = "mjutilsexample", version = "1.7.10-1", guiFactory = "mjaroslav.mcmods.example.mjutils.TestGuiFactory")
+public class MJUtilsExample {
+	public static Logger log = LogManager.getLogger("MJUtilsExample");
+	private static ModInitHandler initHandler = new ModInitHandler("mjutilsexample");
+	public static ExampleConfig config = new ExampleConfig();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

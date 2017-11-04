@@ -11,7 +11,6 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.common.anvil.AnvilUtils.AnvilResult;
 import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -48,8 +47,8 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
 		if ((outputId.equals("anvil")) && (super.getClass() == NEIAnvilRecipeHandler.class)) {
-			Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
-			for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet()) {
+			Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+			for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet()) {
 				this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
 			}
 		} else {
@@ -59,25 +58,25 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void loadCraftingRecipes(ItemStack result) {
-		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
-		for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet())
-			if (NEIServerUtils.areStacksSameType(recipe.getValue().result, result))
+		Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+		for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
+			if (NEIServerUtils.areStacksSameType(recipe.getValue(), result))
 				this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
 	}
 
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
-		Map<AnvilRecipe, AnvilResult> recipes = AnvilUtils.getRecipes();
-		for (Map.Entry<AnvilRecipe, AnvilResult> recipe : recipes.entrySet())
-			if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getKey().getLeft(), ingredient)) {
+		Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+		for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
+			if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getKey().leftStack, ingredient)) {
 				AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());
-				arecipe.setIngredientPermutation(Arrays.asList(new PositionedStack[] { arecipe.left, arecipe.right }),
-						ingredient);
+				arecipe.setIngredientPermutation(
+						Arrays.asList(new PositionedStack[] { arecipe.leftStack, arecipe.rightStack }), ingredient);
 				this.arecipes.add(arecipe);
-			} else if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getKey().getRight(), ingredient)) {
+			} else if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getKey().rightStack, ingredient)) {
 				AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());
-				arecipe.setIngredientPermutation(Arrays.asList(new PositionedStack[] { arecipe.left, arecipe.right }),
-						ingredient);
+				arecipe.setIngredientPermutation(
+						Arrays.asList(new PositionedStack[] { arecipe.leftStack, arecipe.rightStack }), ingredient);
 				this.arecipes.add(arecipe);
 			}
 	}
@@ -104,7 +103,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 			}
 			fonts.drawString(s, i1 - 5, b0 - 12, k);
 		}
-		s = ((AnvilPair) this.arecipes.get(recipe)).name;
+		s = ((AnvilPair) this.arecipes.get(recipe)).textField;
 		if (!StringUtils.isNullOrEmpty(s))
 			fonts.drawStringWithShadow(s, 57, 13, 14737632);
 	}
@@ -113,7 +112,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	public void drawBackground(int recipe) {
 		super.drawBackground(recipe);
 		int k = 8453920;
-		String name = ((AnvilPair) this.arecipes.get(recipe)).name;
+		String name = ((AnvilPair) this.arecipes.get(recipe)).textField;
 		String s = I18n.format("container.repair.cost",
 				new Object[] { Integer.valueOf(((AnvilPair) this.arecipes.get(recipe)).cost) });
 		int offset = !StringUtils.isNullOrEmpty(name) ? 0 : 16;
@@ -126,10 +125,10 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 				GuiDraw.drawRect(i1 - 8, b0 - 14, 176 - 12 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
 				GuiDraw.drawRect(i1 - 7, b0 - 13, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
 			}
-		if (((AnvilPair) this.arecipes.get(recipe)).lNamed) {
+		if (((AnvilPair) this.arecipes.get(recipe)).leftStackHasName) {
 			GuiDraw.drawTexturedModalRect(21, 35, 0, 198, 18, 18);
 		}
-		if (((AnvilPair) this.arecipes.get(recipe)).rNamed) {
+		if (((AnvilPair) this.arecipes.get(recipe)).rightStackHasName) {
 			GuiDraw.drawTexturedModalRect(70, 35, 0, 198, 18, 18);
 		}
 	}
@@ -146,37 +145,36 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	 *
 	 */
 	public class AnvilPair extends TemplateRecipeHandler.CachedRecipe {
-		PositionedStack left;
-		PositionedStack right;
+		PositionedStack leftStack;
+		PositionedStack rightStack;
 		PositionedStack result;
-		/** Exp levels */
 		public int cost;
-		public String name;
-		public boolean lNamed;
-		public boolean rNamed;
+		public String textField;
+		public boolean leftStackHasName;
+		public boolean rightStackHasName;
 
-		public AnvilPair(AnvilRecipe recipe, AnvilResult result) {
+		public AnvilPair(AnvilRecipe recipe, ItemStack result) {
 			super();
-			ItemStack left = recipe.getLeft().copy();
-			if (recipe.leftNameUsed()) {
-				left.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.getLeftName());
-				this.lNamed = true;
+			ItemStack left = recipe.leftStack.copy();
+			if (!StringUtils.isNullOrEmpty(recipe.leftStackName)) {
+				left.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.leftStackName);
+				this.leftStackHasName = true;
 			}
-			ItemStack right = recipe.getRight().copy();
-			if (recipe.rightNameUsed()) {
-				right.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.getRightName());
-				this.rNamed = true;
+			ItemStack right = recipe.rightStack.copy();
+			if (!StringUtils.isNullOrEmpty(recipe.rightStackName)) {
+				right.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.rightStackName);
+				this.rightStackHasName = true;
 			}
-			this.left = new PositionedStack(left, 22, 36);
-			this.right = new PositionedStack(right, 71, 36);
-			this.result = new PositionedStack(result.result, 129, 36);
-			this.cost = result.levels;
-			this.name = recipe.getName();
+			this.leftStack = new PositionedStack(left, 22, 36);
+			this.rightStack = new PositionedStack(right, 71, 36);
+			this.result = new PositionedStack(result, 129, 36);
+			this.cost = recipe.cost;
+			this.textField = recipe.textField;
 		}
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return Arrays.asList(new PositionedStack[] { this.left, this.right });
+			return Arrays.asList(new PositionedStack[] { this.leftStack, this.rightStack });
 		}
 
 		@Override

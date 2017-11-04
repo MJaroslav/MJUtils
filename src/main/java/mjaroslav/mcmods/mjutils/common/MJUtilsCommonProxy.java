@@ -8,12 +8,6 @@ import mjaroslav.mcmods.mjutils.common.objects.ProxyBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
-/**
- * Common proxy for MJUtils mod.
- * 
- * @author MJaroslav
- *
- */
 public class MJUtilsCommonProxy extends ProxyBase {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {

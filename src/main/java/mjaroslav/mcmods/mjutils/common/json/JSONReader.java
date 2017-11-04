@@ -43,8 +43,6 @@ public class JSONReader<T> {
 	/**
 	 * @param object
 	 *            - JSON object (default).
-	 * @param clazz
-	 *            - JSON object class.
 	 * @param file
 	 *            - JSON file.
 	 * @param isPretty

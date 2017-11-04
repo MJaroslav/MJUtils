@@ -1,214 +1,96 @@
 package mjaroslav.mcmods.mjutils.common.anvil;
 
 import mjaroslav.mcmods.mjutils.common.utils.GameUtils;
+import mjaroslav.mcmods.mjutils.common.utils.OtherUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StringUtils;
 
-/**
- * Blank for anvil recipe.
- * 
- * @author MJaroslav
- * 
- */
 public class AnvilRecipe {
-	/**
-	 * Left anvil slot.
-	 */
-	private ItemStack left;
-	/**
-	 * Right anvil slot.
-	 */
-	private ItemStack right;
-	/**
-	 * Names: anvil text field, left and right slots. Format: lower case without
-	 * spaces.
-	 */
-	private String[] name = new String[] { "", "", "" };
-	/**
-	 * Switches for using names.
-	 */
-	private boolean[] useName = new boolean[] { false, false, false };
+	public ItemStack leftStack;
 
-	/**
-	 * New anvil recipe.
-	 * 
-	 * @param left
-	 *            - item in left anvil slot.
-	 * @param right
-	 *            - item in right anvil slot.
-	 */
-	public AnvilRecipe(ItemStack left, ItemStack right) {
-		this.left = left;
-		this.right = right;
+	public ItemStack rightStack;
+
+	public String leftStackName;
+
+	public String rightStackName;
+
+	public String textField;
+
+	public int cost;
+
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack) {
+		this(leftStack, rightStack, "", "", "", 1);
 	}
 
-	/**
-	 * @return Left anvil item.
-	 */
-	public ItemStack getLeft() {
-		return left;
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, int cost) {
+		this(leftStack, rightStack, "", "", "", cost);
 	}
 
-	/**
-	 * @return Right anvil item.
-	 */
-	public ItemStack getRight() {
-		return right;
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String textField) {
+		this(leftStack, rightStack, "", "", textField, 1);
 	}
 
-	/**
-	 * Change mandatory name of anvil text field.
-	 * 
-	 * @param name
-	 *            - format: lower case without spaces.
-	 * @return AnvilRecipe with new mandatory name of text field .
-	 */
-	public AnvilRecipe setName(String name) {
-		this.name[0] = name;
-		this.useName[0] = name.length() <= 0 ? false : true;
-		return this;
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String textField, int cost) {
+		this(leftStack, rightStack, "", "", textField, cost);
 	}
 
-	/**
-	 * @return Mandatory name in text field.
-	 */
-	public String getName() {
-		return name[0];
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String leftStackName, String rightStackName,
+			String textField) {
+		this(leftStack, rightStack, leftStackName, rightStackName, textField, 1);
 	}
 
-	/**
-	 * Change mandatory name of left item.
-	 * 
-	 * @param leftName
-	 *            - format: lower case without spaces.
-	 * @return AnvilRecipe with new left item name.
-	 */
-	public AnvilRecipe setLeftName(String leftName) {
-		this.name[1] = leftName;
-		this.useName[1] = leftName.length() <= 0 ? false : true;
-		return this;
+	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String leftStackName, String rightStackName,
+			String textField, int cost) {
+		this.leftStack = leftStack;
+		this.rightStack = rightStack;
+		this.leftStackName = leftStackName;
+		this.rightStackName = rightStackName;
+		this.textField = textField;
+		this.cost = cost;
 	}
 
-	/**
-	 * Get mandatory name of right item.
-	 * 
-	 * @return Left item name in format: lower case without spaces.
-	 */
-	public String getLeftName() {
-		return this.name[1];
-	}
-
-	/**
-	 * Change mandatory name of right item.
-	 * 
-	 * @param rightName
-	 *            - format: lower case without spaces.
-	 * @return AnvilRecipe with new right item name.
-	 */
-	public AnvilRecipe setRightName(String rightName) {
-		this.name[2] = rightName;
-		this.useName[2] = rightName.length() <= 0 ? false : true;
-		return this;
-	}
-
-	/**
-	 * Get mandatory name of right item.
-	 * 
-	 * @return Right item name in format: lower case without spaces.
-	 */
-	public String getRightName() {
-		return this.name[2];
-	}
-
-	/**
-	 * Is the mandatory name used: text field.
-	 * 
-	 * @return True if the text field must contain text.
-	 */
-	public boolean nameUsed() {
-		return this.useName[0];
-	}
-
-	/**
-	 * Is the mandatory name used: left item.
-	 * 
-	 * @return True if the left item has to be with a certain name.
-	 */
-	public boolean leftNameUsed() {
-		return this.useName[1];
-	}
-
-	/**
-	 * Is the mandatory name used: right item.
-	 * 
-	 * @return True if the right item has to be with a certain name.
-	 */
-	public boolean rightNameUsed() {
-		return this.useName[2];
-	}
-
-	/**
-	 * Compare two AnvilRecipe.
-	 * 
-	 * @param recipe
-	 *            - second recipe.
-	 * @return True if recipes is equals.
-	 */
 	public boolean equals(AnvilRecipe recipe) {
 		if (recipe == null)
 			return false;
-		if (this.left != recipe.left)
+		if (!GameUtils.itemStackNotNullAndEquals(this.leftStack, recipe.leftStack))
 			return false;
-		if (this.right != recipe.right)
+		if (!GameUtils.itemStackNotNullAndEquals(this.rightStack, recipe.rightStack))
 			return false;
-		for (int id = 0; id < 3; id++) {
-			if (!this.name[id].equals(recipe.name[id]))
-				return false;
-			if (!this.useName[id] == recipe.useName[id])
-				return false;
-		}
+		if (!OtherUtils.string(this.leftStackName).equals(OtherUtils.string(recipe.leftStackName)))
+			return false;
+		if (!OtherUtils.string(this.rightStackName).equals(OtherUtils.string(recipe.rightStackName)))
+			return false;
+		if (!OtherUtils.string(this.textField).equals(OtherUtils.string(recipe.textField)))
+			return false;
+		if (this.cost != recipe.cost)
+			return false;
 		return true;
 	}
 
-	/**
-	 * Compare two AnvilRecipe.
-	 * 
-	 * @param left
-	 *            - item in left slot.
-	 * @param right
-	 *            - item in right slot.
-	 * @param name
-	 *            - text field of anvil.
-	 * @return True if ingredients are suitable for this recipe.
-	 */
-	public boolean equals(ItemStack left, ItemStack right, String name) {
-		if (this.nameUsed() && !(name.toLowerCase().replace(" ", "").equals(this.name[0])))
+	public boolean equals(ItemStack leftStack, ItemStack rightStack, String textField, int cost) {
+		if (!GameUtils.itemStackNotNullAndEquals(this.leftStack, leftStack))
 			return false;
-		int count = 0;
-		boolean flag1 = false;
-		if (this.left == null && left == null)
-			flag1 = true;
-		else if (GameUtils.itemStackNotNullAndEquals(this.left, left)) {
-			if (this.leftNameUsed() && !left.getDisplayName().toLowerCase().replace(" ", "").equals(this.getLeftName()))
-				return false;
-			if (this.left.stackSize < left.stackSize)
-				if (left.stackSize % this.left.stackSize == 0)
-					count = (int) left.stackSize / this.left.stackSize;
-				else
-					return false;
-			flag1 = true;
-		}
-		boolean flag2 = false;
-		if (this.right == null && right == null)
-			flag2 = true;
-		else if (GameUtils.itemStackNotNullAndEquals(this.right, right)) {
-			if (this.rightNameUsed()
-					&& !right.getDisplayName().toLowerCase().replace(" ", "").equals(this.getRightName()))
-				return false;
-			if (this.right.stackSize < right.stackSize)
-				if (count * this.right.stackSize > right.stackSize)
-					return false;
-			flag2 = true;
-		}
-		return flag1 && flag2;
+		if (!GameUtils.itemStackNotNullAndEquals(this.rightStack, rightStack))
+			return false;
+		if (!StringUtils.isNullOrEmpty(this.leftStackName)
+				&& !OtherUtils.string(OtherUtils.nameFormat(leftStack)).equals(OtherUtils.string(this.leftStackName)))
+			return false;
+		if (!StringUtils.isNullOrEmpty(this.rightStackName)
+				&& !OtherUtils.string(OtherUtils.nameFormat(rightStack)).equals(OtherUtils.string(this.rightStackName)))
+			return false;
+		if (!StringUtils.isNullOrEmpty(this.textField)
+				&& !OtherUtils.string(this.textField).equals(OtherUtils.string(textField)))
+			return false;
+		if (cost == -1)
+			return true;
+		if (this.cost != cost)
+			return false;
+		return true;
+	}
+
+	public AnvilRecipe copy() {
+		AnvilRecipe recipe = new AnvilRecipe(leftStack.copy(), rightStack.copy(), leftStackName, rightStackName,
+				textField, cost);
+		return recipe;
 	}
 }

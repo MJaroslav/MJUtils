@@ -17,48 +17,15 @@ public class AnvilUtils {
 	/**
 	 * Anvil recipes map, use {@link AnvilUtils#getRecipes()}.
 	 */
-	private static Map<AnvilRecipe, AnvilResult> recipes = new HashMap();
-
-	/**
-	 * Instance of this handler, use {@link AnvilUtils#instance()}.
-	 */
-	private static final AnvilUtils instance = new AnvilUtils();
+	private static Map<AnvilRecipe, ItemStack> recipes = new HashMap();
 
 	/**
 	 * Get anvil recipe map.
 	 * 
 	 * @return Recipe - result map.
 	 */
-	public static Map<AnvilRecipe, AnvilResult> getRecipes() {
+	public static Map<AnvilRecipe, ItemStack> getRecipes() {
 		return recipes;
-	}
-
-	/**
-	 * Add recipe, default cost - 1Lvl.
-	 * 
-	 * @param result
-	 *            - result from crafting.
-	 * @param recipe
-	 *            - anvil recipe.
-	 */
-	public static void addRecipe(ItemStack result, AnvilRecipe recipe) {
-		addRecipe(result, 1, recipe);
-	}
-
-	/**
-	 * Add recipe.
-	 * 
-	 * @param result
-	 *            - result from crafting.
-	 * @param levels
-	 *            - cost, [1;+).
-	 * @param recipe
-	 *            - anvil recipe.
-	 */
-	public static void addRecipe(ItemStack result, int levels, AnvilRecipe recipe) {
-		if (levels < 1)
-			levels = 1;
-		addRecipe(new AnvilResult(result, levels), recipe);
 	}
 
 	/**
@@ -69,8 +36,33 @@ public class AnvilUtils {
 	 * @param recipe
 	 *            - anvil recipe.
 	 */
-	public static void addRecipe(AnvilResult result, AnvilRecipe recipe) {
+	public static void addRecipe(ItemStack result, AnvilRecipe recipe) {
 		recipes.put(recipe, result);
+	}
+
+	/**
+	 * Search recipe from ingredients.
+	 * 
+	 * @param left
+	 *            - left slot item.
+	 * @param right
+	 *            - right slot item.
+	 * @param name
+	 *            - text field of anvil.
+	 * @param cost
+	 *            - recipe cost.
+	 * @return Recipe or null.
+	 */
+	public static AnvilRecipe getRecipe(ItemStack left, ItemStack right, String name, int cost) {
+		Iterator iterator = recipes.entrySet().iterator();
+		Entry entry;
+		do {
+			if (!iterator.hasNext()) {
+				return null;
+			}
+			entry = (Entry) iterator.next();
+		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name, cost));
+		return ((AnvilRecipe) entry.getKey());
 	}
 
 	/**
@@ -92,71 +84,18 @@ public class AnvilUtils {
 				return null;
 			}
 			entry = (Entry) iterator.next();
-		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name));
-		return ((AnvilResult) entry.getValue()).result;
+		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name, -1));
+		return (ItemStack) entry.getValue();
 	}
 
 	/**
-	 * Search recipe cost from ingredients.
+	 * Search recipe result from recipe.
 	 * 
-	 * @param left
-	 *            - left slot item.
-	 * @param right
-	 *            - right slot item.
-	 * @param name
-	 *            - text field of anvil.
-	 * @return Cost [1;+).
+	 * @param recipe
+	 *            - anvil recipe.
+	 * @return Result or null.
 	 */
-	public static int getLevels(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = recipes.entrySet().iterator();
-		Entry entry;
-		do {
-			if (!iterator.hasNext()) {
-				return 1;
-			}
-			entry = (Entry) iterator.next();
-		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name));
-		int levels = ((AnvilResult) entry.getValue()).levels;
-		if (levels < 1)
-			levels = 1;
-		return levels;
-	}
-
-	/**
-	 * Search recipe right item stackSize from ingredients.
-	 * 
-	 * @param left
-	 *            - left slot item.
-	 * @param right
-	 *            - right slot item.
-	 * @param name
-	 *            - text field of anvil.
-	 * @return StackSize of right item or 0.
-	 */
-	public static int getRightCount(ItemStack left, ItemStack right, String name) {
-		Iterator iterator = recipes.entrySet().iterator();
-		Entry entry;
-		do {
-			if (!iterator.hasNext()) {
-				return 0;
-			}
-			entry = (Entry) iterator.next();
-		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name));
-		return ((AnvilRecipe) entry.getKey()).getRight().stackSize;
-	}
-
-	/**
-	 * Search recipe from ingredients.
-	 * 
-	 * @param left
-	 *            - left slot item.
-	 * @param right
-	 *            - right slot item.
-	 * @param name
-	 *            - text field of anvil.
-	 * @return Recipe or null.
-	 */
-	public static AnvilRecipe getRecipe(ItemStack left, ItemStack right, String name) {
+	public static ItemStack getResult(AnvilRecipe recipe) {
 		Iterator iterator = recipes.entrySet().iterator();
 		Entry entry;
 		do {
@@ -164,39 +103,7 @@ public class AnvilUtils {
 				return null;
 			}
 			entry = (Entry) iterator.next();
-		} while (!((AnvilRecipe) entry.getKey()).equals(left, right, name));
-		return ((AnvilRecipe) entry.getKey());
-	}
-
-	/**
-	 * Result of recipe on anvil.
-	 * 
-	 * @author MJaroslav
-	 *
-	 */
-	public static class AnvilResult {
-		/**
-		 * Cost.
-		 */
-		public int levels;
-		/**
-		 * Result item.
-		 */
-		public ItemStack result;
-
-		/**
-		 * Anvil result blank.
-		 * 
-		 * @param result
-		 *            - result item.
-		 * @param levels
-		 *            - cost [1;+) Lvls.
-		 */
-		public AnvilResult(ItemStack result, int levels) {
-			if (levels < 1)
-				levels = 1;
-			this.result = result;
-			this.levels = levels;
-		}
+		} while (!((AnvilRecipe) entry.getKey()).equals(recipe));
+		return (ItemStack) entry.getValue();
 	}
 }

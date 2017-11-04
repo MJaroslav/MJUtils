@@ -35,6 +35,10 @@ public class MJUtilsConfig extends ConfigurationBase {
 	 */
 	public static boolean chainToIron = true;
 
+	/**
+	 * Change leather armor to chain mail by 2 iron bars on anvil.
+	 */
+	public static boolean leatherToChain = true;
 	// CLIENT FIELDS
 	/**
 	 * Show ore dictionary names in tooltip (in advanced tooltip mode).
@@ -49,7 +53,8 @@ public class MJUtilsConfig extends ConfigurationBase {
 	public void readFields() {
 		chainToIron = getInstance().getBoolean("chain_to_iron", CATEGORY_COMMON, true,
 				"Change chainmail armor to iron by iron ingot on anvil.");
-
+		leatherToChain = getInstance().getBoolean("leather_to_chain", CATEGORY_COMMON, true,
+				"Change leather armor to chain mail by 2 iron bars on anvil.");
 		showOreDict = getInstance().getBoolean("show_oredict", CATEGORY_CLIENT, true,
 				"Show ore dict names in tooltip (in advanced tooltip mode).");
 		showOreDictAlways = getInstance().getBoolean("show_oredict_always", CATEGORY_CLIENT, false,

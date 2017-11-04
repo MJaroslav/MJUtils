@@ -21,6 +21,8 @@ public abstract class ProxyBase implements IModModule {
 	/**
 	 * Get proxy player from packet message.
 	 * 
+	 * @param ctx
+	 *            - packet message.
 	 * @return EntityPlayer from packet message context or
 	 *         {@link Minecraft#thePlayer}.
 	 */
@@ -46,7 +48,7 @@ public abstract class ProxyBase implements IModModule {
 	public final String getModuleName() {
 		return "Proxy";
 	}
-	
+
 	@Override
 	public final int getPriority() {
 		return 100;

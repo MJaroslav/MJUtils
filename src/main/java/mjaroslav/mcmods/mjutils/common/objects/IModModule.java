@@ -14,6 +14,8 @@ public interface IModModule {
 	/**
 	 * Module name, optional. Use 'Proxy' for proxy modules and 'Config' for
 	 * configuration module, they will be ignored when searching.
+	 * 
+	 * @return Module name.
 	 */
 	public String getModuleName();
 
@@ -29,18 +31,27 @@ public interface IModModule {
 	/**
 	 * Called in a similar method of the main modification class. Do not call
 	 * this method elsewhere!
+	 * 
+	 * @param event
+	 *            - event from mail class.
 	 */
 	public void preInit(FMLPreInitializationEvent event);
 
 	/**
 	 * Called in a similar method of the main modification class. Do not call
 	 * this method elsewhere!
+	 * 
+	 * @param event
+	 *            - event from mail class.
 	 */
 	public void init(FMLInitializationEvent event);
 
 	/**
 	 * Called in a similar method of the main modification class. Do not call
 	 * this method elsewhere!
+	 * 
+	 * @param event
+	 *            - event from mail class.
 	 */
 	public void postInit(FMLPostInitializationEvent event);
 }
