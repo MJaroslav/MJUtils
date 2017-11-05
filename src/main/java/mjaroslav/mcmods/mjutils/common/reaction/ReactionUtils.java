@@ -3,7 +3,6 @@ package mjaroslav.mcmods.mjutils.common.reaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraft.block.Block;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ReactionUtils {
 	private static ArrayList<ItemStack> pigAngryBlockList = new ArrayList<ItemStack>();
@@ -22,7 +22,7 @@ public class ReactionUtils {
 	public static boolean checkBlockToPigAngryList(Block block, int meta) {
 		for (ItemStack stack : pigAngryBlockList)
 			if (stack.getItem() == Item.getItemFromBlock(block))
-				if (stack.getItemDamage() == MJInfo.anyMeta || stack.getItemDamage() == meta)
+				if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == meta)
 					return true;
 		return false;
 	}

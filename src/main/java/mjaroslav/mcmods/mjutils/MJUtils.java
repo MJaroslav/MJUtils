@@ -16,11 +16,10 @@ import mjaroslav.mcmods.mjutils.common.MJUtilsCommonProxy;
 import mjaroslav.mcmods.mjutils.common.config.MJUtilsConfig;
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase.ConfigurationEventHandler;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
 
 @Mod(modid = MJInfo.MODID, name = MJInfo.NAME, version = MJInfo.VERSION, guiFactory = MJInfo.GUIFACTORY)
 public class MJUtils {
-	public static Logger log = LogManager.getLogger(MJInfo.NAME);
+	public static Logger LOG = LogManager.getLogger(MJInfo.NAME);
 
 	@Instance(MJInfo.MODID)
 	public static MJUtils instance;

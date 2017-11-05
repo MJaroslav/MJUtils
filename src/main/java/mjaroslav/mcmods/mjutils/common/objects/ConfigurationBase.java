@@ -114,7 +114,7 @@ public abstract class ConfigurationBase implements IModModule {
 				if (config.getModId().equals(newConfig.getModId()))
 					return false;
 			list.add(newConfig);
-			MJUtils.log.info("Added configuration for " + newConfig.getModId());
+			MJUtils.LOG.info("Added configuration for " + newConfig.getModId());
 			return true;
 		}
 

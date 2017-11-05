@@ -2,7 +2,7 @@ package mjaroslav.mcmods.mjutils.common.anvil;
 
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import net.minecraft.client.gui.GuiRepair;
 
 /**

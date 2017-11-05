@@ -11,7 +11,7 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiRepair;
@@ -19,6 +19,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 
 /**
@@ -89,20 +90,23 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public void drawExtras(int recipe) {
 		int k = 8453920;
-		String s = I18n.format("container.repair.cost",
-				new Object[] { Integer.valueOf(((AnvilPair) this.arecipes.get(recipe)).cost) });
-		FontRenderer fonts = Minecraft.getMinecraft().fontRenderer;
+		String s = "";
 		if (((AnvilPair) this.arecipes.get(recipe)).cost > 0) {
-			int l = -16777216 | (k & 16579836) >> 2 | k & -16777216;
-			int i1 = 176 - 8 - fonts.getStringWidth(s);
-			byte b0 = 67;
-			if (!fonts.getUnicodeFlag()) {
-				fonts.drawString(s, i1 - 5, b0 + 1 - 12, l);
-				fonts.drawString(s, i1 + 1 - 5, b0 - 12, l);
-				fonts.drawString(s, i1 + 1 - 5, b0 + 1 - 12, l);
-			}
-			fonts.drawString(s, i1 - 5, b0 - 12, k);
+			s = I18n.format("container.repair.cost",
+					new Object[] { Integer.valueOf(((AnvilPair) this.arecipes.get(recipe)).cost) });
+		} else
+			s = I18n.format("container.repair.cost", new Object[] { 1 }) + " "
+					+ StatCollector.translateToLocal("container.repair.cost.always");
+		FontRenderer fonts = Minecraft.getMinecraft().fontRenderer;
+		int l = -16777216 | (k & 16579836) >> 2 | k & -16777216;
+		int i1 = 176 - 8 - fonts.getStringWidth(s);
+		byte b0 = 67;
+		if (!fonts.getUnicodeFlag()) {
+			fonts.drawString(s, i1 - 5, b0 + 1 - 12, l);
+			fonts.drawString(s, i1 + 1 - 5, b0 - 12, l);
+			fonts.drawString(s, i1 + 1 - 5, b0 + 1 - 12, l);
 		}
+		fonts.drawString(s, i1 - 5, b0 - 12, k);
 		s = ((AnvilPair) this.arecipes.get(recipe)).textField;
 		if (!StringUtils.isNullOrEmpty(s))
 			fonts.drawStringWithShadow(s, 57, 13, 14737632);
@@ -113,18 +117,22 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 		super.drawBackground(recipe);
 		int k = 8453920;
 		String name = ((AnvilPair) this.arecipes.get(recipe)).textField;
-		String s = I18n.format("container.repair.cost",
-				new Object[] { Integer.valueOf(((AnvilPair) this.arecipes.get(recipe)).cost) });
+		String s = "";
+		if (((AnvilPair) this.arecipes.get(recipe)).cost > 0) {
+			s = I18n.format("container.repair.cost",
+					new Object[] { Integer.valueOf(((AnvilPair) this.arecipes.get(recipe)).cost) });
+		} else
+			s = I18n.format("container.repair.cost", new Object[] { 1 }) + " "
+					+ StatCollector.translateToLocal("container.repair.cost.always");
 		int offset = !StringUtils.isNullOrEmpty(name) ? 0 : 16;
 		GuiDraw.drawTexturedModalRect(54, 9, 0, offset + 166, 110, 16);
 		FontRenderer fonts = Minecraft.getMinecraft().fontRenderer;
-		if (((AnvilPair) this.arecipes.get(recipe)).cost > 0)
-			if (fonts.getUnicodeFlag()) {
-				int i1 = 176 - 8 - fonts.getStringWidth(s);
-				byte b0 = 67;
-				GuiDraw.drawRect(i1 - 8, b0 - 14, 176 - 12 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
-				GuiDraw.drawRect(i1 - 7, b0 - 13, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
-			}
+		if (fonts.getUnicodeFlag()) {
+			int i1 = 176 - 8 - fonts.getStringWidth(s);
+			byte b0 = 67;
+			GuiDraw.drawRect(i1 - 8, b0 - 14, 176 - 12 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
+			GuiDraw.drawRect(i1 - 7, b0 - 13, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
+		}
 		if (((AnvilPair) this.arecipes.get(recipe)).leftStackHasName) {
 			GuiDraw.drawTexturedModalRect(21, 35, 0, 198, 18, 18);
 		}

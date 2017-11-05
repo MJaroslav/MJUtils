@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.base.Predicates;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
+import mjaroslav.mcmods.mjutils.MJInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
@@ -49,19 +49,20 @@ public class FishingUtils {
 		case FISH: {
 			FishingHooks.removeFish(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(MJInfo.fishingDefaultFish, MJInfo.fishingRarityFish, category);
+				addItemToCategory(FishingConstants.defaultFish, FishingConstants.rarityFish, category);
 		}
 			break;
 		case JUNK: {
 			FishingHooks.removeJunk(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(MJInfo.fishingDefaultJunk, MJInfo.fishingRarityJunk, category);
+				addItemToCategory(FishingConstants.defaultJunk, FishingConstants.rarityJunk, category);
 		}
 			break;
 		case TREASURE: {
 			FishingHooks.removeTreasure(Predicates.not(new FishableStackEqualTo(itemStack)));
 			if (checkOnEmpty && getCategory(category).size() <= 0)
-				addItemToCategory(MJInfo.fishingDefaultTreasure, MJInfo.fishingRarityTreasure, category);
+				addItemToCategory(FishingConstants.defaultTreasure, FishingConstants.rarityTreasure,
+						category);
 		}
 			break;
 		}
@@ -74,9 +75,9 @@ public class FishingUtils {
 	 *            - itemStack that should be added.
 	 * @param weight
 	 *            - rarity of itemStack (You can use
-	 *            {@link MJInfo#fishingRarityFish},
-	 *            {@link MJInfo#fishingRarityJunk} and
-	 *            {@link MJInfo#fishingRarityTreasure} for defaults. values)
+	 *            {@link MJInfo#rarityFish},
+	 *            {@link MJInfo#rarityJunk} and
+	 *            {@link MJInfo#rarityTreasure} for defaults. values)
 	 * @param category
 	 *            - category in which the itemStack should be added.
 	 */
@@ -134,13 +135,14 @@ public class FishingUtils {
 		if (addDefaults)
 			switch (category) {
 			case FISH:
-				addItemToCategory(MJInfo.fishingDefaultFish, MJInfo.fishingRarityFish, category);
+				addItemToCategory(FishingConstants.defaultFish, FishingConstants.rarityFish, category);
 				break;
 			case JUNK:
-				addItemToCategory(MJInfo.fishingDefaultJunk, MJInfo.fishingRarityJunk, category);
+				addItemToCategory(FishingConstants.defaultJunk, FishingConstants.rarityJunk, category);
 				break;
 			case TREASURE:
-				addItemToCategory(MJInfo.fishingDefaultTreasure, MJInfo.fishingRarityTreasure, category);
+				addItemToCategory(FishingConstants.defaultTreasure, FishingConstants.rarityTreasure,
+						category);
 				break;
 			}
 	}

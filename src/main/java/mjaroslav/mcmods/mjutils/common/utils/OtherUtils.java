@@ -13,4 +13,8 @@ public class OtherUtils {
 			return "";
 		return stack.getDisplayName().replace(" ", "").toLowerCase();
 	}
+
+	public static String nameFormat(String name) {
+		return name.replace(" ", "").toLowerCase();
+	}
 }

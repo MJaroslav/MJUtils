@@ -19,7 +19,7 @@ public class AnvilRecipe {
 	public int cost;
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack) {
-		this(leftStack, rightStack, "", "", "", 1);
+		this(leftStack, rightStack, "", "", "", 0);
 	}
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, int cost) {
@@ -27,7 +27,7 @@ public class AnvilRecipe {
 	}
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String textField) {
-		this(leftStack, rightStack, "", "", textField, 1);
+		this(leftStack, rightStack, "", "", textField, 0);
 	}
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String textField, int cost) {
@@ -36,7 +36,7 @@ public class AnvilRecipe {
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String leftStackName, String rightStackName,
 			String textField) {
-		this(leftStack, rightStack, leftStackName, rightStackName, textField, 1);
+		this(leftStack, rightStack, leftStackName, rightStackName, textField, 0);
 	}
 
 	public AnvilRecipe(ItemStack leftStack, ItemStack rightStack, String leftStackName, String rightStackName,

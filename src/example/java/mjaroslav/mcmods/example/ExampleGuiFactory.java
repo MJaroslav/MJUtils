@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.example.mjutils;
+package mjaroslav.mcmods.example;
 
 import java.util.Set;
 
@@ -9,11 +9,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 
 public class ExampleGuiFactory implements IModGuiFactory {
-	public static class TestGuiScreen extends GuiConfig {
-
-		public TestGuiScreen(GuiScreen parentScreen) {
-			super(parentScreen, new ConfigElement(MJUtilsExample.config.getInstance().getCategory("gig")).getChildElements(),
-					"mjutilsexample", false, false, "MJUtilsExample");
+	public static class ExampleGuiScreen extends GuiConfig {
+		public ExampleGuiScreen(GuiScreen parentScreen) {
+			super(parentScreen,
+					new ConfigElement(ExampleMod.config.getInstance().getCategory(ExampleConfig.categoryExample))
+							.getChildElements(),
+					ExampleInfo.MODID, false, false, "config/" + ExampleInfo.MODID + ".cfg");
 		}
 
 	}
@@ -24,7 +25,7 @@ public class ExampleGuiFactory implements IModGuiFactory {
 
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return TestGuiScreen.class;
+		return ExampleGuiScreen.class;
 	}
 
 	@Override

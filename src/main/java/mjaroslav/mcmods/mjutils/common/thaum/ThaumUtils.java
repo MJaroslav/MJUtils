@@ -24,7 +24,7 @@ public class ThaumUtils {
 	 * Thaumcraft is loaded.
 	 */
 	public static void check() {
-		thaumExist = Loader.isModLoaded("thaumcraft");
+		thaumExist = Loader.isModLoaded("Thaumcraft");
 	}
 
 	public static boolean exist() {
@@ -38,7 +38,7 @@ public class ThaumUtils {
 	 *            - target.
 	 * @return Warp count, all types in one.
 	 */
-	public static int getWarp(EntityPlayer player, Object... args) {
+	public static int getWarp(EntityPlayer player) {
 		if (!thaumExist)
 			return 0;
 		int warp = Thaumcraft.proxy.getPlayerKnowledge().getWarpTotal(player.getCommandSenderName());

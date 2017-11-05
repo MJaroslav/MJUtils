@@ -1,6 +1,5 @@
 package mjaroslav.mcmods.mjutils.common.utils;
 
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import mjaroslav.mcmods.mjutils.lib.TimeConstants;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -19,6 +18,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Minecraft game utils.
@@ -230,16 +230,21 @@ public class GameUtils {
 	}
 
 	public static boolean itemStackNotNullAndEquals(ItemStack first, Item second) {
-		return first != null ? itemStacksEquals(first, new ItemStack(second, 1, MJInfo.anyMeta)) ? true : false : false;
+		return first != null
+				? itemStacksEquals(first, new ItemStack(second, 1, OreDictionary.WILDCARD_VALUE)) ? true : false
+				: false;
 	}
 
 	public static boolean itemStackNotNullAndEquals(ItemStack first, Block second) {
-		return first != null ? itemStacksEquals(first, new ItemStack(second, 1, MJInfo.anyMeta)) ? true : false : false;
+		return first != null
+				? itemStacksEquals(first, new ItemStack(second, 1, OreDictionary.WILDCARD_VALUE)) ? true : false
+				: false;
 	}
 
 	public static boolean itemStacksEquals(ItemStack itemStack, ItemStack itemStack1) {
 		return itemStack1.getItem() == itemStack.getItem()
-				&& (itemStack1.getItemDamage() == MJInfo.anyMeta || itemStack.getItemDamage() == MJInfo.anyMeta
+				&& (itemStack1.getItemDamage() == OreDictionary.WILDCARD_VALUE
+						|| itemStack.getItemDamage() == OreDictionary.WILDCARD_VALUE
 						|| itemStack1.getItemDamage() == itemStack.getItemDamage());
 	}
 }

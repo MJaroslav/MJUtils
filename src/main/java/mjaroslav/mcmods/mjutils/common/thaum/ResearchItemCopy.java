@@ -53,4 +53,9 @@ public class ResearchItemCopy extends ResearchItem {
 	public String getText() {
 		return StatCollector.translateToLocal("tc.research_text." + originalKey);
 	}
+
+	public ResearchItemCopy registerResearchItem() {
+		ResearchCategories.addResearch(this);
+		return this;
+	}
 }

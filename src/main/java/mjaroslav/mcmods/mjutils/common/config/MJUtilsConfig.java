@@ -2,9 +2,9 @@ package mjaroslav.mcmods.mjutils.common.config;
 
 import org.apache.logging.log4j.Logger;
 
+import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.MJUtils;
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase;
-import mjaroslav.mcmods.mjutils.lib.MJInfo;
 import net.minecraftforge.common.config.Configuration;
 
 /**
@@ -68,7 +68,7 @@ public class MJUtilsConfig extends ConfigurationBase {
 
 	@Override
 	public Logger getLogger() {
-		return MJUtils.log;
+		return MJUtils.LOG;
 	}
 
 	@Override
