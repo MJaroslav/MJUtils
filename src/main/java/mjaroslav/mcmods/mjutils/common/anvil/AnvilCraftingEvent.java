@@ -18,7 +18,7 @@ public class AnvilCraftingEvent extends Event {
 	public AnvilRecipe recipe;
 
 	/**
-	 * Result of crafting. Can be changed.
+	 * Result of crafting.
 	 */
 	public ItemStack result;
 
@@ -28,7 +28,7 @@ public class AnvilCraftingEvent extends Event {
 	 * @param recipe
 	 *            - current recipe.
 	 * @param result
-	 *            - result from crafting. Can be changed.
+	 *            - result from crafting.
 	 */
 	public AnvilCraftingEvent(AnvilRecipe recipe, ItemStack result) {
 		this.recipe = recipe.copy();

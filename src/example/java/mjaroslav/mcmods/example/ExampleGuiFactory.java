@@ -15,6 +15,8 @@ public class ExampleGuiFactory implements IModGuiFactory {
 					new ConfigElement(ExampleMod.config.getInstance().getCategory(ExampleConfig.categoryExample))
 							.getChildElements(),
 					ExampleInfo.MODID, false, false, "config/" + ExampleInfo.MODID + ".cfg");
+			// You should only use an instance of your configuration. In this
+			// example, it is in the main class.
 		}
 
 	}

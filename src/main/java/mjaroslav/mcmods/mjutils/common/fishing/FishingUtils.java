@@ -75,9 +75,9 @@ public class FishingUtils {
 	 *            - itemStack that should be added.
 	 * @param weight
 	 *            - rarity of itemStack (You can use
-	 *            {@link MJInfo#rarityFish},
-	 *            {@link MJInfo#rarityJunk} and
-	 *            {@link MJInfo#rarityTreasure} for defaults. values)
+	 *            {@link FishingConstants#rarityFish},
+	 *            {@link FishingConstants#rarityJunk} and
+	 *            {@link FishingConstants#rarityTreasure} for defaults. values)
 	 * @param category
 	 *            - category in which the itemStack should be added.
 	 */

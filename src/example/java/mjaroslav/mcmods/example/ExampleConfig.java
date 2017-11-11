@@ -6,14 +6,18 @@ import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase;
 import net.minecraftforge.common.config.Configuration;
 
 public class ExampleConfig extends ConfigurationBase {
+	/**
+	 * Instance (file) of configuration.
+	 */
 	private Configuration instance;
 
+	// Configuration categories.
 	public static final String categoryExample = "example";
 
+	// Configuration fields.
 	public static boolean iAmABoolean;
 	public static int iAmAnInteger;
 	public static String iAmTheString;
-
 	public static boolean useExampleMod;
 
 	@Override
@@ -28,6 +32,7 @@ public class ExampleConfig extends ConfigurationBase {
 
 	@Override
 	public void readFields() {
+		// You can use getInstance() or instance.
 		iAmABoolean = getInstance().getBoolean("iAmABoolean", categoryExample, true, "I am a boolean!");
 		iAmAnInteger = instance.getInt("iAmAnInteger", categoryExample, 1917, Integer.MIN_VALUE, Integer.MAX_VALUE,
 				"I am an integer!");

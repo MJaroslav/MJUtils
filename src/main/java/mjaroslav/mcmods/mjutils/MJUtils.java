@@ -25,11 +25,9 @@ public class MJUtils {
 	public static MJUtils instance;
 
 	public static MJUtilsConfig config = new MJUtilsConfig();
-
+	private static ModInitHandler initHandler = new ModInitHandler(MJInfo.MODID);
 	@SidedProxy(clientSide = MJInfo.CLIENTPROXY, serverSide = MJInfo.COMMONPROXY)
 	public static MJUtilsCommonProxy proxy = new MJUtilsCommonProxy();
-
-	private static ModInitHandler initHandler = new ModInitHandler(MJInfo.MODID);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

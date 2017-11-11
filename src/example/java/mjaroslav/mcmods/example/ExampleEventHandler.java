@@ -11,5 +11,6 @@ public class ExampleEventHandler {
 		if (!event.player.worldObj.isRemote)
 			event.player
 					.addChatComponentMessage(new ChatComponentText("Your warp: " + ThaumUtils.getWarp(event.player)));
+		// Indicates the amount of warp when entering the server.
 	}
 }

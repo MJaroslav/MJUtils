@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
 public @interface ModInitModule {
 	/**
 	 * Modification id.
+	 * 
+	 * @return Modification id.
 	 */
 	String modid();
 }

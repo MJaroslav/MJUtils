@@ -56,6 +56,8 @@ public class FuelUtils {
 	/**
 	 * Get the possible amount of fried items from the fuel.
 	 * 
+	 * @param fuel
+	 *            - fuel ItemStack.
 	 * @return The burning time of fuel in items (1F = 200 ticks).
 	 */
 	public static float getBurnCount(ItemStack fuel) {
