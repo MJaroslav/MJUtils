@@ -7,17 +7,16 @@ import java.lang.annotation.Target;
 
 /**
  * Used for modules registration. (Use with {@link IModModule}).
- * 
- * @author MJaroslav
  *
+ * @author MJaroslav
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ModInitModule {
-	/**
-	 * Modification id.
-	 * 
-	 * @return Modification id.
-	 */
-	String modid();
+    /**
+     * Modification id.
+     *
+     * @return Modification id.
+     */
+    String modid();
 }

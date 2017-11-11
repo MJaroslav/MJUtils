@@ -12,35 +12,35 @@ import mjaroslav.mcmods.mjutils.common.thaum.ThaumUtils;
 
 @ModInitModule(modid = MJInfo.MODID)
 public class ThaumModule implements IModModule {
-	@Override
-	public String getModuleName() {
-		return "Thaum";
-	}
+    @Override
+    public String getModuleName() {
+        return "Thaum";
+    }
 
-	@Override
-	public int getPriority() {
-		return 4;
-	}
+    @Override
+    public int getPriority() {
+        return 4;
+    }
 
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		ThaumUtils.check();
-		if (ThaumUtils.exist()) {
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        ThaumUtils.check();
+        if (ThaumUtils.exist()) {
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		if (ThaumUtils.exist()) {
-			FMLCommonHandler.instance().bus().register(new ThaumEventHandler());
-		}
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        if (ThaumUtils.exist()) {
+            FMLCommonHandler.instance().bus().register(new ThaumEventHandler());
+        }
+    }
 
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		if (ThaumUtils.exist()) {
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        if (ThaumUtils.exist()) {
 
-		}
-	}
+        }
+    }
 }

@@ -10,28 +10,28 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MJUtilsClientProxy extends MJUtilsCommonProxy {
-	@Override
-	public EntityPlayer getEntityPlayer(MessageContext ctx) {
-		return ctx.side == Side.CLIENT ? Minecraft.getMinecraft().thePlayer : super.getEntityPlayer(ctx);
-	}
+    @Override
+    public EntityPlayer getEntityPlayer(MessageContext ctx) {
+        return ctx.side == Side.CLIENT ? Minecraft.getMinecraft().thePlayer : super.getEntityPlayer(ctx);
+    }
 
-	@Override
-	public Minecraft getMinecraft() {
-		return Minecraft.getMinecraft();
-	}
+    @Override
+    public Minecraft getMinecraft() {
+        return Minecraft.getMinecraft();
+    }
 
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		super.preInit(event);
-	}
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		super.init(event);
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+    }
 
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
-	}
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+    }
 }
