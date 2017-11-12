@@ -11,28 +11,28 @@ import net.minecraft.item.ItemStack;
  */
 @Cancelable
 public class AnvilCraftingEvent extends Event {
-    /**
-     * Current anvil recipe.
-     */
-    public AnvilRecipe recipe;
+  /**
+   * Current anvil recipe.
+   */
+  public AnvilRecipe recipe;
 
-    /**
-     * Result of crafting.
-     */
-    public ItemStack result;
+  /**
+   * Result of crafting.
+   */
+  public ItemStack result;
 
-    /**
-     * @param recipe - current recipe.
-     * @param result - result from crafting.
-     * @see AnvilCraftingEvent
-     */
-    public AnvilCraftingEvent(AnvilRecipe recipe, ItemStack result) {
-        this.recipe = recipe.copy();
-        this.result = result.copy();
-    }
+  /**
+   * @param recipe - current recipe.
+   * @param result - result from crafting.
+   * @see AnvilCraftingEvent
+   */
+  public AnvilCraftingEvent(AnvilRecipe recipe, ItemStack result) {
+    this.recipe = recipe.copy();
+    this.result = result.copy();
+  }
 
-    @Override
-    public boolean isCancelable() {
-        return true;
-    }
+  @Override
+  public boolean isCancelable() {
+    return true;
+  }
 }
