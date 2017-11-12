@@ -6,37 +6,33 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Fired when an recipe forms in the anvil.
- * 
- * @author MJaroslav
  *
+ * @author MJaroslav
  */
 @Cancelable
 public class AnvilCraftingEvent extends Event {
-	/**
-	 * Current anvil recipe.
-	 */
-	public AnvilRecipe recipe;
+    /**
+     * Current anvil recipe.
+     */
+    public AnvilRecipe recipe;
 
-	/**
-	 * Result of crafting.
-	 */
-	public ItemStack result;
+    /**
+     * Result of crafting.
+     */
+    public ItemStack result;
 
-	/**
-	 * @see AnvilCraftingEvent
-	 * 
-	 * @param recipe
-	 *            - current recipe.
-	 * @param result
-	 *            - result from crafting.
-	 */
-	public AnvilCraftingEvent(AnvilRecipe recipe, ItemStack result) {
-		this.recipe = recipe.copy();
-		this.result = result.copy();
-	}
+    /**
+     * @param recipe - current recipe.
+     * @param result - result from crafting.
+     * @see AnvilCraftingEvent
+     */
+    public AnvilCraftingEvent(AnvilRecipe recipe, ItemStack result) {
+        this.recipe = recipe.copy();
+        this.result = result.copy();
+    }
 
-	@Override
-	public boolean isCancelable() {
-		return true;
-	}
+    @Override
+    public boolean isCancelable() {
+        return true;
+    }
 }

@@ -11,34 +11,31 @@ import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 
 /**
  * MJUtils fuel module.
- * 
- * @author MJaroslav
  *
+ * @author MJaroslav
  */
 @ModInitModule(modid = MJInfo.MODID)
 public class FuelModule implements IModModule {
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+    }
 
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        GameRegistry.registerFuelHandler(new FuelHandler());
+    }
 
-	}
+    @Override
+    public String getModuleName() {
+        return "Fuel";
+    }
 
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		GameRegistry.registerFuelHandler(new FuelHandler());
-	}
-
-	@Override
-	public String getModuleName() {
-		return "Fuel";
-	}
-	
-	@Override
-	public int getPriority() {
-		return 1;
-	}
+    @Override
+    public int getPriority() {
+        return 1;
+    }
 }
