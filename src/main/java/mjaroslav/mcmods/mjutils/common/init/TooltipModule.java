@@ -36,4 +36,14 @@ public class TooltipModule implements IModModule {
   public int getPriority() {
     return 2;
   }
+  
+  @Override
+  public String[] modDependencies() {
+    return null;
+  }
+
+  @Override
+  public boolean canLoad() {
+    return true;
+  }
 }

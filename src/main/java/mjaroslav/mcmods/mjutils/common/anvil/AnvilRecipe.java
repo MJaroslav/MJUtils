@@ -1,9 +1,8 @@
 package mjaroslav.mcmods.mjutils.common.anvil;
 
-import static mjaroslav.mcmods.mjutils.common.utils.GameUtils.itemStackNotNullAndEquals;
-import static mjaroslav.mcmods.mjutils.common.utils.OtherUtils.nameFormat;
-import static mjaroslav.mcmods.mjutils.common.utils.OtherUtils.string;
-import static net.minecraft.util.StringUtils.isNullOrEmpty;
+import static mjaroslav.mcmods.mjutils.common.utils.GameUtils.*;
+import static mjaroslav.utils.StringUtils.*;
+import static net.minecraft.util.StringUtils.*;
 
 import net.minecraft.item.ItemStack;
 

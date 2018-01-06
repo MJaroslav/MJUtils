@@ -46,4 +46,14 @@ public abstract class ProxyBase implements IModModule {
   public final int getPriority() {
     return 100;
   }
+  
+  @Override
+  public final String[] modDependencies() {
+    return null;
+  }
+
+  @Override
+  public final boolean canLoad() {
+    return true;
+  }
 }

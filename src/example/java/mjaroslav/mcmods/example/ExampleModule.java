@@ -61,4 +61,14 @@ public class ExampleModule implements IModModule {
   public int getPriority() {
     return 0;
   }
+
+  @Override
+  public String[] modDependencies() {
+    return new String[] { "Thaumcraft" };
+  }
+
+  @Override
+  public boolean canLoad() {
+    return true;
+  }
 }

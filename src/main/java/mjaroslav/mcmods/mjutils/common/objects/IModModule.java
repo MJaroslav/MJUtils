@@ -1,5 +1,6 @@
 package mjaroslav.mcmods.mjutils.common.objects;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.*;
 
 /**
@@ -48,4 +49,18 @@ public interface IModModule {
    * @param event - event from mail class.
    */
   public void postInit(FMLPostInitializationEvent event);
+
+  /**
+   * Will be checked in {@link Loader#isModLoaded(String)}.
+   * 
+   * @return Array of modid.
+   */
+  public String[] modDependencies();
+
+  /**
+   * Can load module.
+   * 
+   * @return Set true if you wont use it.
+   */
+  public boolean canLoad();
 }

@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.common.utils;
+package mjaroslav.utils;
 
 import java.awt.Color;
 

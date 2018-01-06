@@ -60,4 +60,14 @@ public class AnvilModule implements IModModule {
   public int getPriority() {
     return 0;
   }
+
+  @Override
+  public String[] modDependencies() {
+    return null;
+  }
+
+  @Override
+  public boolean canLoad() {
+    return true;
+  }
 }
