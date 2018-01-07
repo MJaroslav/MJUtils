@@ -14,36 +14,36 @@ import net.minecraftforge.common.MinecraftForge;
  */
 @ModInitModule(modid = MJInfo.MODID)
 public class TooltipModule implements IModModule {
-  @Override
-  public void preInit(FMLPreInitializationEvent event) {
-  }
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+    }
 
-  @Override
-  public void init(FMLInitializationEvent event) {
-    MinecraftForge.EVENT_BUS.register(new TooltipEventHandler());
-  }
+    @Override
+    public void init(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new TooltipEventHandler());
+    }
 
-  @Override
-  public void postInit(FMLPostInitializationEvent event) {
-  }
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+    }
 
-  @Override
-  public String getModuleName() {
-    return "Tooltip";
-  }
+    @Override
+    public String getModuleName() {
+        return "Tooltip";
+    }
 
-  @Override
-  public int getPriority() {
-    return 2;
-  }
-  
-  @Override
-  public String[] modDependencies() {
-    return null;
-  }
+    @Override
+    public int getPriority() {
+        return 2;
+    }
 
-  @Override
-  public boolean canLoad() {
-    return true;
-  }
+    @Override
+    public String[] modDependencies() {
+        return null;
+    }
+
+    @Override
+    public boolean canLoad() {
+        return true;
+    }
 }

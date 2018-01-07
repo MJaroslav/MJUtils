@@ -13,16 +13,16 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author MJaroslav
  */
 public class TooltipEventHandler {
-  @SubscribeEvent
-  public void itemTooltipEvent(ItemTooltipEvent event) {
-    boolean flag = event.showAdvancedItemTooltips && MJUtilsConfig.showOreDict;
-    boolean flag1 = MJUtilsConfig.showOreDictAlways;
-    if ((flag || flag1) && event.itemStack != null && event.itemStack.getItem() != null) {
-      event.toolTip.add("");
-      for (int id : OreDictionary.getOreIDs(event.itemStack)) {
-        event.toolTip
-            .add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString() + OreDictionary.getOreName(id));
-      }
+    @SubscribeEvent
+    public void itemTooltipEvent(ItemTooltipEvent event) {
+        boolean flag = event.showAdvancedItemTooltips && MJUtilsConfig.showOreDict;
+        boolean flag1 = MJUtilsConfig.showOreDictAlways;
+        if ((flag || flag1) && event.itemStack != null && event.itemStack.getItem() != null) {
+            event.toolTip.add("");
+            for (int id : OreDictionary.getOreIDs(event.itemStack)) {
+                event.toolTip.add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString()
+                        + OreDictionary.getOreName(id));
+            }
+        }
     }
-  }
 }

@@ -12,12 +12,12 @@ import net.minecraft.item.ItemStack;
  * @author MJaroslav
  */
 public class FuelHandler implements IFuelHandler {
-  @Override
-  public int getBurnTime(ItemStack fuel) {
-    for (Entry<ItemStack, Integer> entry : FuelUtils.getFuelMap().entrySet()) {
-      if (GameUtils.itemStacksEquals(fuel, entry.getKey()))
-        return entry.getValue();
+    @Override
+    public int getBurnTime(ItemStack fuel) {
+        for (Entry<ItemStack, Integer> entry : FuelUtils.getFuelMap().entrySet()) {
+            if (GameUtils.itemStacksEquals(fuel, entry.getKey()))
+                return entry.getValue();
+        }
+        return 0;
     }
-    return 0;
-  }
 }

@@ -11,20 +11,20 @@ import net.minecraft.client.gui.GuiRepair;
  * @author MJaroslav
  */
 public class NEIAnvilConfig implements IConfigureNEI {
-  @Override
-  public String getName() {
-    return MJInfo.NAME + ":Anvil";
-  }
+    @Override
+    public String getName() {
+        return MJInfo.NAME + ":Anvil";
+    }
 
-  @Override
-  public String getVersion() {
-    return MJInfo.VERSION;
-  }
+    @Override
+    public String getVersion() {
+        return MJInfo.VERSION;
+    }
 
-  @Override
-  public void loadConfig() {
-    API.registerRecipeHandler(new NEIAnvilRecipeHandler());
-    API.registerUsageHandler(new NEIAnvilRecipeHandler());
-    API.setGuiOffset(GuiRepair.class, 5, 11);
-  }
+    @Override
+    public void loadConfig() {
+        API.registerRecipeHandler(new NEIAnvilRecipeHandler());
+        API.registerUsageHandler(new NEIAnvilRecipeHandler());
+        API.setGuiOffset(GuiRepair.class, 5, 11);
+    }
 }

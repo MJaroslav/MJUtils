@@ -10,10 +10,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ModInitModule {
-  /**
-   * Modification id.
-   *
-   * @return Modification id.
-   */
-  String modid();
+    /**
+     * Modification id.
+     *
+     * @return Modification id.
+     */
+    String modid();
 }
