@@ -31,7 +31,7 @@ public class ExampleGuiFactory implements IModGuiFactory {
     public static class ExampleGuiScreen extends GuiConfig {
         public ExampleGuiScreen(GuiScreen parentScreen) {
             super(parentScreen,
-                    new ConfigElement(ExampleMod.config.getInstance().getCategory(ExampleConfig.categoryExample))
+                    new ConfigElement(ExampleMod.config.getInstance().getCategory(ExampleInfo.categoryExample))
                             .getChildElements(),
                     ExampleInfo.MODID, false, false, "config/" + ExampleInfo.MODID + ".cfg");
             // You should only use an instance of your configuration. In this

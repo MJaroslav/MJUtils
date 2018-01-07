@@ -20,7 +20,7 @@ public class ExampleMod {
     // The configuration wrapper.
     // public static ExampleConfig config = new ExampleConfig();
     public static ConfigurationHandler config = new ConfigurationHandler(ExampleInfo.MODID, LOG,
-            "mjaroslav.mcmods.mjutils.lib.ConfigFields");
+            "mjaroslav.mcmods.example.ExampleInfo");
 
     @SidedProxy(clientSide = ExampleInfo.CLIENTPROXY, serverSide = ExampleInfo.COMMONPROXY)
     public static ExampleCommonProxy proxy;
@@ -33,37 +33,39 @@ public class ExampleMod {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        ExampleMod.reader.setFile(new File(event.getModConfigurationDirectory() + "/example.json"));
-        ExampleMod.reader.init();
+        reader.setFile(new File(event.getModConfigurationDirectory() + "/example.json"));
+        reader.init();
         // Modules pre initialization.
-        ExampleMod.initHandler.preInit(event);
+        initHandler.preInit(event);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         // Modules initialization.
-        ExampleMod.initHandler.init(event);
+        initHandler.init(event);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         // Modules post initialization.
-        ExampleMod.initHandler.postInit(event);
+        initHandler.postInit(event);
     }
 
     @EventHandler
     public void constr(FMLConstructionEvent event) {
         // Find modification modules, before pre initialization.
-        ExampleMod.initHandler.findModules(event);
+        initHandler.findModules(event);
     }
 
     @EventHandler
     public void serverStopped(FMLServerStoppingEvent event) {
         // Records part of the configuration fields in the JSON file, when
         // server stopping.
-        ExampleMod.reader.json.iAmABooleanCopy = ExampleConfig.iAmABoolean;
-        ExampleMod.reader.json.iAmAnIntegerCopy = ExampleConfig.iAmAnInteger;
-        ExampleMod.reader.json.iAmTheStringCopy = ExampleConfig.iAmTheString;
-        ExampleMod.reader.write();
+        if (ExampleInfo.useExampleMod) {
+            reader.json.iAmABooleanCopy = ExampleInfo.iAmABoolean;
+            reader.json.iAmAnIntegerCopy = ExampleInfo.iAmAnInteger;
+            reader.json.iAmTheStringCopy = ExampleInfo.iAmTheString;
+            reader.write();
+        }
     }
 }
