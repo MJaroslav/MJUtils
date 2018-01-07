@@ -1,7 +1,7 @@
 package mjaroslav.mcmods.mjutils.common.anvil;
 
 import static mjaroslav.mcmods.mjutils.common.utils.GameUtils.*;
-import static mjaroslav.utils.StringUtils.*;
+import static mjaroslav.utils.JavaUtils.*;
 import static net.minecraft.util.StringUtils.*;
 
 import net.minecraft.item.ItemStack;

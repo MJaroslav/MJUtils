@@ -2,7 +2,7 @@ package mjaroslav.utils;
 
 import net.minecraft.item.ItemStack;
 
-public class StringUtils {
+public class JavaUtils {
 	public static boolean stringIsNotEmpty(String input) {
 		return input != null && input.length() > 0;
 	}
@@ -42,5 +42,25 @@ public class StringUtils {
 	 */
 	public static String nameFormat(String name) {
 		return name.replace(" ", "").toLowerCase();
+	}
+
+	public static float[] toFloatArray(double[] input) {
+		if (input != null) {
+			float[] result = new float[input.length];
+			for (int id = 0; id < input.length; id++)
+				result[id] = (float) input[id];
+			return result;
+		}
+		return new float[] {};
+	}
+
+	public static double[] toDoubleArray(float[] input) {
+		if (input != null) {
+			double[] result = new double[input.length];
+			for (int id = 0; id < input.length; id++)
+				result[id] = input[id];
+			return result;
+		}
+		return new double[] {};
 	}
 }
