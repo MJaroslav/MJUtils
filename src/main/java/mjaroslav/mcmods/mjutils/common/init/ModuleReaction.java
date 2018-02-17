@@ -1,14 +1,14 @@
 package mjaroslav.mcmods.mjutils.common.init;
 
 import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 import mjaroslav.mcmods.mjutils.common.reaction.ReactionEventHandler;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 import net.minecraftforge.common.MinecraftForge;
 
-@ModInitModule(modid = MJInfo.MODID)
-public class ReactionModule implements IModModule {
+@ModInitModule(modid = ModInfo.MODID)
+public class ModuleReaction implements IModModule {
     @Override
     public String getModuleName() {
         return "Reaction";

@@ -11,7 +11,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.MJInfo;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiRepair;
@@ -45,7 +45,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
         if ((outputId.equals("anvil")) && (super.getClass() == NEIAnvilRecipeHandler.class)) {
-            Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+            Map<AnvilRecipe, ItemStack> recipes = UtilsAnvil.getRecipes();
             for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet()) {
                 this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
             }
@@ -56,7 +56,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+        Map<AnvilRecipe, ItemStack> recipes = UtilsAnvil.getRecipes();
         for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
             if (areStacksSameType(recipe.getValue(), result))
                 this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
@@ -64,7 +64,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
-        Map<AnvilRecipe, ItemStack> recipes = AnvilUtils.getRecipes();
+        Map<AnvilRecipe, ItemStack> recipes = UtilsAnvil.getRecipes();
         for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
             if (areStacksSameTypeCrafting(recipe.getKey().leftStack, ingredient)) {
                 AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());
@@ -79,7 +79,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public String getGuiTexture() {
-        return new ResourceLocation(MJInfo.MODID, "textures/gui/nei/anvil.png").toString();
+        return new ResourceLocation(ModInfo.MODID, "textures/gui/nei/anvil.png").toString();
     }
 
     @Override

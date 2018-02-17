@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
  *
  * @author MJaroslav
  */
-public class AnvilUtils {
+public class UtilsAnvil {
     /**
-     * Anvil recipes map, use {@link AnvilUtils#getRecipes()}.
+     * Anvil recipes map, use {@link UtilsAnvil#getRecipes()}.
      */
     private static Map<AnvilRecipe, ItemStack> recipes = new HashMap<>();
 

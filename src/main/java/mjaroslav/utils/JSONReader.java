@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.common.json;
+package mjaroslav.utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

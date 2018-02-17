@@ -13,7 +13,7 @@ public class DependenciesBuilderApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Dependencies Builder");
+        primaryStage.setTitle("Dependencies Builder. WORK IN PROGRESS");
         primaryStage.setWidth(600);
         primaryStage.setHeight(400);
         primaryStage.setResizable(false);

@@ -3,7 +3,6 @@ package mjaroslav.mcmods.mjutils.common.thaum;
 import static thaumcraft.common.lib.events.EventHandlerRunic.*;
 
 import baubles.api.BaublesApi;
-import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -17,14 +16,14 @@ import thaumcraft.common.lib.network.playerdata.PacketSyncResearch;
  *
  * @author MJaroslav
  */
-public class ThaumUtils {
+public class UtilsThaum {
     private static boolean thaumExist = false;
 
     /**
      * Thaumcraft is loaded.
      */
-    public static void check() {
-        thaumExist = Loader.isModLoaded("Thaumcraft");
+    public static void checkMod() {
+        thaumExist = true;
     }
 
     public static boolean exist() {

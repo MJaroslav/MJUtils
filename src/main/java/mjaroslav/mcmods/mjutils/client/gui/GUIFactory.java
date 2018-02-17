@@ -6,14 +6,14 @@ import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.DummyConfigElement.DummyCategoryElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
-import mjaroslav.mcmods.mjutils.MJInfo;
-import mjaroslav.mcmods.mjutils.MJUtils;
-import mjaroslav.mcmods.mjutils.common.config.MJUtilsConfig;
+import mjaroslav.mcmods.mjutils.ModMJUtils;
+import mjaroslav.mcmods.mjutils.lib.ConfigInfo;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 
-public class MJUtilsGUIFactory implements IModGuiFactory {
+public class GUIFactory implements IModGuiFactory {
     @Override
     public void initialize(Minecraft minecraftInstance) {
     }
@@ -35,19 +35,17 @@ public class MJUtilsGUIFactory implements IModGuiFactory {
 
     public static class MJUtilsGUIConfig extends GuiConfig {
         public MJUtilsGUIConfig(GuiScreen parentScreen) {
-            super(parentScreen, getElements(), MJInfo.MODID, false, false, MJInfo.NAME);
+            super(parentScreen, getElements(), ModInfo.MODID, false, false, ModInfo.NAME);
         }
 
         public static List<IConfigElement> getElements() {
             ArrayList<IConfigElement> list = new ArrayList<IConfigElement>();
             List<IConfigElement> listCommon = new ConfigElement(
-                    MJUtils.config.getInstance().getCategory(MJUtilsConfig.CATEGORY_COMMON)).getChildElements();
+                    ModMJUtils.config.getInstance().getCategory(ConfigInfo.CATEGORY_COMMON)).getChildElements();
             List<IConfigElement> listClient = new ConfigElement(
-                    MJUtils.config.getInstance().getCategory(MJUtilsConfig.CATEGORY_CLIENT)).getChildElements();
-            list.add(
-                    new DummyCategoryElement(MJUtilsConfig.CATEGORY_COMMON, MJUtilsConfig.CATEGORY_COMMON, listCommon));
-            list.add(
-                    new DummyCategoryElement(MJUtilsConfig.CATEGORY_CLIENT, MJUtilsConfig.CATEGORY_CLIENT, listClient));
+                    ModMJUtils.config.getInstance().getCategory(ConfigInfo.CATEGORY_CLIENT)).getChildElements();
+            list.add(new DummyCategoryElement(ConfigInfo.CATEGORY_COMMON, ConfigInfo.CATEGORY_COMMON, listCommon));
+            list.add(new DummyCategoryElement(ConfigInfo.CATEGORY_CLIENT, ConfigInfo.CATEGORY_CLIENT, listClient));
             return list;
         }
     }

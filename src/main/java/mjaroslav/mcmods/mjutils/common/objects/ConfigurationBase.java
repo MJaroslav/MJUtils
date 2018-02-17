@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mjaroslav.mcmods.mjutils.MJInfo;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 import net.minecraftforge.common.config.Configuration;
 
 /**
@@ -111,7 +111,7 @@ public abstract class ConfigurationBase implements IModModule {
                 if (config.getModId().equals(newConfig.getModId()))
                     return false;
             list.add(newConfig);
-            MJInfo.LOG.info("Added configuration for " + newConfig.getModId());
+            ModInfo.LOG.info("Added configuration for " + newConfig.getModId());
             return true;
         }
 

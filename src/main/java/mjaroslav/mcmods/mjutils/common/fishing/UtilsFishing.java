@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.google.common.base.Predicates;
 
+import mjaroslav.mcmods.mjutils.lib.FishingConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
@@ -17,7 +18,7 @@ import net.minecraftforge.common.FishingHooks.FishableCategory;
  *
  * @author MJaroslav
  */
-public class FishingUtils {
+public class UtilsFishing {
     /**
      * Remove item from all categories.
      *

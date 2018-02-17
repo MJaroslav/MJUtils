@@ -10,9 +10,9 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.common.json.JSONReader;
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationHandler;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
+import mjaroslav.utils.JSONReader;
 
 @Mod(name = ExampleInfo.NAME, modid = ExampleInfo.MODID, version = ExampleInfo.VERSION, guiFactory = ExampleInfo.GUIFACTORY, dependencies = ExampleInfo.DEPENDENCIES)
 public class ExampleMod {

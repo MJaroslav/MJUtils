@@ -2,13 +2,14 @@ package mjaroslav.mcmods.mjutils.common.init;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.MJInfo;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
 import mjaroslav.mcmods.mjutils.common.thaum.ThaumEventHandler;
+import mjaroslav.mcmods.mjutils.common.thaum.UtilsThaum;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 
-@ModInitModule(modid = MJInfo.MODID)
-public class ThaumModule implements IModModule {
+@ModInitModule(modid = ModInfo.MODID)
+public class ModuleThaum implements IModModule {
     @Override
     public String getModuleName() {
         return "Thaum";
@@ -21,6 +22,7 @@ public class ThaumModule implements IModModule {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        UtilsThaum.checkMod();
     }
 
     @Override

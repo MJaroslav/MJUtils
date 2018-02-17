@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 @Cancelable
-public class AngryPigZombieByBlockBreaking extends Event {
+public class AngryPigZombieByBlockBreakingEvent extends Event {
     public World world;
     public Block block;
     public int meta;
@@ -16,7 +16,7 @@ public class AngryPigZombieByBlockBreaking extends Event {
     public int z;
     public EntityPlayer player;
 
-    public AngryPigZombieByBlockBreaking(Block block, int meta, EntityPlayer player, int x, int y, int z, World world) {
+    public AngryPigZombieByBlockBreakingEvent(Block block, int meta, EntityPlayer player, int x, int y, int z, World world) {
         this.block = block;
         this.world = world;
         this.meta = meta;

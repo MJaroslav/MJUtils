@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.common.fishing;
+package mjaroslav.mcmods.mjutils.lib;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

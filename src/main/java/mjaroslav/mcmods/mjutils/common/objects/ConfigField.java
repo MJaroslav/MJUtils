@@ -115,13 +115,10 @@ public @interface ConfigField {
      */
     String[] defaultStringArray() default {};
 
-    /**
-     * It should be true if you use {@link #listLengthFixed()},
-     * {@link #maxListLength()} or {@link #validValues()}.
-     * 
-     * @return Default false.
-     */
-    boolean advanced() default false;
+
+    boolean requiresWorldRestart() default false;
+    
+    boolean requiresMcRestart() default false;
 
     /**
      * Fixes the size of the array. The size of the standard value is used.

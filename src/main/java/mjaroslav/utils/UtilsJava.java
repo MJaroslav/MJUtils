@@ -2,7 +2,7 @@ package mjaroslav.utils;
 
 import net.minecraft.item.ItemStack;
 
-public class JavaUtils {
+public class UtilsJava {
     public static boolean stringIsNotEmpty(String input) {
         return input != null && input.length() > 0;
     }

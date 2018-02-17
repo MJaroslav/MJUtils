@@ -1,7 +1,7 @@
 package mjaroslav.mcmods.mjutils.common.anvil;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mjaroslav.utils.JavaUtils;
+import mjaroslav.utils.UtilsJava;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -9,9 +9,9 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 public class AnvilEventHandler {
     @SubscribeEvent
     public void onAnvilUpdateEvent(AnvilUpdateEvent event) {
-        AnvilRecipe recipe = AnvilUtils.getRecipe(event.left, event.right, JavaUtils.nameFormat(event.name), -1);
+        AnvilRecipe recipe = UtilsAnvil.getRecipe(event.left, event.right, UtilsJava.nameFormat(event.name), -1);
         if (recipe != null) {
-            ItemStack result = AnvilUtils.getResult(recipe);
+            ItemStack result = UtilsAnvil.getResult(recipe);
             AnvilCraftingEvent newEvent = new AnvilCraftingEvent(recipe, result);
             if (MinecraftForge.EVENT_BUS.post(newEvent))
                 return;

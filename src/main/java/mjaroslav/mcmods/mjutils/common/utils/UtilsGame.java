@@ -22,7 +22,7 @@ import net.minecraftforge.oredict.OreDictionary;
  *
  * @author MJaroslav
  */
-public class GameUtils {
+public class UtilsGame {
     /**
      * Inaccurate copy of the method of multi-purpose attack from Thaumcraft.
      *

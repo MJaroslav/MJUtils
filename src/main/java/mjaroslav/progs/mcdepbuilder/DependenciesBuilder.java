@@ -2,7 +2,7 @@ package mjaroslav.progs.mcdepbuilder;
 
 import java.util.ArrayList;
 
-import mjaroslav.utils.JavaUtils;
+import mjaroslav.utils.UtilsJava;
 
 public class DependenciesBuilder {
     public ArrayList<DependenceInfo> list = new ArrayList<DependenceInfo>();
@@ -42,15 +42,15 @@ public class DependenciesBuilder {
     }
 
     public void add(DependenceInfo dependence) {
-        if (dependence != null && JavaUtils.stringIsNotEmpty(dependence.modid))
+        if (dependence != null && UtilsJava.stringIsNotEmpty(dependence.modid))
             if (!contains(dependence))
                 list.add(dependence);
     }
 
     public boolean contains(DependenceInfo dependence) {
-        if (dependence != null && JavaUtils.stringIsNotEmpty(dependence.modid))
+        if (dependence != null && UtilsJava.stringIsNotEmpty(dependence.modid))
             for (DependenceInfo check : list)
-                if (JavaUtils.stringIsNotEmpty(check.modid))
+                if (UtilsJava.stringIsNotEmpty(check.modid))
                     if (check.modid.equals(dependence.modid))
                         return true;
         return false;
@@ -90,7 +90,7 @@ public class DependenciesBuilder {
 
         public DependenceInfo(String modid, PriorityType priorityType, boolean isRequired,
                 VersionType versionSensitivity, String version) {
-            if (JavaUtils.stringIsNotEmpty(modid)) {
+            if (UtilsJava.stringIsNotEmpty(modid)) {
                 this.modid = modid;
             } else
                 throw new NullPointerException("Mod id not must be null.");
@@ -101,7 +101,7 @@ public class DependenciesBuilder {
             this.isRequired = isRequired;
             if (versionSensitivity != null && !versionSensitivity.equals(VersionType.NONE)) {
                 this.versionSensitivity = versionSensitivity;
-                if (JavaUtils.stringIsNotEmpty(version)) {
+                if (UtilsJava.stringIsNotEmpty(version)) {
                     this.version = version;
                 } else
                     throw new NullPointerException("If you use version, you must select not null value of version.");
@@ -159,11 +159,11 @@ public class DependenciesBuilder {
 
         public String build(boolean isRequired) {
             if (isRequired) {
-                if (JavaUtils.stringIsNotEmpty(value))
+                if (UtilsJava.stringIsNotEmpty(value))
                     return "required-" + value + ":";
                 else
                     throw new IllegalArgumentException("Priority type is null");
-            } else if (JavaUtils.stringIsNotEmpty(value))
+            } else if (UtilsJava.stringIsNotEmpty(value))
                 return value + ":";
             else
                 throw new IllegalArgumentException("Priority type is null");
@@ -180,7 +180,7 @@ public class DependenciesBuilder {
         }
 
         public String build(String value) {
-            if (JavaUtils.stringIsNotEmpty(value) && JavaUtils.stringIsNotEmpty(suffix)) {
+            if (UtilsJava.stringIsNotEmpty(value) && UtilsJava.stringIsNotEmpty(suffix)) {
                 return "@[" + value + suffix;
             } else
                 return "";

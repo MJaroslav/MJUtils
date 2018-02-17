@@ -1,40 +1,40 @@
 package mjaroslav.mcmods.mjutils.common.init;
 
 import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.MJInfo;
+import cpw.mods.fml.common.registry.GameRegistry;
+import mjaroslav.mcmods.mjutils.common.fuel.FuelHandler;
 import mjaroslav.mcmods.mjutils.common.objects.IModModule;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitModule;
-import mjaroslav.mcmods.mjutils.common.tooltip.TooltipEventHandler;
-import net.minecraftforge.common.MinecraftForge;
+import mjaroslav.mcmods.mjutils.lib.ModInfo;
 
 /**
- * MJUtils tooltip module.
+ * MJUtils fuel module.
  *
  * @author MJaroslav
  */
-@ModInitModule(modid = MJInfo.MODID)
-public class TooltipModule implements IModModule {
+@ModInitModule(modid = ModInfo.MODID)
+public class ModuleFuel implements IModModule {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new TooltipEventHandler());
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
+        GameRegistry.registerFuelHandler(new FuelHandler());
     }
 
     @Override
     public String getModuleName() {
-        return "Tooltip";
+        return "Fuel";
     }
 
     @Override
     public int getPriority() {
-        return 2;
+        return 1;
     }
 
     @Override

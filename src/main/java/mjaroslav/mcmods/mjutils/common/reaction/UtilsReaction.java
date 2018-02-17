@@ -12,7 +12,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ReactionUtils {
+public class UtilsReaction {
     private static ArrayList<ItemStack> pigAngryBlockList = new ArrayList<ItemStack>();
 
     public static void addBlockToPigAngryList(Block block, int meta) {

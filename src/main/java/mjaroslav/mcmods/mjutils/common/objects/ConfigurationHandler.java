@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.Logger;
 
-import mjaroslav.utils.JavaUtils;
+import mjaroslav.utils.UtilsJava;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler extends ConfigurationBase {
@@ -27,6 +27,14 @@ public class ConfigurationHandler extends ConfigurationBase {
             logger.error("Config class (" + className + ") for \"" + modid + "\" not found!");
             e.printStackTrace();
         }
+    }
+
+    public ConfigurationHandler(String modid, Logger logger, Class clazz) {
+        super();
+        this.modid = modid;
+        this.className = clazz.getName();
+        this.logger = logger;
+        fieldClass = clazz;
     }
 
     @Override
@@ -64,63 +72,69 @@ public class ConfigurationHandler extends ConfigurationBase {
     // Parse (and set) field from info.
     public static void parseField(Field field, ConfigField info, Configuration instance) {
         try {
-            String name = JavaUtils.stringIsEmpty(info.customName()) ? field.getName() : info.customName();
+            String name = "";
+            if (UtilsJava.stringIsNotEmpty(info.customName()))
+                name = info.customName();
+            else {
+                name = field.getName();
+                if (Character.isUpperCase(name.charAt(0)))
+                    name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+                name = name.replaceAll("[A-Z]", "_$0").toLowerCase();
+            }
+            boolean flag = true;
+            Object value = null;
             switch (FieldType.get(field)) {
             case FLOAT:
-                field.setFloat(null, instance.getFloat(name, info.category(), info.defaultFloat(), info.minFloat(),
-                        info.maxFloat(), info.comment()));
+                value = (float) instance
+                        .get(info.category(), name, info.defaultFloat(), info.comment(), info.minFloat(),
+                                info.maxFloat())
+                        .setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getDouble();
                 break;
             case FLOATARRAY:
-                if (info.advanced())
-                    field.set(null,
-                            JavaUtils.toFloatArray(instance.get(info.category(), name,
-                                    JavaUtils.toDoubleArray(info.defaultFloatArray()), info.comment(), info.minFloat(),
-                                    info.maxFloat(), info.listLengthFixed(), info.maxListLength()).getDoubleList()));
-                else
-                    field.set(null,
-                            JavaUtils.toFloatArray(instance
-                                    .get(info.category(), name, JavaUtils.toDoubleArray(info.defaultFloatArray()),
-                                            info.comment(), info.minFloat(), info.maxFloat())
-                                    .getDoubleList()));
+                value = UtilsJava.toFloatArray(instance
+                        .get(info.category(), name, UtilsJava.toDoubleArray(info.defaultFloatArray()), info.comment(),
+                                info.minFloat(), info.maxFloat(), info.listLengthFixed(), info.maxListLength())
+                        .setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getDoubleList());
                 break;
             case STRING:
-                field.set(null, instance.getString(name, info.category(), info.defaultString(), info.comment()));
+                value = instance.get(info.category(), name, info.defaultString(), info.comment(), info.validValues())
+                        .setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getString();
                 break;
             case STRINGARRAY:
-                if (info.advanced())
-                    field.set(null, instance.getStringList(name, info.category(), info.defaultStringArray(),
-                            info.comment(), info.validValues()));
-                else
-                    field.set(null,
-                            instance.getStringList(name, info.category(), info.defaultStringArray(), info.comment()));
+                value = instance.get(info.category(), name, info.defaultStringArray(), info.comment())
+                        .setMaxListLength(info.maxListLength()).setIsListLengthFixed(info.listLengthFixed())
+                        .setValidValues(info.validValues()).setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getStringList();
                 break;
             case INT:
-                field.setInt(null, instance.getInt(name, info.category(), info.defaultInt(), info.minInt(),
-                        info.maxInt(), info.comment()));
+                value = instance.get(info.category(), name, info.defaultInt(), info.comment())
+                        .setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getInt();
                 break;
             case INTARRAY:
-                if (info.advanced())
-                    field.set(null, instance.get(info.category(), name, info.defaultIntArray(), info.comment(),
-                            info.minInt(), info.maxInt(), info.listLengthFixed(), info.maxListLength()).getIntList());
-                else
-                    field.set(null, instance.get(info.category(), name, info.defaultIntArray(), info.comment(),
-                            info.minInt(), info.maxInt()).getIntList());
+                value = instance.get(info.category(), name, info.defaultIntArray(), info.comment(), info.minInt(),
+                        info.maxInt(), info.listLengthFixed(), info.maxListLength()).getIntList();
                 break;
             case BOOLEAN:
-                field.setBoolean(null,
-                        instance.getBoolean(name, info.category(), info.defaultBoolean(), info.comment()));
+                value = instance.get(info.category(), name, info.defaultBoolean(), info.comment())
+                        .setRequiresMcRestart(info.requiresMcRestart())
+                        .setRequiresWorldRestart(info.requiresWorldRestart()).getBoolean();
                 break;
             case BOOLEANARRAY:
-                if (info.advanced())
-                    field.set(null, instance.get(info.category(), name, info.defaultBooleanArray(), info.comment())
-                            .getBooleanList());
-                else
-                    field.set(null, instance.get(info.category(), name, info.defaultBooleanArray(), info.comment(),
-                            info.listLengthFixed(), info.maxListLength()).getBooleanList());
+                value = instance.get(info.category(), name, info.defaultBooleanArray(), info.comment())
+                        .setIsListLengthFixed(info.listLengthFixed()).setMaxListLength(info.maxListLength())
+                        .setRequiresWorldRestart(info.requiresWorldRestart())
+                        .setRequiresMcRestart(info.requiresMcRestart()).getBooleanList();
                 break;
             default:
+                flag = false;
                 break;
             }
+            if (flag)
+                field.set(null, value);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }

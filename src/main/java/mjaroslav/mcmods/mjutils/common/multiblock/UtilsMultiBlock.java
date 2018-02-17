@@ -11,7 +11,7 @@ import net.minecraft.world.World;
  *
  * @author MJaroslav
  */
-public class MultiBlockUtils {
+public class UtilsMultiBlock {
     public static ItemStack replaceBlock(World world, int x, int y, int z, Block block, int meta) {
         ItemStack temp = new ItemStack(Blocks.air, 1, 0);
         if (!world.isRemote) {

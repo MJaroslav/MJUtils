@@ -7,7 +7,7 @@ import java.awt.Color;
  *
  * @author MJaroslav
  */
-public class ColorUtils {
+public class UtilsColor {
     /**
      * Change hex color value to int.
      *

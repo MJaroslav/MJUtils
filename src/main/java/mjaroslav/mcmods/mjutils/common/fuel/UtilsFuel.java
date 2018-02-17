@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.mjutils.common.fuel;
 
-import static mjaroslav.mcmods.mjutils.common.utils.GameUtils.*;
+import static mjaroslav.mcmods.mjutils.common.utils.UtilsGame.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,9 @@ import net.minecraft.item.ItemStack;
  *
  * @author MJaroslav
  */
-public class FuelUtils {
+public class UtilsFuel {
     /**
-     * Fuel map, use {@link FuelUtils#getFuelMap()}.
+     * Fuel map, use {@link UtilsFuel#getFuelMap()}.
      */
     private static Map<ItemStack, Integer> fuelMap = new HashMap<>();
 

@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.mjutils.common.thaum;
 
-import static mjaroslav.mcmods.mjutils.common.thaum.ThaumUtils.*;
+import static mjaroslav.mcmods.mjutils.common.thaum.UtilsThaum.*;
 
 import java.util.ArrayList;
 
