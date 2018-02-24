@@ -14,6 +14,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -23,6 +24,35 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author MJaroslav
  */
 public class UtilsGame {
+    public static int getSideFromMeta(int meta, int side) {
+        switch (ForgeDirection.getOrientation(meta)) {
+        case EAST:
+            return side == 4 ? 2 : side == 2 ? 4 : side == 3 ? 5 : side == 5 ? 3 : side;
+        case NORTH:
+            return side == 3 ? 2 : side == 2 ? 3 : side;
+        case WEST:
+            return side == 4 ? 3 : side == 3 ? 4 : side == 2 ? 5 : side == 5 ? 2 : side;
+        case SOUTH:
+            return side == 4 ? 5 : side == 5 ? 4 : side;
+        default:
+            return side;
+        }
+    }
+
+    public static int getMetaFromRotation(EntityLivingBase placer) {
+        switch (MathHelper.floor_double((placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) {
+        case 0:
+            return ForgeDirection.SOUTH.ordinal();
+        case 1:
+            return ForgeDirection.WEST.ordinal();
+        case 2:
+            return ForgeDirection.NORTH.ordinal();
+        case 3:
+            return ForgeDirection.EAST.ordinal();
+        }
+        return 0;
+    }
+
     /**
      * Inaccurate copy of the method of multi-purpose attack from Thaumcraft.
      *

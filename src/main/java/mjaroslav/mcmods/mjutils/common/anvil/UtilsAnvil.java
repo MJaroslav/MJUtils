@@ -54,9 +54,8 @@ public class UtilsAnvil {
         Iterator iterator = recipes.entrySet().iterator();
         Entry entry;
         do {
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext())
                 return null;
-            }
             entry = (Entry) iterator.next();
         } while (!((AnvilRecipe) entry.getKey()).equals(left, right, name, cost));
         return ((AnvilRecipe) entry.getKey());
@@ -77,9 +76,8 @@ public class UtilsAnvil {
         Iterator iterator = recipes.entrySet().iterator();
         Entry entry;
         do {
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext())
                 return null;
-            }
             entry = (Entry) iterator.next();
         } while (!((AnvilRecipe) entry.getKey()).equals(left, right, name, -1));
         return (ItemStack) entry.getValue();
@@ -96,9 +94,8 @@ public class UtilsAnvil {
         Iterator iterator = recipes.entrySet().iterator();
         Entry entry;
         do {
-            if (!iterator.hasNext()) {
+            if (!iterator.hasNext())
                 return null;
-            }
             entry = (Entry) iterator.next();
         } while (!((AnvilRecipe) entry.getKey()).equals(recipe));
         return (ItemStack) entry.getValue();

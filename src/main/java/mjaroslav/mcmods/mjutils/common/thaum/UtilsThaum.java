@@ -22,7 +22,7 @@ public class UtilsThaum {
     /**
      * Thaumcraft is loaded.
      */
-    public static void checkMod() {
+    public static void activate() {
         thaumExist = true;
     }
 
@@ -37,18 +37,40 @@ public class UtilsThaum {
      *            - target.
      * @return Warp count, all types in one.
      */
-    public static int getWarp(EntityPlayer player) {
+    public static int getWarpTotal(EntityPlayer player) {
         if (!thaumExist)
             return 0;
-        int warp = Thaumcraft.proxy.getPlayerKnowledge().getWarpTotal(player.getCommandSenderName());
+        return getWarpInventory(player) + getWarpPerm(player) + getWarpSticky(player) + getWarpTemp(player);
+    }
+
+    public static int getWarpSticky(EntityPlayer player) {
+        if (!thaumExist)
+            return 0;
+        return Thaumcraft.proxy.getPlayerKnowledge().getWarpSticky(player.getCommandSenderName());
+    }
+
+    public static int getWarpTemp(EntityPlayer player) {
+        if (!thaumExist)
+            return 0;
+        return Thaumcraft.proxy.getPlayerKnowledge().getWarpTemp(player.getCommandSenderName());
+    }
+
+    public static int getWarpPerm(EntityPlayer player) {
+        if (!thaumExist)
+            return 0;
+        return Thaumcraft.proxy.getPlayerKnowledge().getWarpPerm(player.getCommandSenderName());
+    }
+
+    public static int getWarpInventory(EntityPlayer player) {
+        if (!thaumExist)
+            return 0;
+        int warp = 0;
         warp += getFinalWarp(player.getCurrentEquippedItem(), player);
-        for (int a = 0; a < 4; ++a) {
+        for (int a = 0; a < 4; ++a)
             warp += getFinalWarp(player.inventory.armorItemInSlot(a), player);
-        }
         IInventory baubles = BaublesApi.getBaubles(player);
-        for (int a = 0; a < 4; ++a) {
+        for (int a = 0; a < 4; ++a)
             warp += getFinalWarp(baubles.getStackInSlot(a), player);
-        }
         return warp;
     }
 

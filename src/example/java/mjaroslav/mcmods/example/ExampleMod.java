@@ -19,8 +19,7 @@ public class ExampleMod {
     public static Logger LOG = LogManager.getLogger(ExampleInfo.NAME);
     // The configuration wrapper.
     // public static ExampleConfig config = new ExampleConfig();
-    public static ConfigurationHandler config = new ConfigurationHandler(ExampleInfo.MODID, LOG,
-            "mjaroslav.mcmods.example.ExampleInfo");
+    public static ConfigurationHandler config = new ConfigurationHandler(ExampleInfo.MODID, LOG);
 
     @SidedProxy(clientSide = ExampleInfo.CLIENTPROXY, serverSide = ExampleInfo.COMMONPROXY)
     public static ExampleCommonProxy proxy;

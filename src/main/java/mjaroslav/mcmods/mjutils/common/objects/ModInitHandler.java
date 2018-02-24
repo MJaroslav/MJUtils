@@ -85,6 +85,8 @@ public class ModInitHandler {
         modules.clear();
         logger.log(Level.INFO, "Looking for modules for \"" + modid + "\"");
         iterator = event.getASMHarvestedData().getAll(ModInitModule.class.getName()).iterator();
+        if (config instanceof ConfigurationHandler)
+            ((ConfigurationHandler) config).findCategories(event);
     }
 
     private Iterator<ASMData> iterator;

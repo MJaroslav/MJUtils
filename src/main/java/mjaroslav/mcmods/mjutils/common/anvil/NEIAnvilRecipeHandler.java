@@ -46,12 +46,10 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
     public void loadCraftingRecipes(String outputId, Object... results) {
         if ((outputId.equals("anvil")) && (super.getClass() == NEIAnvilRecipeHandler.class)) {
             Map<AnvilRecipe, ItemStack> recipes = UtilsAnvil.getRecipes();
-            for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet()) {
-                this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
-            }
-        } else {
+            for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
+                arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
+        } else
             super.loadCraftingRecipes(outputId, results);
-        }
     }
 
     @Override
@@ -59,7 +57,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
         Map<AnvilRecipe, ItemStack> recipes = UtilsAnvil.getRecipes();
         for (Map.Entry<AnvilRecipe, ItemStack> recipe : recipes.entrySet())
             if (areStacksSameType(recipe.getValue(), result))
-                this.arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
+                arecipes.add(new AnvilPair(recipe.getKey(), recipe.getValue()));
     }
 
     @Override
@@ -69,11 +67,11 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
             if (areStacksSameTypeCrafting(recipe.getKey().leftStack, ingredient)) {
                 AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());
                 arecipe.setIngredientPermutation(Arrays.asList(arecipe.leftStack, arecipe.rightStack), ingredient);
-                this.arecipes.add(arecipe);
+                arecipes.add(arecipe);
             } else if (areStacksSameTypeCrafting(recipe.getKey().rightStack, ingredient)) {
                 AnvilPair arecipe = new AnvilPair(recipe.getKey(), recipe.getValue());
                 arecipe.setIngredientPermutation(Arrays.asList(arecipe.leftStack, arecipe.rightStack), ingredient);
-                this.arecipes.add(arecipe);
+                arecipes.add(arecipe);
             }
     }
 
@@ -86,9 +84,9 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
     public void drawExtras(int recipe) {
         int k = 8453920;
         String s;
-        if (((AnvilPair) arecipes.get(recipe)).cost > 0) {
+        if (((AnvilPair) arecipes.get(recipe)).cost > 0)
             s = I18n.format("container.repair.cost", ((AnvilPair) arecipes.get(recipe)).cost);
-        } else
+        else
             s = I18n.format("container.repair.cost", 1) + " "
                     + StatCollector.translateToLocal("container.repair.cost.always");
         FontRenderer fonts = Minecraft.getMinecraft().fontRenderer;
@@ -101,7 +99,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
             fonts.drawString(s, i1 + 1 - 5, b0 + 1 - 12, l);
         }
         fonts.drawString(s, i1 - 5, b0 - 12, k);
-        s = ((AnvilPair) this.arecipes.get(recipe)).textField;
+        s = ((AnvilPair) arecipes.get(recipe)).textField;
         if (!isNullOrEmpty(s))
             fonts.drawStringWithShadow(s, 57, 13, 14737632);
     }
@@ -109,11 +107,11 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
     @Override
     public void drawBackground(int recipe) {
         super.drawBackground(recipe);
-        String name = ((AnvilPair) this.arecipes.get(recipe)).textField;
+        String name = ((AnvilPair) arecipes.get(recipe)).textField;
         String s;
-        if (((AnvilPair) arecipes.get(recipe)).cost > 0) {
+        if (((AnvilPair) arecipes.get(recipe)).cost > 0)
             s = I18n.format("container.repair.cost", ((AnvilPair) arecipes.get(recipe)).cost);
-        } else
+        else
             s = I18n.format("container.repair.cost", 1) + " "
                     + StatCollector.translateToLocal("container.repair.cost.always");
         int offset = !isNullOrEmpty(name) ? 0 : 16;
@@ -125,12 +123,10 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
             drawRect(i1 - 8, b0 - 14, 176 - 12 - (i1 - 8), b0 - 1 - (b0 - 13), -16777216);
             drawRect(i1 - 7, b0 - 13, 176 - 13 - (i1 - 7), b0 - 2 - (b0 - 12), -12895429);
         }
-        if (((AnvilPair) arecipes.get(recipe)).leftStackHasName) {
+        if (((AnvilPair) arecipes.get(recipe)).leftStackHasName)
             drawTexturedModalRect(21, 35, 0, 198, 18, 18);
-        }
-        if (((AnvilPair) arecipes.get(recipe)).rightStackHasName) {
+        if (((AnvilPair) arecipes.get(recipe)).rightStackHasName)
             drawTexturedModalRect(70, 35, 0, 198, 18, 18);
-        }
     }
 
     @Override
@@ -157,28 +153,28 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
             ItemStack left = recipe.leftStack.copy();
             if (!isNullOrEmpty(recipe.leftStackName)) {
                 left.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.leftStackName);
-                this.leftStackHasName = true;
+                leftStackHasName = true;
             }
             ItemStack right = recipe.rightStack.copy();
             if (!isNullOrEmpty(recipe.rightStackName)) {
                 right.setStackDisplayName(ChatFormatting.UNDERLINE.toString() + recipe.rightStackName);
-                this.rightStackHasName = true;
+                rightStackHasName = true;
             }
-            this.leftStack = new PositionedStack(left, 22, 36);
-            this.rightStack = new PositionedStack(right, 71, 36);
+            leftStack = new PositionedStack(left, 22, 36);
+            rightStack = new PositionedStack(right, 71, 36);
             this.result = new PositionedStack(result, 129, 36);
-            this.cost = recipe.cost;
-            this.textField = recipe.textField;
+            cost = recipe.cost;
+            textField = recipe.textField;
         }
 
         @Override
         public List<PositionedStack> getIngredients() {
-            return Arrays.asList(this.leftStack, this.rightStack);
+            return Arrays.asList(leftStack, rightStack);
         }
 
         @Override
         public PositionedStack getResult() {
-            return this.result;
+            return result;
         }
     }
 }

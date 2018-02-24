@@ -10,14 +10,13 @@ import mjaroslav.mcmods.mjutils.common.CommonProxy;
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationBase.ConfigurationEventHandler;
 import mjaroslav.mcmods.mjutils.common.objects.ConfigurationHandler;
 import mjaroslav.mcmods.mjutils.common.objects.ModInitHandler;
-import mjaroslav.mcmods.mjutils.lib.ConfigInfo;
 
 @Mod(modid = MODID, name = NAME, version = VERSION, guiFactory = GUIFACTORY, dependencies = "")
 public class ModMJUtils {
     @Instance(MODID)
     public static ModMJUtils instance;
 
-    public static ConfigurationHandler config = new ConfigurationHandler(MODID, LOG, ConfigInfo.class);
+    public static ConfigurationHandler config = new ConfigurationHandler(MODID, LOG);
     @SidedProxy(clientSide = CLIENTPROXY, serverSide = COMMONPROXY)
     public static CommonProxy proxy = new CommonProxy();
     private static ModInitHandler initHandler = new ModInitHandler(MODID, config, proxy);
@@ -29,7 +28,6 @@ public class ModMJUtils {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(new ConfigurationEventHandler());
         initHandler.init(event);
     }
 

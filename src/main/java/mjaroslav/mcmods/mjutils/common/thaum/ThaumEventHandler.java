@@ -18,13 +18,10 @@ public class ThaumEventHandler {
 
     @SubscribeEvent
     public void eventPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-        if (!event.player.worldObj.isRemote) {
-            for (ResearchCopy researchCopy : researchCopyList) {
-                if (researchCopy.exist() && isComplete(event.player, researchCopy.getOriginalKey())) {
+        if (!event.player.worldObj.isRemote)
+            for (ResearchCopy researchCopy : researchCopyList)
+                if (researchCopy.exist() && isComplete(event.player, researchCopy.getOriginalKey()))
                     complete(event.player, researchCopy.key);
-                }
-            }
-        }
     }
 
     public static class ResearchCopy {
@@ -37,7 +34,7 @@ public class ThaumEventHandler {
         }
 
         public boolean exist() {
-            return !StringUtils.isNullOrEmpty(this.originalKey) && !StringUtils.isNullOrEmpty(this.key);
+            return !StringUtils.isNullOrEmpty(originalKey) && !StringUtils.isNullOrEmpty(key);
         }
 
         public String getKey() {

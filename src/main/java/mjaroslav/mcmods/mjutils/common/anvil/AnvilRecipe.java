@@ -150,11 +150,11 @@ public class AnvilRecipe {
      *         otherwise.
      */
     public boolean equals(AnvilRecipe recipe) {
-        return recipe != null && itemStackNotNullAndEquals(this.leftStack, recipe.leftStack)
-                && itemStackNotNullAndEquals(this.rightStack, recipe.rightStack)
-                && string(this.leftStackName).equals(string(recipe.leftStackName))
-                && string(this.rightStackName).equals(string(recipe.rightStackName))
-                && string(this.textField).equals(string(recipe.textField)) && this.cost == recipe.cost;
+        return recipe != null && itemStackNotNullAndEquals(leftStack, recipe.leftStack)
+                && itemStackNotNullAndEquals(rightStack, recipe.rightStack)
+                && string(leftStackName).equals(string(recipe.leftStackName))
+                && string(rightStackName).equals(string(recipe.rightStackName))
+                && string(textField).equals(string(recipe.textField)) && cost == recipe.cost;
     }
 
     /**
@@ -175,10 +175,10 @@ public class AnvilRecipe {
     public boolean equals(ItemStack leftStack, ItemStack rightStack, String textField, int cost) {
         return itemStackNotNullAndEquals(this.leftStack, leftStack)
                 && itemStackNotNullAndEquals(this.rightStack, rightStack)
-                && (isNullOrEmpty(this.leftStackName)
-                        || string(nameFormat(leftStack)).equals(string(this.leftStackName)))
-                && (isNullOrEmpty(this.rightStackName)
-                        || string(nameFormat(rightStack)).equals(string(this.rightStackName)))
+                && (isNullOrEmpty(leftStackName)
+                        || string(nameFormat(leftStack)).equals(string(leftStackName)))
+                && (isNullOrEmpty(rightStackName)
+                        || string(nameFormat(rightStack)).equals(string(rightStackName)))
                 && (isNullOrEmpty(this.textField) || string(this.textField).equals(string(textField)))
                 && (cost == -1 || this.cost == cost);
     }

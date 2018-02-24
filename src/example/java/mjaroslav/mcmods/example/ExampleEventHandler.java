@@ -9,8 +9,8 @@ public class ExampleEventHandler {
     @SubscribeEvent
     public void onJoin(PlayerLoggedInEvent event) {
         if (!event.player.worldObj.isRemote)
-            event.player
-                    .addChatComponentMessage(new ChatComponentText("Your warp: " + UtilsThaum.getWarp(event.player)));
+            event.player.addChatComponentMessage(
+                    new ChatComponentText("Your warp: " + UtilsThaum.getWarpTotal(event.player)));
         // Indicates the amount of warp when entering the server.
     }
 }

@@ -22,7 +22,7 @@ public class ModuleThaum implements IModModule {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        UtilsThaum.checkMod();
+        UtilsThaum.activate();
     }
 
     @Override
