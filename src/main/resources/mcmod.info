@@ -8,10 +8,5 @@
   "url": "https://minecraft.curseforge.com/projects/mjutils",
   "authorList": ["MJaroslav"],
   "logoFile": "assets/mjutils/logo.png"
-},
-{
-  "modid": "examplemod",
-  "name": "Example Mod (MJUtils)",
-  "version": "1.0.0"
 }
 ]
