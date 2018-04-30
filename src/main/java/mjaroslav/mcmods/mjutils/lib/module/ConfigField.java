@@ -18,7 +18,7 @@ public @interface ConfigField {
     String customName() default "";
 
     /**
-     * Category name (lower case).
+     * Category name (lower case). Used if there is no {@link CofigCategory}.
      * 
      * @return Default "general".
      */
@@ -115,9 +115,8 @@ public @interface ConfigField {
      */
     String[] defaultStringArray() default {};
 
-
     boolean requiresWorldRestart() default false;
-    
+
     boolean requiresMcRestart() default false;
 
     /**

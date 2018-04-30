@@ -20,10 +20,11 @@ import cpw.mods.fml.common.event.*;
  * @author MJaroslav
  */
 public class ModuleHandler {
-    /**
-     * Logger for module system
-     */
     public static final Logger logger = LogManager.getLogger("MJUtils Module System");
+    private final String modid;
+    private final ConfigurationBase config;
+    private final ProxyBase proxy;
+    private final ArrayList<IModule> modules = new ArrayList<IModule>();
 
     private static final Comparator<IModule> ASCENDING_COMPARATOR = new Comparator<IModule>() {
         @Override
@@ -32,58 +33,18 @@ public class ModuleHandler {
         }
     };
 
-    /**
-     * Modification id.
-     */
-    private final String modid;
-    /**
-     * Modification configuration handler.
-     */
-    private final ConfigurationBase config;
-    /**
-     * Modification proxy handler.
-     */
-    private final ProxyBase proxy;
-    /**
-     * List of modification modules, use {@link ModuleHandler#getModules()}.
-     */
-    private final ArrayList<IModule> modules = new ArrayList<IModule>();
-
-    /**
-     * New modification initialization handler.
-     *
-     * @param modid
-     *            - ID of modification. Do not use someone else's ID.
-     */
     public ModuleHandler(String modid) {
         this.modid = modid;
         config = null;
         proxy = null;
     }
 
-    /**
-     * New modification initialization handler.
-     * 
-     * @param modid
-     *            - ID of modification. Do not use someone else's ID.
-     * @param config
-     *            - instance of configuration handler.
-     * @param proxy
-     *            - instance of proxy handler.
-     */
     public ModuleHandler(String modid, ConfigurationBase config, ProxyBase proxy) {
         this.modid = modid;
         this.config = config;
         this.proxy = proxy;
     }
 
-    /**
-     * Find all modules for this handler (modification). Called in
-     * {@link FMLConstructionEvent}.
-     *
-     * @param event
-     *            - main class construction event.
-     */
     public void findModules(FMLConstructionEvent event) {
         modules.clear();
         logger.log(Level.INFO, "Looking for modules for \"" + modid + "\"");
@@ -104,9 +65,8 @@ public class ModuleHandler {
                         Object instance = Class.forName(data.getClassName()).newInstance();
                         if (instance != null && instance instanceof IModule) {
                             modules.add((IModule) instance);
-                            logger.info(
-                                    "Found module for \"" + modid + "\": \"" + ((IModule) instance).getModuleName()
-                                            + "\" with priority " + ((IModule) instance).getPriority());
+                            logger.info("Found module for \"" + modid + "\": \"" + ((IModule) instance).getModuleName()
+                                    + "\" with priority " + ((IModule) instance).getPriority());
                             count++;
                         }
                     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -119,12 +79,6 @@ public class ModuleHandler {
         logger.info("Search finished, found " + count + " module" + (count == 1 ? "" : "s"));
     }
 
-    /**
-     * Called in a similar event of the main class.
-     *
-     * @param event
-     *            - mail class pre init event.
-     */
     public void preInit(FMLPreInitializationEvent event) {
         registerModules();
         logger.info("Pre initialization of \"" + modid + "\"");
@@ -137,12 +91,6 @@ public class ModuleHandler {
             proxy.preInit(event);
     }
 
-    /**
-     * Called in a similar event of the main class.
-     *
-     * @param event
-     *            - mail class init event.
-     */
     public void init(FMLInitializationEvent event) {
         logger.info("Initialization of \"" + modid + "\"");
         if (config != null)
@@ -154,12 +102,6 @@ public class ModuleHandler {
             proxy.init(event);
     }
 
-    /**
-     * Called in a similar event of the main class.
-     *
-     * @param event
-     *            - mail class post init event.
-     */
     public void postInit(FMLPostInitializationEvent event) {
         logger.info("Post initialization of \"" + modid + "\"");
         if (config != null)
@@ -171,11 +113,6 @@ public class ModuleHandler {
             proxy.postInit(event);
     }
 
-    /**
-     * Get handler mod id.
-     *
-     * @return Modification id of this handler.
-     */
     public String getModid() {
         return modid;
     }
@@ -190,13 +127,6 @@ public class ModuleHandler {
         return modules;
     }
 
-    /**
-     * Check some mods on existing.
-     * 
-     * @param modids
-     *            - mod ids.
-     * @return True if all is loaded.
-     */
     public static boolean modsIsLoaded(String... modids) {
         if (modids != null && modids.length > 0)
             for (String modid : modids)

@@ -4,9 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import javafx.scene.shape.Box;
 import mjaroslav.utils.UtilsMonitor;
-import sun.security.provider.VerificationProvider;
 
 // WIP
 public class DependenciesBuilderApp extends JFrame {
@@ -17,14 +15,15 @@ public class DependenciesBuilderApp extends JFrame {
         }
         DependenciesBuilderApp app = new DependenciesBuilderApp();
         app.pack();
-        app.setLocation(UtilsMonitor.getCenterHorizontal(app.getWidth() / 2), UtilsMonitor.getCenterVertical(app.getHeight() / 2));
+        app.setLocation(UtilsMonitor.getCenterHorizontal(app.getWidth() / 2),
+                UtilsMonitor.getCenterVertical(app.getHeight() / 2));
         app.setVisible(true);
     }
 
     public DependenciesBuilderApp() {
         super("Dependencies Builder");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setResizable(false);
+        // setResizable(false);
         Container c = getContentPane();
         c.setLayout(new FlowLayout());
         JPanel left = initLeftSide();
@@ -35,7 +34,7 @@ public class DependenciesBuilderApp extends JFrame {
 
     public JPanel initLeftSide() {
         JPanel result = new JPanel();
-        //result.setLayout(new GridLayout(rows, cols));
+        // result.setLayout(new GridLayout(rows, cols));
         JLabel label1 = new JLabel("Modid:");
         result.add(label1);
         result.add(new JTextField());
@@ -52,9 +51,10 @@ public class DependenciesBuilderApp extends JFrame {
         result.add(b);
         return result;
     }
-    
+
     public JScrollPane initRightSide() {
-        JScrollPane result = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane result = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         result.setPreferredSize(new Dimension(200, 200));
         return result;
     }

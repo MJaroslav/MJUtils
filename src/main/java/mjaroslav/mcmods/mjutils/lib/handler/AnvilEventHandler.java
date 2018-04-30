@@ -1,6 +1,7 @@
 package mjaroslav.mcmods.mjutils.lib.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mjaroslav.mcmods.mjutils.lib.event.AnvilCraftingEvent;
 import mjaroslav.mcmods.mjutils.lib.utils.UtilsAnvil;
 import mjaroslav.utils.UtilsJava;
 import net.minecraft.item.ItemStack;
@@ -22,16 +23,14 @@ public class AnvilEventHandler {
             int rSize = event.right.stackSize;
             int ingSize = newEvent.recipe.rightStack.stackSize;
             int resSize = newEvent.result.stackSize;
-            while (endSize <= newEvent.result.getMaxStackSize()) {
+            while (endSize <= newEvent.result.getMaxStackSize())
                 if (lSize > 0 && rSize >= ingSize) {
                     count++;
                     endSize += resSize;
                     lSize--;
                     rSize -= ingSize;
-                } else {
+                } else
                     break;
-                }
-            }
             if (count > 0 && event.left.stackSize == count) {
                 newEvent.result.stackSize = endSize;
                 int cost = count * newEvent.recipe.cost;

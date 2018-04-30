@@ -4,15 +4,16 @@ import static mjaroslav.utils.FieldType.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import mjaroslav.utils.UtilsJava;
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler extends ConfigurationBase {
@@ -156,5 +157,13 @@ public class ConfigurationHandler extends ConfigurationBase {
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<IConfigElement> toElementList(String name) {
+        return new ConfigElement(getInstance().getCategory(name)).getChildElements();
+    }
+
+    public List<IConfigElement> toElementList() {
+        return toElementList(Configuration.CATEGORY_GENERAL);
     }
 }

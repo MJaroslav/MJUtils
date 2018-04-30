@@ -5,11 +5,9 @@ import java.util.Set;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import mjaroslav.mcmods.mjutils.mod.ModMJUtils;
-import mjaroslav.mcmods.mjutils.mod.lib.ConfigGeneralInfo;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigElement;
 
 public class GUIFactory implements IModGuiFactory {
     @Override
@@ -33,10 +31,7 @@ public class GUIFactory implements IModGuiFactory {
 
     public static class MJUtilsGUIConfig extends GuiConfig {
         public MJUtilsGUIConfig(GuiScreen parentScreen) {
-            super(parentScreen,
-                    new ConfigElement(ModMJUtils.config.getInstance().getCategory(ConfigGeneralInfo.CATEGORY))
-                            .getChildElements(),
-                    ModInfo.MODID, false, false, ModInfo.NAME);
+            super(parentScreen, ModMJUtils.config.toElementList(), ModInfo.MODID, false, false, ModInfo.NAME);
         }
     }
 }

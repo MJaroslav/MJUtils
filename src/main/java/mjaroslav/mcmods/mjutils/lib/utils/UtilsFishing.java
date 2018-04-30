@@ -13,12 +13,6 @@ import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.FishingHooks.FishableCategory;
 
-/**
- * Wrap-around class for FishingHooks. Use for get/add/remove/clear itemStacks
- * and categories from fishing lists.
- *
- * @author MJaroslav
- */
 public class UtilsFishing {
     /**
      * Remove item from all categories.

@@ -8,11 +8,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.StringUtils;
 
-/**
- * Thaumcraft module event handler
- *
- * @author MJaroslav
- */
 public class ThaumEventHandler {
     public static ArrayList<ResearchCopy> researchCopyList = new ArrayList<ResearchCopy>();
 

@@ -5,11 +5,6 @@ import codechicken.nei.api.IConfigureNEI;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import net.minecraft.client.gui.GuiRepair;
 
-/**
- * NEI Integration with anvil recipes.
- *
- * @author MJaroslav
- */
 public class NEIAnvilConfig implements IConfigureNEI {
     @Override
     public String getName() {

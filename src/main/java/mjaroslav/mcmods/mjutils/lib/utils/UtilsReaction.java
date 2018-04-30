@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -36,7 +36,7 @@ public class UtilsReaction {
      *
      * @param world
      *            - target world.
-     * @param player
+     * @param target
      *            - target.
      * @param x
      *            - x center of cube.
@@ -48,14 +48,14 @@ public class UtilsReaction {
      *            - expansion from the center.
      * @return The number of angry pig zombies.
      */
-    public static int pigZombiesBecomeAngryInRadius(World world, EntityPlayer player, double x, double y, double z,
+    public static int pigZombiesBecomeAngryInRadius(World world, EntityLivingBase target, double x, double y, double z,
             double expand) {
-        if (world == null || world.isRemote || player == null)
+        if (world == null || world.isRemote || target == null)
             return 0;
         List<EntityPigZombie> list = world.getEntitiesWithinAABB(EntityPigZombie.class,
                 AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1).expand(expand, expand, expand));
         for (EntityPigZombie entity : list)
-            entity.becomeAngryAt(player);
+            entity.becomeAngryAt(target);
         return list.size();
     }
 }

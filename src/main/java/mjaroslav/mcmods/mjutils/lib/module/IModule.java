@@ -9,8 +9,7 @@ import cpw.mods.fml.common.Loader;
  */
 public interface IModule extends IInit {
     /**
-     * Module name, optional. Use 'Proxy' for proxy modules and 'Config' for
-     * configuration module, they will be ignored when searching.
+     * Module name, optional.
      *
      * @return Module name.
      */

@@ -11,11 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-/**
- * Base proxy for mods.
- *
- * @author MJaroslav
- */
 public abstract class ProxyBase implements IInit {
     /**
      * Get proxy minecraft.

@@ -22,11 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-/**
- * Anvil recipe NEI handler.
- *
- * @author MJaroslav
- */
 public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
     @Override
     public String getRecipeName() {
@@ -40,7 +35,7 @@ public class NEIAnvilRecipeHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadTransferRects() {
-        this.transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(97, 37, 22, 15), "anvil"));
+        transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(97, 37, 22, 15), "anvil"));
     }
 
     @Override
