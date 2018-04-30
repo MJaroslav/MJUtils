@@ -14,32 +14,12 @@ import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.FishingHooks.FishableCategory;
 
 public class UtilsFishing {
-    /**
-     * Remove item from all categories.
-     *
-     * @param itemStack
-     *            - itemStack that should be removed.
-     * @param checkOnEmpty
-     *            - add default itemStack if category is empty (empty list
-     *            causes crash when fishing).
-     */
     public static void removeItemFromAllCategories(ItemStack itemStack, boolean checkOnEmpty) {
         removeItemFromCategory(itemStack, FishableCategory.FISH, checkOnEmpty);
         removeItemFromCategory(itemStack, FishableCategory.JUNK, checkOnEmpty);
         removeItemFromCategory(itemStack, FishableCategory.TREASURE, checkOnEmpty);
     }
 
-    /**
-     * Remove item from category.
-     *
-     * @param itemStack
-     *            - itemStack that should be removed.
-     * @param category
-     *            - category from which itemStack should be deleted.
-     * @param checkOnEmpty
-     *            - add default itemStack if category is empty (empty list
-     *            causes crash).
-     */
     public static void removeItemFromCategory(ItemStack itemStack, FishableCategory category, boolean checkOnEmpty) {
         switch (category) {
         case FISH: {
@@ -63,40 +43,19 @@ public class UtilsFishing {
         }
     }
 
-    /**
-     * Add new itemStack to category.
-     *
-     * @param itemStack
-     *            - itemStack that should be added.
-     * @param weight
-     *            - rarity of itemStack (You can use
-     *            {@link ConstantsFishing#rarityFish},
-     *            {@link ConstantsFishing#rarityJunk} and
-     *            {@link ConstantsFishing#rarityTreasure} for defaults. values)
-     * @param category
-     *            - category in which the itemStack should be added.
-     */
     public static void addItemToCategory(ItemStack itemStack, int weight, FishableCategory category) {
-        WeightedRandomFishable fishable = new WeightedRandomFishable(itemStack, weight);
         switch (category) {
         case FISH:
-            FishingHooks.addFish(fishable);
+            FishingHooks.addFish(new WeightedRandomFishable(itemStack, weight));
             break;
         case JUNK:
-            FishingHooks.addJunk(fishable);
+            FishingHooks.addJunk(new WeightedRandomFishable(itemStack, weight));
             break;
         case TREASURE:
-            FishingHooks.addTreasure(fishable);
+            FishingHooks.addTreasure(new WeightedRandomFishable(itemStack, weight));
         }
     }
 
-    /**
-     * Get category in list format.
-     *
-     * @param category
-     *            - category to receive.
-     * @return Copy of category.
-     */
     public static ArrayList<WeightedRandomFishable> getCategory(FishableCategory category) {
         try {
             switch (category) {
@@ -115,15 +74,6 @@ public class UtilsFishing {
         return new ArrayList<WeightedRandomFishable>();
     }
 
-    /**
-     * Remove all itemStacks from category.
-     *
-     * @param category
-     *            - category to be cleared.
-     * @param addDefaults
-     *            - add default itemStack if category is empty (empty list
-     *            causes crash).
-     */
     public static void clearCategory(FishableCategory category, boolean addDefaults) {
         for (WeightedRandomFishable fishable : getCategory(category))
             removeItemFromCategory(fishable.field_150711_b, category, false);
@@ -141,13 +91,6 @@ public class UtilsFishing {
             }
     }
 
-    /**
-     * Clear all categories.
-     *
-     * @param addDefaults
-     *            - add default itemStack if category is empty (empty list
-     *            causes crash).
-     */
     public static void clearAllCategories(boolean addDefaults) {
         clearCategory(FishableCategory.FISH, addDefaults);
         clearCategory(FishableCategory.JUNK, addDefaults);
