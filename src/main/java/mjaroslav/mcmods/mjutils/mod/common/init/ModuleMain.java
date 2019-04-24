@@ -7,8 +7,13 @@ import mjaroslav.mcmods.mjutils.lib.handler.*;
 import mjaroslav.mcmods.mjutils.lib.module.ConfigurationBase.ConfigurationEventHandler;
 import mjaroslav.mcmods.mjutils.lib.module.IModule;
 import mjaroslav.mcmods.mjutils.lib.module.ModModule;
+import mjaroslav.mcmods.mjutils.lib.util.UtilsGame;
+import mjaroslav.mcmods.mjutils.lib.util.UtilsInteractions;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.OreDictionary;
 
 @ModModule(modid = ModInfo.MODID)
 public class ModuleMain implements IModule {
@@ -37,6 +42,7 @@ public class ModuleMain implements IModule {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerFuelHandler(new FuelHandler());
+        UtilsInteractions.setDisableBlockBreakingInCreative(Items.iron_axe, true);
     }
 
     @Override

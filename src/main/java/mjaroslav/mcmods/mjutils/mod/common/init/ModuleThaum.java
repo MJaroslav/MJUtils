@@ -5,7 +5,7 @@ import cpw.mods.fml.common.event.*;
 import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler;
 import mjaroslav.mcmods.mjutils.lib.module.IModule;
 import mjaroslav.mcmods.mjutils.lib.module.ModModule;
-import mjaroslav.mcmods.mjutils.lib.utils.UtilsThaum;
+import mjaroslav.mcmods.mjutils.lib.util.UtilsThaum;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 
 @ModModule(modid = ModInfo.MODID)

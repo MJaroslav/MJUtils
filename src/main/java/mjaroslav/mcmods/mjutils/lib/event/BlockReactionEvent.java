@@ -2,7 +2,6 @@ package mjaroslav.mcmods.mjutils.lib.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
-import mjaroslav.mcmods.mjutils.lib.utils.UtilsReaction;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -30,9 +29,9 @@ public class BlockReactionEvent extends Event {
     }
 
     /**
-     * Fired when player break the block in
-     * {@link UtilsReaction#getPigAngryBlockList()}.
-     * 
+     * Fired if {@link mjaroslav.mcmods.mjutils.lib.util.UtilsInteractions#blockIsPigzombieTrigger(Block, int)
+     * blockIsPigzombieTrigger(Block, meta)} is true.
+     *
      * @author MJaroslav
      */
     @Cancelable

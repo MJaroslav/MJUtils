@@ -2,7 +2,7 @@ package mjaroslav.progs.mcdepbuilder;
 
 import java.util.ArrayList;
 
-import mjaroslav.utils.UtilsJava;
+import mjaroslav.util.UtilsJava;
 
 public class DependenciesBuilder {
     public ArrayList<DependenceInfo> list = new ArrayList<DependenceInfo>();

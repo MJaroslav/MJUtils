@@ -11,7 +11,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import mjaroslav.mcmods.mjutils.lib.utils.UtilsAnvil;
+import mjaroslav.mcmods.mjutils.lib.object.recipe.AnvilRecipe;
+import mjaroslav.mcmods.mjutils.lib.util.UtilsAnvil;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

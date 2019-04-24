@@ -18,7 +18,7 @@ public @interface ConfigField {
     String customName() default "";
 
     /**
-     * Category name (lower case). Used if there is no {@link CofigCategory}.
+     * Category name (lower case). Used if there is no {@link ConfigCategory}.
      * 
      * @return Default "general".
      */
@@ -121,21 +121,20 @@ public @interface ConfigField {
 
     /**
      * Fixes the size of the array. The size of the standard value is used.
-     * Requires {@link #advanced()}.
      * 
      * @return Default false;
      */
     boolean listLengthFixed() default false;
 
     /**
-     * Maximal array size. Use -1 for disable. Requires {@link #advanced()}.
+     * Maximal array size. Use -1 for disable.
      * 
      * @return Default -1;
      */
     int maxListLength() default -1;
 
     /**
-     * Valid values for strings. Requires {@link #advanced()}.
+     * Valid values for strings.
      * 
      * @return Default - empty array.
      */

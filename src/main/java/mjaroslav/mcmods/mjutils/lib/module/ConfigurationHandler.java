@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.mjutils.lib.module;
 
-import static mjaroslav.utils.FieldType.*;
+import static mjaroslav.util.FieldType.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
-import mjaroslav.utils.UtilsJava;
+import mjaroslav.util.UtilsJava;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 
@@ -53,15 +53,14 @@ public class ConfigurationHandler extends ConfigurationBase {
         logger.log(Level.INFO, "Looking for config categories for \"" + modid + "\"");
         Iterator<ASMData> iterator = event.getASMHarvestedData().getAll(ConfigCategory.class.getName()).iterator();
         int count = 0;
-        if (iterator != null) {
-            while (iterator.hasNext()) {
-                ASMData data = iterator.next();
-                if (data.getAnnotationInfo().get("modid").equals(modid)) {
-                    try {
-                        fieldClasses.add(Class.forName(data.getClassName()));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+        while (iterator.hasNext()) {
+            ASMData data = iterator.next();
+            if (data.getAnnotationInfo().get("modid").equals(modid)) {
+                try {
+                    fieldClasses.add(Class.forName(data.getClassName()));
+                    count++;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -90,7 +89,7 @@ public class ConfigurationHandler extends ConfigurationBase {
     // Parse (and set) field from info.
     public static void parseField(Field field, ConfigField info, ConfigCategory categoryInfo, Configuration instance) {
         try {
-            String name = "";
+            String name;
             if (UtilsJava.stringIsNotEmpty(info.customName()))
                 name = info.customName();
             else {
@@ -104,8 +103,8 @@ public class ConfigurationHandler extends ConfigurationBase {
             boolean mcRestart = info.requiresMcRestart();
             if (categoryInfo != null) {
                 category = categoryInfo.name();
-                worldRestart = info.requiresWorldRestart() ? true : worldRestart;
-                mcRestart = info.requiresMcRestart() ? true : mcRestart;
+                worldRestart = info.requiresWorldRestart() || worldRestart;
+                mcRestart = info.requiresMcRestart() || mcRestart;
             }
             boolean flag = true;
             Object value = null;
@@ -159,6 +158,7 @@ public class ConfigurationHandler extends ConfigurationBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<IConfigElement> toElementList(String name) {
         return new ConfigElement(getInstance().getCategory(name)).getChildElements();
     }

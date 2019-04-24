@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import mjaroslav.utils.UtilsMonitor;
+import mjaroslav.util.UtilsMonitor;
 
 // WIP
 public class DependenciesBuilderApp extends JFrame {
