@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.google.common.base.Predicates;
 
 import mjaroslav.mcmods.mjutils.lib.constant.ConstantsFishing;
-import mjaroslav.mcmods.mjutils.lib.object.other.FishableStackEqualTo;
+import mjaroslav.mcmods.mjutils.object.other.FishableStackEqualTo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;

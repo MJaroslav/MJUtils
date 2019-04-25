@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.object.tileentity;
+package mjaroslav.mcmods.mjutils.object.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

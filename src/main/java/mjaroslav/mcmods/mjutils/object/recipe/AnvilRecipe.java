@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.object.recipe;
+package mjaroslav.mcmods.mjutils.object.recipe;
 
 import net.minecraft.item.ItemStack;
 

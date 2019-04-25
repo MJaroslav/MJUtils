@@ -114,7 +114,7 @@ public class ConfigurationHandler extends ConfigurationBase {
                         .get(category, name, info.defaultFloat(), info.comment(), info.minFloat(), info.maxFloat())
                         .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDouble();
                 break;
-            case FLOATARRAY:
+            case FLOAT_ARRAY:
                 value = UtilsJava.toFloatArray(instance
                         .get(category, name, UtilsJava.toDoubleArray(info.defaultFloatArray()), info.comment(),
                                 info.minFloat(), info.maxFloat(), info.listLengthFixed(), info.maxListLength())
@@ -124,7 +124,7 @@ public class ConfigurationHandler extends ConfigurationBase {
                 value = instance.get(category, name, info.defaultString(), info.comment(), info.validValues())
                         .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getString();
                 break;
-            case STRINGARRAY:
+            case STRING_ARRAY:
                 value = instance.get(category, name, info.defaultStringArray(), info.comment())
                         .setMaxListLength(info.maxListLength()).setIsListLengthFixed(info.listLengthFixed())
                         .setValidValues(info.validValues()).setRequiresMcRestart(mcRestart)
@@ -134,7 +134,7 @@ public class ConfigurationHandler extends ConfigurationBase {
                 value = instance.get(category, name, info.defaultInt(), info.comment()).setRequiresMcRestart(mcRestart)
                         .setRequiresWorldRestart(worldRestart).getInt();
                 break;
-            case INTARRAY:
+            case INT_ARRAY:
                 value = instance.get(category, name, info.defaultIntArray(), info.comment(), info.minInt(),
                         info.maxInt(), info.listLengthFixed(), info.maxListLength()).getIntList();
                 break;
@@ -142,7 +142,7 @@ public class ConfigurationHandler extends ConfigurationBase {
                 value = instance.get(category, name, info.defaultBoolean(), info.comment())
                         .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getBoolean();
                 break;
-            case BOOLEANARRAY:
+            case BOOLEAN_ARRAY:
                 value = instance.get(category, name, info.defaultBooleanArray(), info.comment())
                         .setIsListLengthFixed(info.listLengthFixed()).setMaxListLength(info.maxListLength())
                         .setRequiresWorldRestart(worldRestart).setRequiresMcRestart(mcRestart).getBooleanList();

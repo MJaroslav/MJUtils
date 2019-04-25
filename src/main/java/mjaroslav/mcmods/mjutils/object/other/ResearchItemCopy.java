@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.object.other;
+package mjaroslav.mcmods.mjutils.object.other;
 
 import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler;
 import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler.ResearchCopy;

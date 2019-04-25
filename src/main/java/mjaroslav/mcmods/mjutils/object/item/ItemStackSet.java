@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.object.item;
+package mjaroslav.mcmods.mjutils.object.item;
 
 import mjaroslav.mcmods.mjutils.lib.util.UtilsInventory;
 import net.minecraft.item.ItemStack;

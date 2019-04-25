@@ -2,7 +2,7 @@ package mjaroslav.mcmods.mjutils.lib.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mjaroslav.mcmods.mjutils.lib.event.AnvilCraftingEvent;
-import mjaroslav.mcmods.mjutils.lib.object.recipe.AnvilRecipe;
+import mjaroslav.mcmods.mjutils.object.recipe.AnvilRecipe;
 import mjaroslav.mcmods.mjutils.lib.util.UtilsAnvil;
 import mjaroslav.util.UtilsJava;
 import net.minecraft.item.ItemStack;

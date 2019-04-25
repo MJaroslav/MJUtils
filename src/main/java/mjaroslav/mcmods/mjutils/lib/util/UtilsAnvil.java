@@ -3,7 +3,7 @@ package mjaroslav.mcmods.mjutils.lib.util;
 import java.util.*;
 import java.util.Map.Entry;
 
-import mjaroslav.mcmods.mjutils.lib.object.recipe.AnvilRecipe;
+import mjaroslav.mcmods.mjutils.object.recipe.AnvilRecipe;
 import net.minecraft.item.ItemStack;
 
 public class UtilsAnvil {

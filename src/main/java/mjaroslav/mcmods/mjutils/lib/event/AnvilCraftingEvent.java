@@ -2,7 +2,7 @@ package mjaroslav.mcmods.mjutils.lib.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
-import mjaroslav.mcmods.mjutils.lib.object.recipe.AnvilRecipe;
+import mjaroslav.mcmods.mjutils.object.recipe.AnvilRecipe;
 import net.minecraft.item.ItemStack;
 
 @Cancelable

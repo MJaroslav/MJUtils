@@ -20,7 +20,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 
 @SuppressWarnings("unused")
-public class HookContainer {
+public class HooksBlockBreakingCreative {
+    public static final String DISABLE_ID = "hooks_block_breaking_creative";
+
     // TODO: Поискать альтернативу, которая предусмотрена mc/forge.
     @SideOnly(Side.CLIENT)
     @Hook(returnCondition = ReturnCondition.ON_TRUE)
@@ -37,11 +39,11 @@ public class HookContainer {
         boolean preCancelEvent = false;
         if (gameType.isAdventure() && !entityPlayer.isCurrentToolAdventureModeExempt(x, y, z))
             preCancelEvent = true;
-            // ORIGINAL
+        // ORIGINAL
 //        else if (gameType.isCreative() && entityPlayer.getHeldItem() != null &&
 //                entityPlayer.getHeldItem().getItem() instanceof ItemSword)
 //            preCancelEvent = true;
-            // HOOK START
+        // HOOK START
         if (gameType.isCreative() && entityPlayer.getHeldItem() != null &&
                 UtilsInteractions.blockBreakingIsDisabledInCreative(entityPlayer.getHeldItem()))
             preCancelEvent = true;

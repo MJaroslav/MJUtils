@@ -3,28 +3,22 @@ package mjaroslav.util;
 import java.lang.reflect.Field;
 
 public enum FieldType {
-    INT, INTARRAY, FLOAT, FLOATARRAY, STRING, STRINGARRAY, BOOLEAN, BOOLEANARRAY, NONE;
+    INT(int.class), INT_ARRAY(int[].class), FLOAT(float.class), FLOAT_ARRAY(float[].class), STRING(String.class),
+    STRING_ARRAY(String[].class), BOOLEAN(boolean.class), BOOLEAN_ARRAY(boolean[].class), UNKNOWN(Object.class);
+
+    public final Class TYPE;
+
+    FieldType(Class type) {
+        this.TYPE = type;
+    }
 
     public static FieldType get(Field field) {
-        if (field != null) {
+        if(field != null) {
             Class type = field.getType();
-            if (type == String.class)
-                return STRING;
-            else if (type == String[].class)
-                return STRINGARRAY;
-            else if (type == int.class)
-                return INT;
-            else if (type == int[].class)
-                return INTARRAY;
-            else if (type == float.class)
-                return FLOAT;
-            else if (type == float[].class)
-                return FLOATARRAY;
-            else if (type == boolean.class)
-                return BOOLEAN;
-            else if (type == boolean[].class)
-                return BOOLEANARRAY;
+            for(FieldType check : values())
+                if(check.TYPE == type)
+                    return check;
         }
-        return NONE;
+        return UNKNOWN;
     }
 }
