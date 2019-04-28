@@ -46,7 +46,6 @@ public class ModuleMain implements IModule {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerFuelHandler(new FuelHandler());
-        UtilsInteractions.setDisableBlockBreakingInCreative(Items.iron_axe, true);
     }
 
     @Override

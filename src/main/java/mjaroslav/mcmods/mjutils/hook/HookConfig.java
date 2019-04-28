@@ -24,12 +24,14 @@ public class HookConfig {
             LOG.error("Failed to load hooks configuration!", e);
             LOG.error("Trying to create default hooks configuration file...");
             String[] defaultConfiguration = new String[]{
-                    "# If you want to disable some hooks, just remove the comment mark (#) from its line.",
-                    "# Required Minecraft restart.",
-                    "# Game changes that are dependent on disabled hooks will be disabled.",
-                    "#",
+                    COMMENT_MARK + " If you want to disable some hooks, just remove the comment mark (#) from its " +
+                            "line.",
+                    COMMENT_MARK + " Required Minecraft restart.",
+                    COMMENT_MARK + " Game changes that are dependent on disabled hooks will be disabled.",
+                    COMMENT_MARK,
                     COMMENT_MARK + " " + HooksBlockBreakingCreative.DISABLE_ID,
-                    COMMENT_MARK + " " + HooksFishing.DISABLE_ID,
+                    COMMENT_MARK + " " + HooksFishingEvent.DISABLE_ID,
+                    COMMENT_MARK + " " + HooksFishingCache.DISABLE_ID
             };
             try {
                 Files.write(Paths.get(DISABLED_HOOKS_FILE), Arrays.asList(defaultConfiguration));
@@ -48,7 +50,11 @@ public class HookConfig {
         return hookIsEnabled(HooksBlockBreakingCreative.DISABLE_ID);
     }
 
-    public static boolean fishing() {
-        return hookIsEnabled(HooksFishing.DISABLE_ID);
+    public static boolean fishingEvent() {
+        return hookIsEnabled(HooksFishingEvent.DISABLE_ID);
+    }
+
+    public static boolean fishingCache() {
+        return hookIsEnabled(HooksFishingCache.DISABLE_ID);
     }
 }

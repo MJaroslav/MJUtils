@@ -1,16 +1,15 @@
 package mjaroslav.mcmods.mjutils.lib.handler;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mjaroslav.mcmods.mjutils.mod.lib.ConfigClientInfo;
+import mjaroslav.mcmods.mjutils.mod.lib.ConfigGeneralInfo;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class TooltipEventHandler {
     @SubscribeEvent
     public void itemTooltipEvent(ItemTooltipEvent event) {
-        if (((event.showAdvancedItemTooltips && ConfigClientInfo.showOreDict) || ConfigClientInfo.showOreDictAlways)
+        if (((event.showAdvancedItemTooltips && ConfigGeneralInfo.showOreDict) || ConfigGeneralInfo.showOreDictAlways)
                 && event.itemStack != null && event.itemStack.getItem() != null
                 && OreDictionary.getOreIDs(event.itemStack).length > 0) {
             event.toolTip.add("");

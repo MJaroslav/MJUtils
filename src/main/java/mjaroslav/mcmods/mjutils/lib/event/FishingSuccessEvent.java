@@ -1,5 +1,6 @@
 package mjaroslav.mcmods.mjutils.lib.event;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -7,9 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.FishingHooks;
 
+@Cancelable
 public class FishingSuccessEvent extends Event {
     public final EntityPlayer fisher;
-    public final FishingHooks.FishableCategory category;
+    public FishingHooks.FishableCategory category;
     public ItemStack catchStack;
     public final EntityFishHook fishHook;
     public final float chance;
@@ -33,5 +35,17 @@ public class FishingSuccessEvent extends Event {
         x = fishHook.serverPosX;
         y = fishHook.serverPosY;
         z = fishHook.serverPosZ;
+    }
+
+    @Override
+    public boolean isCancelable() {
+        return true;
+    }
+
+    @Override
+    public void setCanceled(boolean cancel) {
+        super.setCanceled(cancel);
+        category = null;
+        catchStack = null;
     }
 }

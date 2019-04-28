@@ -18,10 +18,15 @@ public class MJUtilsHookLoader extends HookLoader {
             registerHookContainer(HooksBlockBreakingCreative.class.getName());
         else ModInfo.LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be ignored!",
                 HooksBlockBreakingCreative.DISABLE_ID));
-        if (HookConfig.fishing())
-            registerHookContainer(HooksFishing.class.getName());
+        if (HookConfig.fishingEvent())
+            registerHookContainer(HooksFishingEvent.class.getName());
         else
             ModInfo.LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be ignored!",
-                    HooksFishing.DISABLE_ID));
+                    HooksFishingEvent.DISABLE_ID));
+        if (HookConfig.fishingCache())
+            registerHookContainer(HooksFishingCache.class.getName());
+        else
+            ModInfo.LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be use original!",
+                    HooksFishingEvent.DISABLE_ID));
     }
 }

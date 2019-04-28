@@ -13,10 +13,10 @@ import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("ALL")
-public class HooksFishing {
-    public static final String DISABLE_ID = "hooks_fishing";
+public class HooksFishingEvent {
+    public static final String DISABLE_ID = "hooks_fishing_event";
 
-    // Return fishing rood damage after right click.
+    // Return fishingEvent rood damage after right click.
     @Hook(returnCondition = ReturnCondition.ALWAYS)
     public static int func_146034_e(EntityFishHook instance) {
         if (instance.worldObj.isRemote)
@@ -69,11 +69,13 @@ public class HooksFishing {
         int speed = EnchantmentHelper.func_151387_h(instance.field_146042_b);
         FishingHooks.FishableCategory category = net.minecraftforge.common.FishingHooks.getFishableCategory(chance,
                 luck, speed);
-        instance.field_146042_b.addStat(category.stat, 1);
         ItemStack catchStack = FishingHooks.getRandomFishable(instance.rand, chance, luck, speed);
         FishingSuccessEvent event = new FishingSuccessEvent(instance.field_146042_b, instance, category, catchStack,
                 chance, luck, speed);
+        // Hooked custom event
         MinecraftForge.EVENT_BUS.post(event);
+        if(event.category != null)
+            instance.field_146042_b.addStat(event.category.stat, 1);
         return event.catchStack;
     }
 }
