@@ -1,56 +1,28 @@
 package mjaroslav.mcmods.mjutils.lib.module;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.Logger;
-
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Logger;
 
-/**
- * Base of configuration handler.
- *
- * @author MJaroslav
- */
-public abstract class ConfigurationBase implements IInit {
-    /**
-     * Automatic registration in the configuration update event.
-     */
+import java.io.File;
+import java.util.ArrayList;
+
+public abstract class ConfigurationBase implements Initializator {
     public ConfigurationBase() {
-        ConfigurationEventHandler.addConfig(this);
+        ConfigurationEventHandler.instance.addConfig(this);
     }
 
-    /**
-     * Instance of configuration file.
-     *
-     * @return - configuration file.
-     */
     public abstract Configuration getInstance();
 
-    /**
-     * Set new Configuration instance.
-     *
-     * @param newConfig
-     *            - new configuration file.
-     */
     public abstract void setInstance(Configuration newConfig);
 
-    /**
-     * Configuration mod id.
-     *
-     * @return Mod id of configuration.
-     */
     public abstract String getModId();
 
-    /**
-     * Configuration logger.
-     *
-     * @return Logger for configuration.
-     */
     public abstract Logger getLogger();
 
     @Override
@@ -77,36 +49,27 @@ public abstract class ConfigurationBase implements IInit {
     public final void postInit(FMLPostInitializationEvent event) {
     }
 
-    /**
-     * In this method, you assign values to your fields from the configuration
-     * (instance).
-     */
     public abstract void readFields();
 
-    /**
-     * Synchronize configuration fields and save in file.
-     */
-    public final void sync() {
+    private void sync() {
         readFields();
         if (getInstance().hasChanged())
             getInstance().save();
     }
 
     public static class ConfigurationEventHandler {
+        public static final ConfigurationEventHandler instance = new ConfigurationEventHandler();
 
-        private static ArrayList<ConfigurationBase> list = new ArrayList<ConfigurationBase>();
+        private ConfigurationEventHandler() {}
 
-        public static boolean addConfig(ConfigurationBase newConfig) {
+        private final ArrayList<ConfigurationBase> list = new ArrayList<>();
+
+        private void addConfig(ConfigurationBase newConfig) {
             for (ConfigurationBase config : list)
                 if (config.getModId().equals(newConfig.getModId()))
-                    return false;
+                    return;
             list.add(newConfig);
             ModInfo.LOG.info("Added configuration for " + newConfig.getModId());
-            return true;
-        }
-
-        public static ArrayList<ConfigurationBase> getList() {
-            return list;
         }
 
         @SubscribeEvent

@@ -3,13 +3,13 @@ package mjaroslav.mcmods.mjutils.mod.common.init;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
 import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler;
-import mjaroslav.mcmods.mjutils.lib.module.IModule;
-import mjaroslav.mcmods.mjutils.lib.module.ModModule;
+import mjaroslav.mcmods.mjutils.lib.module.Modular;
+import mjaroslav.mcmods.mjutils.lib.module.Module;
 import mjaroslav.mcmods.mjutils.lib.util.UtilsThaum;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 
-@ModModule(modid = ModInfo.MODID)
-public class ModuleThaum implements IModule {
+@Module(modid = ModInfo.MODID)
+public class ModuleThaum implements Modular {
     @Override
     public String getModuleName() {
         return "Thaum";

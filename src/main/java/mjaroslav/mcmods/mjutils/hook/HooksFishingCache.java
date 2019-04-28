@@ -14,6 +14,7 @@ import java.util.Random;
 import static mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
 import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
 
+// TODO: Решить, необходимо ли это или нет
 public class HooksFishingCache {
     public static final String DISABLE_ID = "hooks_fishing_cache";
 

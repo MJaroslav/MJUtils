@@ -3,17 +3,17 @@ package mjaroslav.mcmods.mjutils.lib.module;
 import cpw.mods.fml.common.Loader;
 
 /**
- * Add a {@link ModModule} annotation to connect a module to modification.
+ * Add a {@link Module} annotation to connect a module to modification.
  *
  * @author MJaroslav
  */
-public interface IModule extends IInit {
+public interface Modular extends Initializator {
     /**
      * Module name, optional.
      *
      * @return Module name.
      */
-    public String getModuleName();
+    String getModuleName();
 
     /**
      * Priority of module loading. If you use an existing level, then this
@@ -22,19 +22,19 @@ public interface IModule extends IInit {
      *
      * @return Priority: 0 - first, 1 - second...
      */
-    public int getPriority();
+    int getPriority();
 
     /**
      * Will be checked in {@link Loader#isModLoaded(String)}.
      * 
      * @return Array of modid.
      */
-    public String[] modDependencies();
+    String[] modDependencies();
 
     /**
      * Can load module.
      * 
      * @return Set true if you wont use it.
      */
-    public boolean canLoad();
+    boolean canLoad();
 }

@@ -11,18 +11,12 @@ public class UtilsWorld {
     /**
      * Angry pig zombies on the player in the specified cube.
      *
-     * @param world
-     *            - target world.
-     * @param target
-     *            - target.
-     * @param x
-     *            - x center of cube.
-     * @param y
-     *            - y center of cube.
-     * @param z
-     *            - z center of cube.
-     * @param expand
-     *            - expansion from the center.
+     * @param world  target world.
+     * @param target target.
+     * @param x      x center of cube.
+     * @param y      y center of cube.
+     * @param z      z center of cube.
+     * @param expand expansion from the center.
      * @return The number of angry pig zombies.
      */
     @SuppressWarnings("unchecked")

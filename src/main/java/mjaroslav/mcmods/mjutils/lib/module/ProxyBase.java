@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-public abstract class ProxyBase implements IInit {
+public abstract class ProxyBase implements Initializator {
     /**
      * Get proxy minecraft.
      *

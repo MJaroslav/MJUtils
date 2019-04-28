@@ -13,25 +13,20 @@ import cpw.mods.fml.common.event.*;
  * an instance of the handler with modification id in the argument. Call in each
  * initialization event of modification using the same method from the handler.
  * Example: preInit({@link FMLPreInitializationEvent} e) {handler.preInit(e)}.
- * Add findModules({@link FMLConstructionEvent} e) method to the a similar event
- * in the main class. Register your modules through the {@link ModModule}
- * annotation and {@link IModule} interface.
+ * Add initHandler({@link FMLConstructionEvent} e) method to the a similar event
+ * in the main class. Register your modules through the {@link Module}
+ * annotation and {@link Modular} interface.
  *
  * @author MJaroslav
  */
 public class ModuleHandler {
-    public static final Logger logger = LogManager.getLogger("MJUtils Module System");
+    private static final Logger logger = LogManager.getLogger("Module System");
     private final String modid;
     private final ConfigurationBase config;
     private final ProxyBase proxy;
-    private final ArrayList<IModule> modules = new ArrayList<IModule>();
+    private final ArrayList<Modular> modules = new ArrayList<>();
 
-    private static final Comparator<IModule> ASCENDING_COMPARATOR = new Comparator<IModule>() {
-        @Override
-        public int compare(IModule o1, IModule o2) {
-            return o2.getPriority() - o1.getPriority();
-        }
-    };
+    private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.getPriority() - o1.getPriority();
 
     public ModuleHandler(String modid) {
         this.modid = modid;
@@ -45,12 +40,12 @@ public class ModuleHandler {
         this.proxy = proxy;
     }
 
-    public void findModules(FMLConstructionEvent event) {
+    public void initHandler(FMLConstructionEvent event) {
         modules.clear();
         logger.log(Level.INFO, "Looking for modules for \"" + modid + "\"");
-        iterator = event.getASMHarvestedData().getAll(ModModule.class.getName()).iterator();
-        if (config instanceof ConfigurationHandler)
-            ((ConfigurationHandler) config).findCategories(event);
+        iterator = event.getASMHarvestedData().getAll(Module.class.getName()).iterator();
+        registerModules();
+        constuct(event);
     }
 
     private Iterator<ASMData> iterator;
@@ -63,10 +58,10 @@ public class ModuleHandler {
                 if (data.getAnnotationInfo().get("modid").equals(modid)) {
                     try {
                         Object instance = Class.forName(data.getClassName()).newInstance();
-                        if (instance != null && instance instanceof IModule) {
-                            modules.add((IModule) instance);
-                            logger.info("Found module for \"" + modid + "\": \"" + ((IModule) instance).getModuleName()
-                                    + "\" with priority " + ((IModule) instance).getPriority());
+                        if (instance instanceof Modular) {
+                            modules.add((Modular) instance);
+                            logger.info("Found module for \"" + modid + "\": \"" + ((Modular) instance).getModuleName()
+                                    + "\" with priority " + ((Modular) instance).getPriority());
                             count++;
                         }
                     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -74,17 +69,27 @@ public class ModuleHandler {
                     }
                 }
             }
-            Collections.sort(modules, ASCENDING_COMPARATOR);
+            modules.sort(ASCENDING_COMPARATOR);
         }
         logger.info("Search finished, found " + count + " module" + (count == 1 ? "" : "s"));
     }
 
+    public void constuct(FMLConstructionEvent event) {
+        logger.info("Construction of \"" + modid + "\"");
+        if (config != null)
+            config.construct(event);
+        for (Modular module : modules)
+            if (module.canLoad() && modsIsLoaded(module.modDependencies()))
+                module.construct(event);
+        if (proxy != null)
+            proxy.construct(event);
+    }
+
     public void preInit(FMLPreInitializationEvent event) {
-        registerModules();
         logger.info("Pre initialization of \"" + modid + "\"");
         if (config != null)
             config.preInit(event);
-        for (IModule module : modules)
+        for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.modDependencies()))
                 module.preInit(event);
         if (proxy != null)
@@ -95,7 +100,7 @@ public class ModuleHandler {
         logger.info("Initialization of \"" + modid + "\"");
         if (config != null)
             config.init(event);
-        for (IModule module : modules)
+        for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.modDependencies()))
                 module.init(event);
         if (proxy != null)
@@ -106,7 +111,7 @@ public class ModuleHandler {
         logger.info("Post initialization of \"" + modid + "\"");
         if (config != null)
             config.postInit(event);
-        for (IModule module : modules)
+        for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.modDependencies()))
                 module.postInit(event);
         if (proxy != null)
@@ -119,11 +124,11 @@ public class ModuleHandler {
 
     /**
      * Get list of modules. Use
-     * {@link ModuleHandler#findModules(FMLConstructionEvent)} for search.
+     * {@link ModuleHandler#initHandler(FMLConstructionEvent)} for search.
      *
      * @return List of found modules of this handler.
      */
-    public ArrayList<IModule> getModules() {
+    public ArrayList<Modular> getModules() {
         return modules;
     }
 

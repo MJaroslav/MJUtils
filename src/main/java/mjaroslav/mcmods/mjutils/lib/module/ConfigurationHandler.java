@@ -1,25 +1,26 @@
 package mjaroslav.mcmods.mjutils.lib.module;
 
-import static mjaroslav.util.FieldType.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import mjaroslav.util.UtilsJava;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static mjaroslav.util.FieldType.get;
 
 public class ConfigurationHandler extends ConfigurationBase {
     private final String modid;
     private Configuration instance;
-    private final ArrayList<Class> fieldClasses = new ArrayList<Class>();
+    private final ArrayList<Class> fieldClasses = new ArrayList<>();
     private final Logger logger;
 
     public ConfigurationHandler(String modid, Logger logger) {
@@ -48,7 +49,8 @@ public class ConfigurationHandler extends ConfigurationBase {
         return logger;
     }
 
-    public void findCategories(FMLConstructionEvent event) {
+    @Override
+    public void construct(FMLConstructionEvent event) {
         fieldClasses.clear();
         logger.log(Level.INFO, "Looking for config categories for \"" + modid + "\"");
         Iterator<ASMData> iterator = event.getASMHarvestedData().getAll(ConfigCategory.class.getName()).iterator();
@@ -87,7 +89,7 @@ public class ConfigurationHandler extends ConfigurationBase {
     }
 
     // Parse (and set) field from info.
-    public static void parseField(Field field, ConfigField info, ConfigCategory categoryInfo, Configuration instance) {
+    private static void parseField(Field field, ConfigField info, ConfigCategory categoryInfo, Configuration instance) {
         try {
             String name;
             if (UtilsJava.stringIsNotEmpty(info.customName()))
@@ -109,47 +111,47 @@ public class ConfigurationHandler extends ConfigurationBase {
             boolean flag = true;
             Object value = null;
             switch (get(field)) {
-            case FLOAT:
-                value = (float) instance
-                        .get(category, name, info.defaultFloat(), info.comment(), info.minFloat(), info.maxFloat())
-                        .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDouble();
-                break;
-            case FLOAT_ARRAY:
-                value = UtilsJava.toFloatArray(instance
-                        .get(category, name, UtilsJava.toDoubleArray(info.defaultFloatArray()), info.comment(),
-                                info.minFloat(), info.maxFloat(), info.listLengthFixed(), info.maxListLength())
-                        .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDoubleList());
-                break;
-            case STRING:
-                value = instance.get(category, name, info.defaultString(), info.comment(), info.validValues())
-                        .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getString();
-                break;
-            case STRING_ARRAY:
-                value = instance.get(category, name, info.defaultStringArray(), info.comment())
-                        .setMaxListLength(info.maxListLength()).setIsListLengthFixed(info.listLengthFixed())
-                        .setValidValues(info.validValues()).setRequiresMcRestart(mcRestart)
-                        .setRequiresWorldRestart(worldRestart).getStringList();
-                break;
-            case INT:
-                value = instance.get(category, name, info.defaultInt(), info.comment()).setRequiresMcRestart(mcRestart)
-                        .setRequiresWorldRestart(worldRestart).getInt();
-                break;
-            case INT_ARRAY:
-                value = instance.get(category, name, info.defaultIntArray(), info.comment(), info.minInt(),
-                        info.maxInt(), info.listLengthFixed(), info.maxListLength()).getIntList();
-                break;
-            case BOOLEAN:
-                value = instance.get(category, name, info.defaultBoolean(), info.comment())
-                        .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getBoolean();
-                break;
-            case BOOLEAN_ARRAY:
-                value = instance.get(category, name, info.defaultBooleanArray(), info.comment())
-                        .setIsListLengthFixed(info.listLengthFixed()).setMaxListLength(info.maxListLength())
-                        .setRequiresWorldRestart(worldRestart).setRequiresMcRestart(mcRestart).getBooleanList();
-                break;
-            default:
-                flag = false;
-                break;
+                case FLOAT:
+                    value = (float) instance
+                            .get(category, name, info.defaultFloat(), info.comment(), info.minFloat(), info.maxFloat())
+                            .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDouble();
+                    break;
+                case FLOAT_ARRAY:
+                    value = UtilsJava.toFloatArray(instance
+                            .get(category, name, UtilsJava.toDoubleArray(info.defaultFloatArray()), info.comment(),
+                                    info.minFloat(), info.maxFloat(), info.listLengthFixed(), info.maxListLength())
+                            .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDoubleList());
+                    break;
+                case STRING:
+                    value = instance.get(category, name, info.defaultString(), info.comment(), info.validValues())
+                            .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getString();
+                    break;
+                case STRING_ARRAY:
+                    value = instance.get(category, name, info.defaultStringArray(), info.comment())
+                            .setMaxListLength(info.maxListLength()).setIsListLengthFixed(info.listLengthFixed())
+                            .setValidValues(info.validValues()).setRequiresMcRestart(mcRestart)
+                            .setRequiresWorldRestart(worldRestart).getStringList();
+                    break;
+                case INT:
+                    value = instance.get(category, name, info.defaultInt(), info.comment()).setRequiresMcRestart(mcRestart)
+                            .setRequiresWorldRestart(worldRestart).getInt();
+                    break;
+                case INT_ARRAY:
+                    value = instance.get(category, name, info.defaultIntArray(), info.comment(), info.minInt(),
+                            info.maxInt(), info.listLengthFixed(), info.maxListLength()).getIntList();
+                    break;
+                case BOOLEAN:
+                    value = instance.get(category, name, info.defaultBoolean(), info.comment())
+                            .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getBoolean();
+                    break;
+                case BOOLEAN_ARRAY:
+                    value = instance.get(category, name, info.defaultBooleanArray(), info.comment())
+                            .setIsListLengthFixed(info.listLengthFixed()).setMaxListLength(info.maxListLength())
+                            .setRequiresWorldRestart(worldRestart).setRequiresMcRestart(mcRestart).getBooleanList();
+                    break;
+                default:
+                    flag = false;
+                    break;
             }
             if (flag)
                 field.set(null, value);
