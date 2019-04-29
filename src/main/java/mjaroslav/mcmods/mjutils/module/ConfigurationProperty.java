@@ -9,20 +9,13 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ConfigField {
+public @interface ConfigurationProperty {
     /**
      * Configuration field name. Will use field name if it null or empty.
      * 
      * @return Default "".
      */
-    String customName() default "";
-
-    /**
-     * Category name (lower case). Used if there is no {@link ConfigCategory}.
-     * 
-     * @return Default "general".
-     */
-    String category() default "general";
+    String name() default "";
 
     /**
      * Comment on the configuration parameter.

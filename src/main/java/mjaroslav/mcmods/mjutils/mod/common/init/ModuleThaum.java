@@ -1,23 +1,19 @@
 package mjaroslav.mcmods.mjutils.mod.common.init;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import mjaroslav.mcmods.mjutils.mod.common.handler.ThaumEventHandler;
+import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import mjaroslav.mcmods.mjutils.module.Modular;
 import mjaroslav.mcmods.mjutils.module.Module;
 import mjaroslav.mcmods.mjutils.util.UtilsThaum;
-import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 
-@Module(modid = ModInfo.MODID)
+@Module(ModInfo.MODID)
 public class ModuleThaum implements Modular {
     @Override
-    public String name() {
-        return "Thaum";
-    }
-
-    @Override
     public int priority() {
-        return 4;
+        return 10;
     }
 
     @Override
@@ -27,20 +23,11 @@ public class ModuleThaum implements Modular {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(new ThaumEventHandler());
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
+        FMLCommonHandler.instance().bus().register(ThaumEventHandler.instance);
     }
 
     @Override
     public String[] dependencies() {
-        return new String[] { "Thaumcraft" };
-    }
-
-    @Override
-    public boolean canLoad() {
-        return true;
+        return new String[]{"Thaumcraft"};
     }
 }

@@ -1,7 +1,7 @@
 package mjaroslav.mcmods.mjutils.object.other;
 
-import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler;
-import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler.ResearchCopy;
+import mjaroslav.mcmods.mjutils.mod.common.handler.ThaumEventHandler;
+import mjaroslav.mcmods.mjutils.mod.common.handler.ThaumEventHandler.ResearchCopy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -22,7 +22,7 @@ public class ResearchItemCopy extends ResearchItem {
         super(key, category);
         this.originalKey = originalKey;
         this.setStub();
-        ThaumEventHandler.researchCopyList.add(new ResearchCopy(originalKey, key));
+        ThaumEventHandler.newResearchCopy(new ResearchCopy(originalKey, key));
         this.setParents(originalKey);
         this.setConcealed();
         this.setHidden();
@@ -33,7 +33,7 @@ public class ResearchItemCopy extends ResearchItem {
         super(key, category, new AspectList(), col, row, 1, icon);
         this.originalKey = originalKey;
         this.setStub();
-        ThaumEventHandler.researchCopyList.add(new ResearchCopy(originalKey, key));
+        ThaumEventHandler.newResearchCopy(new ResearchCopy(originalKey, key));
         this.setParents(originalKey);
         this.setConcealed();
         this.setHidden();
@@ -44,7 +44,7 @@ public class ResearchItemCopy extends ResearchItem {
         super(key, category, new AspectList(), col, row, 1, icon);
         this.originalKey = originalKey;
         this.setStub();
-        ThaumEventHandler.researchCopyList.add(new ResearchCopy(originalKey, key));
+        ThaumEventHandler.newResearchCopy(new ResearchCopy(originalKey, key));
         this.setParents(originalKey);
         this.setConcealed();
         this.setHidden();

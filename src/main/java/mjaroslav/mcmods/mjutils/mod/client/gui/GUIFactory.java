@@ -31,7 +31,7 @@ public class GUIFactory implements IModGuiFactory {
 
     public static class MJUtilsGUIConfig extends GuiConfig {
         public MJUtilsGUIConfig(GuiScreen parentScreen) {
-            super(parentScreen, ModMJUtils.config.toElementList(), ModInfo.MODID, false, false, ModInfo.NAME);
+            super(parentScreen, ModMJUtils.config.generalToElementList(), ModInfo.MODID, false, false, ModInfo.NAME);
         }
     }
 }

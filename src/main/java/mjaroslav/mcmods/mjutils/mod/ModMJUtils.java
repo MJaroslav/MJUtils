@@ -8,9 +8,9 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import mjaroslav.mcmods.mjutils.module.ConfigurationHandler;
-import mjaroslav.mcmods.mjutils.module.ModuleManager;
-import mjaroslav.mcmods.mjutils.module.ProxyBase;
+import mjaroslav.mcmods.mjutils.module.AnnotationBasedConfiguration;
+import mjaroslav.mcmods.mjutils.module.ModuleSystem;
+import mjaroslav.mcmods.mjutils.module.Proxy;
 
 import static mjaroslav.mcmods.mjutils.mod.lib.ModInfo.*;
 
@@ -19,10 +19,10 @@ public class ModMJUtils {
     @Instance(MODID)
     public static ModMJUtils instance;
 
-    public static ConfigurationHandler config = new ConfigurationHandler(MODID, LOG);
+    public static AnnotationBasedConfiguration config = new AnnotationBasedConfiguration(MODID, LOG);
     @SidedProxy(clientSide = CLIENTPROXY, serverSide = COMMONPROXY)
-    public static ProxyBase proxy;
-    private static ModuleManager initHandler;
+    public static Proxy proxy;
+    private static ModuleSystem initHandler;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -41,7 +41,7 @@ public class ModMJUtils {
 
     @EventHandler
     public void constr(FMLConstructionEvent event) {
-        initHandler = new ModuleManager(MODID, config, proxy);
-        initHandler.initHandler(event);
+        initHandler = new ModuleSystem(MODID, config, proxy);
+        initHandler.initSystem(event);
     }
 }

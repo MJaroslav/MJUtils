@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.handler;
+package mjaroslav.mcmods.mjutils.mod.common.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mjaroslav.mcmods.mjutils.object.event.BlockReactionEvent.PigZombieEvent;
@@ -8,6 +8,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 
 public class ReactionEventHandler {
+    public static final ReactionEventHandler instance = new ReactionEventHandler();
+
+    private ReactionEventHandler() {
+    }
+
     @SubscribeEvent
     public void onBlockHarvest(HarvestDropsEvent event) {
         if (event.world.isRemote || event.harvester == null || event.isSilkTouching)

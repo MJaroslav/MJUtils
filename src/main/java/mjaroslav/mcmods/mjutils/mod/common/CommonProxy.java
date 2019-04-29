@@ -2,11 +2,11 @@ package mjaroslav.mcmods.mjutils.mod.common;
 
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import mjaroslav.mcmods.mjutils.module.ProxyBase;
+import mjaroslav.mcmods.mjutils.module.Proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class CommonProxy extends ProxyBase {
+public class CommonProxy extends Proxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
     }

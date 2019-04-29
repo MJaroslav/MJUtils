@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.handler;
+package mjaroslav.mcmods.mjutils.mod.common.handler;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -7,6 +7,11 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class TooltipEventHandler {
+    public static final TooltipEventHandler instance = new TooltipEventHandler();
+
+    private TooltipEventHandler() {
+    }
+
     @SubscribeEvent
     public void itemTooltipEvent(ItemTooltipEvent event) {
         if (((event.showAdvancedItemTooltips && ConfigGeneralInfo.showOreDict) || ConfigGeneralInfo.showOreDictAlways)

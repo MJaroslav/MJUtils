@@ -33,7 +33,7 @@ public interface Modular extends Initializator {
     /**
      * Will be checked in {@link Loader#isModLoaded(String)}.
      *
-     * @return Array of modid.
+     * @return Array of modID.
      */
     default String[] dependencies() {
         return NONE_DEPENDENCIES;
