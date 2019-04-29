@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import mjaroslav.mcmods.mjutils.module.Initializator.Configurable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,7 @@ public class ModuleSystem {
     private final FileBasedConfiguration config;
     private final Proxy proxy;
     private final List<Modular> modules = new ArrayList<>();
-    private final Set<CustomConfiguration> configurations = new HashSet<>();
+    private final Set<Configurable> configurations = new HashSet<>();
 
 
     public ModuleSystem(String modID) {
@@ -39,7 +40,7 @@ public class ModuleSystem {
     }
 
     public ModuleSystem(String modID, FileBasedConfiguration config, Proxy proxy,
-                        CustomConfiguration... customConfigurations) {
+                        Configurable... customConfigurations) {
         this.modID = modID;
         this.config = config;
         this.proxy = proxy;
@@ -75,7 +76,7 @@ public class ModuleSystem {
         LOGGER.info(String.format("Construction of \"%s\"", modID));
         if (config != null)
             config.construct(event);
-        for (CustomConfiguration config : configurations)
+        for (Configurable config : configurations)
             config.construct(event);
         for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.dependencies()))
@@ -88,7 +89,7 @@ public class ModuleSystem {
         LOGGER.info(String.format("Pre initialization of \"%s\"", modID));
         if (config != null)
             config.preInit(event);
-        for (CustomConfiguration config : configurations)
+        for (Configurable config : configurations)
             config.preInit(event);
         for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.dependencies()))
@@ -101,7 +102,7 @@ public class ModuleSystem {
         LOGGER.info(String.format("Initialization of \"%s\"", modID));
         if (config != null)
             config.init(event);
-        for (CustomConfiguration config : configurations)
+        for (Configurable config : configurations)
             config.init(event);
         for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.dependencies()))
@@ -114,7 +115,7 @@ public class ModuleSystem {
         LOGGER.info(String.format("Post initialization of \"%s\"", modID));
         if (config != null)
             config.postInit(event);
-        for (CustomConfiguration config : configurations)
+        for (Configurable config : configurations)
             config.postInit(event);
         for (Modular module : modules)
             if (module.canLoad() && modsIsLoaded(module.dependencies()))

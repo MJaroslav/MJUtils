@@ -7,4 +7,6 @@ public interface Initializator {
     default void init(FMLInitializationEvent event) {}
     default void postInit(FMLPostInitializationEvent event) {}
     default void construct(FMLConstructionEvent event) {}
+
+    interface Configurable extends Initializator {}
 }
