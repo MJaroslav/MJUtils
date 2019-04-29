@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.constant;
+package mjaroslav.mcmods.mjutils.object.constant;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

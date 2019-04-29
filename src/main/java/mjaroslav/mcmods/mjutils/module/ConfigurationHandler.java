@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.module;
+package mjaroslav.mcmods.mjutils.module;
 
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;

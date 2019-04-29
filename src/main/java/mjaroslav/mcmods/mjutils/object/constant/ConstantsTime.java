@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.constant;
+package mjaroslav.mcmods.mjutils.object.constant;
 
 public class ConstantsTime {
     public static final int SECOND = 20;

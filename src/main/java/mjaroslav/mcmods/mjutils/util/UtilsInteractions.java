@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.util;
+package mjaroslav.mcmods.mjutils.util;
 
 import mjaroslav.mcmods.mjutils.hook.HookConfig;
 import mjaroslav.mcmods.mjutils.hook.HooksBlockBreakingCreative;

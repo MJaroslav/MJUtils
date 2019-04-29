@@ -1,6 +1,6 @@
-package mjaroslav.mcmods.mjutils.lib.handler;
+package mjaroslav.mcmods.mjutils.handler;
 
-import static mjaroslav.mcmods.mjutils.lib.util.UtilsThaum.*;
+import static mjaroslav.mcmods.mjutils.util.UtilsThaum.*;
 
 import java.util.ArrayList;
 

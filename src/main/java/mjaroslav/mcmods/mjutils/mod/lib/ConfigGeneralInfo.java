@@ -1,8 +1,7 @@
 package mjaroslav.mcmods.mjutils.mod.lib;
 
-import mjaroslav.mcmods.mjutils.lib.module.ConfigCategory;
-import mjaroslav.mcmods.mjutils.lib.module.ConfigField;
-import net.minecraftforge.common.config.Configuration;
+import mjaroslav.mcmods.mjutils.module.ConfigCategory;
+import mjaroslav.mcmods.mjutils.module.ConfigField;
 
 @ConfigCategory(modid = ModInfo.MODID, comment = "Main options.")
 public class ConfigGeneralInfo {

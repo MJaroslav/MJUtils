@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.util;
+package mjaroslav.mcmods.mjutils.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;

@@ -5,24 +5,24 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import mjaroslav.mcmods.mjutils.lib.handler.FuelHandler;
-import mjaroslav.mcmods.mjutils.lib.handler.ReactionEventHandler;
-import mjaroslav.mcmods.mjutils.lib.handler.TooltipEventHandler;
-import mjaroslav.mcmods.mjutils.lib.module.ConfigurationBase.ConfigurationEventHandler;
-import mjaroslav.mcmods.mjutils.lib.module.Modular;
-import mjaroslav.mcmods.mjutils.lib.module.Module;
+import mjaroslav.mcmods.mjutils.handler.FuelHandler;
+import mjaroslav.mcmods.mjutils.handler.ReactionEventHandler;
+import mjaroslav.mcmods.mjutils.handler.TooltipEventHandler;
+import mjaroslav.mcmods.mjutils.module.ConfigurationBase.ConfigurationEventHandler;
+import mjaroslav.mcmods.mjutils.module.Modular;
+import mjaroslav.mcmods.mjutils.module.Module;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import net.minecraftforge.common.MinecraftForge;
 
 @Module(modid = ModInfo.MODID)
 public class ModuleMain implements Modular {
     @Override
-    public String getModuleName() {
+    public String name() {
         return "Main";
     }
 
     @Override
-    public int getPriority() {
+    public int priority() {
         return 0;
     }
 
@@ -43,7 +43,7 @@ public class ModuleMain implements Modular {
     }
 
     @Override
-    public String[] modDependencies() {
+    public String[] dependencies() {
         return null;
     }
 

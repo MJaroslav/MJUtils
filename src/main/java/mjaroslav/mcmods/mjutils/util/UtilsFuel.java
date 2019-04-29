@@ -1,6 +1,6 @@
-package mjaroslav.mcmods.mjutils.lib.util;
+package mjaroslav.mcmods.mjutils.util;
 
-import static mjaroslav.mcmods.mjutils.lib.util.UtilsSmelting.*;
+import static mjaroslav.mcmods.mjutils.util.UtilsSmelting.*;
 
 import java.util.HashMap;
 import java.util.Map;

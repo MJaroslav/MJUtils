@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.handler;
+package mjaroslav.mcmods.mjutils.handler;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

@@ -2,21 +2,21 @@ package mjaroslav.mcmods.mjutils.mod.common.init;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
-import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler;
-import mjaroslav.mcmods.mjutils.lib.module.Modular;
-import mjaroslav.mcmods.mjutils.lib.module.Module;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsThaum;
+import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler;
+import mjaroslav.mcmods.mjutils.module.Modular;
+import mjaroslav.mcmods.mjutils.module.Module;
+import mjaroslav.mcmods.mjutils.util.UtilsThaum;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 
 @Module(modid = ModInfo.MODID)
 public class ModuleThaum implements Modular {
     @Override
-    public String getModuleName() {
+    public String name() {
         return "Thaum";
     }
 
     @Override
-    public int getPriority() {
+    public int priority() {
         return 4;
     }
 
@@ -35,7 +35,7 @@ public class ModuleThaum implements Modular {
     }
 
     @Override
-    public String[] modDependencies() {
+    public String[] dependencies() {
         return new String[] { "Thaumcraft" };
     }
 

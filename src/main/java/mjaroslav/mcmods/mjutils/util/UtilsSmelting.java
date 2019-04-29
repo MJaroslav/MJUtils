@@ -1,6 +1,6 @@
-package mjaroslav.mcmods.mjutils.lib.util;
+package mjaroslav.mcmods.mjutils.util;
 
-import mjaroslav.mcmods.mjutils.lib.constant.ConstantsTime;
+import mjaroslav.mcmods.mjutils.object.constant.ConstantsTime;
 
 public class UtilsSmelting {
     /**

@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.module;
+package mjaroslav.mcmods.mjutils.module;
 
 import cpw.mods.fml.client.registry.*;
 import cpw.mods.fml.common.FMLCommonHandler;

@@ -1,6 +1,6 @@
 package mjaroslav.mcmods.mjutils.object.item;
 
-import mjaroslav.mcmods.mjutils.lib.util.UtilsInventory;
+import mjaroslav.mcmods.mjutils.util.UtilsInventory;
 import net.minecraft.item.ItemStack;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.module;
+package mjaroslav.mcmods.mjutils.module;
 
 import java.lang.annotation.*;
 
@@ -15,5 +15,5 @@ public @interface Module {
      *
      * @return Modification id.
      */
-    String modid();
+    String value();
 }

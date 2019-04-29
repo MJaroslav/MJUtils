@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.event;
+package mjaroslav.mcmods.mjutils.object.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
@@ -29,7 +29,7 @@ public class BlockReactionEvent extends Event {
     }
 
     /**
-     * Fired if {@link mjaroslav.mcmods.mjutils.lib.util.UtilsInteractions#blockIsPigzombieTrigger(Block, int)
+     * Fired if {@link mjaroslav.mcmods.mjutils.util.UtilsInteractions#blockIsPigzombieTrigger(Block, int)
      * blockIsPigzombieTrigger(Block, meta)} is true.
      *
      * @author MJaroslav

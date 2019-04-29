@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.event;
+package mjaroslav.mcmods.mjutils.object.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;

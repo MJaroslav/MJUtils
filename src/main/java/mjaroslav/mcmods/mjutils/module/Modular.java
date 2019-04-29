@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.module;
+package mjaroslav.mcmods.mjutils.module;
 
 import cpw.mods.fml.common.Loader;
 
@@ -13,7 +13,9 @@ public interface Modular extends Initializator {
      *
      * @return Module name.
      */
-    String getModuleName();
+    default String name() {
+        return this.getClass().getSimpleName();
+    }
 
     /**
      * Priority of module loading. If you use an existing level, then this
@@ -22,19 +24,27 @@ public interface Modular extends Initializator {
      *
      * @return Priority: 0 - first, 1 - second...
      */
-    int getPriority();
+    default int priority() {
+        return 0;
+    }
+
+    String[] NONE_DEPENDENCIES = new String[]{};
 
     /**
      * Will be checked in {@link Loader#isModLoaded(String)}.
-     * 
+     *
      * @return Array of modid.
      */
-    String[] modDependencies();
+    default String[] dependencies() {
+        return NONE_DEPENDENCIES;
+    }
 
     /**
      * Can load module.
-     * 
+     *
      * @return Set true if you wont use it.
      */
-    boolean canLoad();
+    default boolean canLoad() {
+        return true;
+    }
 }

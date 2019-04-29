@@ -24,8 +24,8 @@ public class HookConfig {
             LOG.error("Failed to load hooks configuration!", e);
             LOG.error("Trying to create default hooks configuration file...");
             String[] defaultConfiguration = new String[]{
-                    COMMENT_MARK + " If you want to disable some hooks, just remove the comment mark (#) from its " +
-                            "line.",
+                    COMMENT_MARK + " If you want to disable some hooks, just remove the comment mark (" + COMMENT_MARK +
+                            ") from its " + "line.",
                     COMMENT_MARK + " Required Minecraft restart.",
                     COMMENT_MARK + " Game changes that are dependent on disabled hooks will be disabled.",
                     COMMENT_MARK,
@@ -42,7 +42,7 @@ public class HookConfig {
         }
     }
 
-    public static boolean hookIsEnabled(String name) {
+    private static boolean hookIsEnabled(String name) {
         return !DISABLED_HOOKS.contains(name);
     }
 
@@ -50,6 +50,7 @@ public class HookConfig {
         return hookIsEnabled(HooksBlockBreakingCreative.DISABLE_ID);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean fishingEvent() {
         return hookIsEnabled(HooksFishingEvent.DISABLE_ID);
     }

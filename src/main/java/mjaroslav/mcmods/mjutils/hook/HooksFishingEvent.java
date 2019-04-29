@@ -2,7 +2,7 @@ package mjaroslav.mcmods.mjutils.hook;
 
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.Hook;
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.ReturnCondition;
-import mjaroslav.mcmods.mjutils.lib.event.FishingSuccessEvent;
+import mjaroslav.mcmods.mjutils.object.event.FishingSuccessEvent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;

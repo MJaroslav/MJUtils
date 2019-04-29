@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.lib.module;
+package mjaroslav.mcmods.mjutils.module;
 
 import java.util.*;
 
@@ -19,22 +19,22 @@ import cpw.mods.fml.common.event.*;
  *
  * @author MJaroslav
  */
-public class ModuleHandler {
+public class ModuleManager {
     private static final Logger logger = LogManager.getLogger("Module System");
     private final String modid;
     private final ConfigurationBase config;
     private final ProxyBase proxy;
     private final ArrayList<Modular> modules = new ArrayList<>();
 
-    private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.getPriority() - o1.getPriority();
+    private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.priority() - o1.priority();
 
-    public ModuleHandler(String modid) {
+    public ModuleManager(String modid) {
         this.modid = modid;
         config = null;
         proxy = null;
     }
 
-    public ModuleHandler(String modid, ConfigurationBase config, ProxyBase proxy) {
+    public ModuleManager(String modid, ConfigurationBase config, ProxyBase proxy) {
         this.modid = modid;
         this.config = config;
         this.proxy = proxy;
@@ -60,8 +60,8 @@ public class ModuleHandler {
                         Object instance = Class.forName(data.getClassName()).newInstance();
                         if (instance instanceof Modular) {
                             modules.add((Modular) instance);
-                            logger.info("Found module for \"" + modid + "\": \"" + ((Modular) instance).getModuleName()
-                                    + "\" with priority " + ((Modular) instance).getPriority());
+                            logger.info("Found module for \"" + modid + "\": \"" + ((Modular) instance).name()
+                                    + "\" with priority " + ((Modular) instance).priority());
                             count++;
                         }
                     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -79,7 +79,7 @@ public class ModuleHandler {
         if (config != null)
             config.construct(event);
         for (Modular module : modules)
-            if (module.canLoad() && modsIsLoaded(module.modDependencies()))
+            if (module.canLoad() && modsIsLoaded(module.dependencies()))
                 module.construct(event);
         if (proxy != null)
             proxy.construct(event);
@@ -90,7 +90,7 @@ public class ModuleHandler {
         if (config != null)
             config.preInit(event);
         for (Modular module : modules)
-            if (module.canLoad() && modsIsLoaded(module.modDependencies()))
+            if (module.canLoad() && modsIsLoaded(module.dependencies()))
                 module.preInit(event);
         if (proxy != null)
             proxy.preInit(event);
@@ -101,7 +101,7 @@ public class ModuleHandler {
         if (config != null)
             config.init(event);
         for (Modular module : modules)
-            if (module.canLoad() && modsIsLoaded(module.modDependencies()))
+            if (module.canLoad() && modsIsLoaded(module.dependencies()))
                 module.init(event);
         if (proxy != null)
             proxy.init(event);
@@ -112,7 +112,7 @@ public class ModuleHandler {
         if (config != null)
             config.postInit(event);
         for (Modular module : modules)
-            if (module.canLoad() && modsIsLoaded(module.modDependencies()))
+            if (module.canLoad() && modsIsLoaded(module.dependencies()))
                 module.postInit(event);
         if (proxy != null)
             proxy.postInit(event);
@@ -124,7 +124,7 @@ public class ModuleHandler {
 
     /**
      * Get list of modules. Use
-     * {@link ModuleHandler#initHandler(FMLConstructionEvent)} for search.
+     * {@link ModuleManager#initHandler(FMLConstructionEvent)} for search.
      *
      * @return List of found modules of this handler.
      */

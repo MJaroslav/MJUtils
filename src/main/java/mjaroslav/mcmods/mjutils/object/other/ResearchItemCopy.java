@@ -1,7 +1,7 @@
 package mjaroslav.mcmods.mjutils.object.other;
 
-import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler;
-import mjaroslav.mcmods.mjutils.lib.handler.ThaumEventHandler.ResearchCopy;
+import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler;
+import mjaroslav.mcmods.mjutils.handler.ThaumEventHandler.ResearchCopy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;

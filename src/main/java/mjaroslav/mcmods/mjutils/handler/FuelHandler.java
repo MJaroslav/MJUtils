@@ -1,10 +1,10 @@
-package mjaroslav.mcmods.mjutils.lib.handler;
+package mjaroslav.mcmods.mjutils.handler;
 
 import java.util.Map.Entry;
 
 import cpw.mods.fml.common.IFuelHandler;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsFuel;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsInventory;
+import mjaroslav.mcmods.mjutils.util.UtilsFuel;
+import mjaroslav.mcmods.mjutils.util.UtilsInventory;
 import net.minecraft.item.ItemStack;
 
 public class FuelHandler implements IFuelHandler {

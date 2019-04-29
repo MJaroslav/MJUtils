@@ -1,9 +1,9 @@
-package mjaroslav.mcmods.mjutils.lib.handler;
+package mjaroslav.mcmods.mjutils.handler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mjaroslav.mcmods.mjutils.lib.event.BlockReactionEvent.PigZombieEvent;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsInteractions;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsWorld;
+import mjaroslav.mcmods.mjutils.object.event.BlockReactionEvent.PigZombieEvent;
+import mjaroslav.mcmods.mjutils.util.UtilsInteractions;
+import mjaroslav.mcmods.mjutils.util.UtilsWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 

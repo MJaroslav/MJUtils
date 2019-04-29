@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.Hook;
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.ReturnCondition;
-import mjaroslav.mcmods.mjutils.lib.util.UtilsInteractions;
+import mjaroslav.mcmods.mjutils.util.UtilsInteractions;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -33,8 +33,9 @@ public class HooksBlockBreakingCreative {
 
     // TODO: Выбрать между hook'ом и BreakEvent'ом.
     @Hook(returnCondition = ReturnCondition.ALWAYS)
-    public static BlockEvent.BreakEvent onBlockBreakEvent(ForgeHooks instance, World world, WorldSettings.GameType gameType,
-                                                          EntityPlayerMP entityPlayer, int x, int y, int z) {
+    public static BlockEvent.BreakEvent onBlockBreakEvent(ForgeHooks instance, World world,
+                                                          WorldSettings.GameType gameType,  EntityPlayerMP entityPlayer,
+                                                          int x, int y, int z) {
         // TODO: Попробовать реализовать через hook локальной переменной.
         boolean preCancelEvent = false;
         if (gameType.isAdventure() && !entityPlayer.isCurrentToolAdventureModeExempt(x, y, z))
