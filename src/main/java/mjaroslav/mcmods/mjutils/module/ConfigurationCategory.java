@@ -21,7 +21,7 @@ public @interface ConfigurationCategory {
     boolean DEFAULT_REQUIRES_WORLD_RESTART = false;
     boolean DEFAULT_REQUIRED_MC_RESTART = false;
 
-    String modID();
+    String modID() default "";
 
     String name() default DEFAULT_NAME;
 

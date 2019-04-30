@@ -37,7 +37,7 @@ public abstract class FileBasedConfiguration implements Initializator {
         try {
             getInstance().load();
         } catch (Exception e) {
-            logger.error("Unable to load configuration!");
+            logger.error(String.format("Unable to load configuration for \"%s\"!", modID));
         } finally {
             if (getInstance().hasChanged())
                 getInstance().save();
@@ -64,7 +64,7 @@ public abstract class FileBasedConfiguration implements Initializator {
                 if (config.modID.equals(newConfig.modID))
                     return;
             list.add(newConfig);
-            ModInfo.LOG.info(String.format("Added configuration file for \"%s\" modID.", newConfig.modID));
+            ModInfo.LOG.info(String.format("Added configuration file for \"%s\".", newConfig.modID));
         }
 
         @SubscribeEvent
@@ -72,7 +72,7 @@ public abstract class FileBasedConfiguration implements Initializator {
             for (FileBasedConfiguration config : list)
                 if (event.modID.equals(config.modID)) {
                     config.sync();
-                    config.logger.info(String.format("Configuration synchronized for \"%s\" modID.", config.modID));
+                    config.logger.info(String.format("Configuration synchronized for \"%s\".", config.modID));
                     break;
                 }
         }

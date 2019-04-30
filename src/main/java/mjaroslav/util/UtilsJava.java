@@ -3,6 +3,10 @@ package mjaroslav.util;
 import net.minecraft.item.ItemStack;
 
 public class UtilsJava {
+    public static boolean stringsNotNullAndEquals(String a, String b) {
+        return a != null && a.equals(b);
+    }
+
     public static boolean stringIsNotEmpty(String input) {
         return input != null && input.length() > 0;
     }

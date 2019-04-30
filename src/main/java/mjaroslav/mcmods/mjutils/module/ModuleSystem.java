@@ -58,8 +58,8 @@ public class ModuleSystem {
         modules.sort(ASCENDING_COMPARATOR);
         List<String> names = new ArrayList<>();
         modules.forEach(module -> names.add(module.name()));
-        LOGGER.info(String.format("Search finished, found %s module%s [%s]", count, count == 1 ? "" : "s"),
-                String.join(", ", names));
+        LOGGER.info(String.format("Search finished, found %s module%s [%s]", count, count == 1 ? "" : "s",
+                String.join(", ", names)));
         constuct(event);
     }
 
