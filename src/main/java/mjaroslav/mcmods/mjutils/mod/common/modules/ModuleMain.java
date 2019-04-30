@@ -1,4 +1,4 @@
-package mjaroslav.mcmods.mjutils.mod.common.init;
+package mjaroslav.mcmods.mjutils.mod.common.modules;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

@@ -16,7 +16,6 @@ import java.util.*;
 
 import static cpw.mods.fml.relauncher.ReflectionHelper.getPrivateValue;
 
-@SuppressWarnings("ALL")
 public class UtilsFishing {
     private static final Map<FishableCategory, Set<WeightedRandomFishable>> FISHABLE_MAP = new HashMap<>();
 
@@ -105,14 +104,11 @@ public class UtilsFishing {
             try {
                 switch (category) {
                     case FISH:
-                        return new HashSet((ArrayList<WeightedRandomFishable>) ((ArrayList<WeightedRandomFishable>)
-                                getPrivateValue(FishingHooks.class, new FishingHooks(), "fish")));
+                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "fish"));
                     case JUNK:
-                        return new HashSet((ArrayList<WeightedRandomFishable>) ((ArrayList<WeightedRandomFishable>)
-                                getPrivateValue(FishingHooks.class, new FishingHooks(), "junk")));
+                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "junk"));
                     case TREASURE:
-                        return new HashSet((ArrayList<WeightedRandomFishable>) ((ArrayList<WeightedRandomFishable>)
-                                getPrivateValue(FishingHooks.class, new FishingHooks(), "treasure")));
+                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "treasure"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -48,10 +48,14 @@ public class UtilsInteractions {
         setPigzombieTriggerBlock(block, OreDictionary.WILDCARD_VALUE, value);
     }
 
-    public static void setPigzombieTriggerBlock(Block block, int meta, boolean value) {
+    public static void setPigzombieTriggerBlock(ItemStack stack, boolean value) {
         if (value)
-            PIGZOMBIE_TRIGGER_BLOCKS.add(new ItemStack(block, 1, meta));
-        else PIGZOMBIE_TRIGGER_BLOCKS.remove(new ItemStack(block, 1, meta));
+            PIGZOMBIE_TRIGGER_BLOCKS.add(stack);
+        else PIGZOMBIE_TRIGGER_BLOCKS.remove(stack);
+    }
+
+    public static void setPigzombieTriggerBlock(Block block, int meta, boolean value) {
+        setPigzombieTriggerBlock(new ItemStack(block, 1, meta), value);
     }
 
     public static boolean blockIsPigzombieTrigger(Block block, int meta) {

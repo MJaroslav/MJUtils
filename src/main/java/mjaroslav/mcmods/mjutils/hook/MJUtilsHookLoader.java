@@ -28,5 +28,12 @@ public class MJUtilsHookLoader extends HookLoader {
         else
             ModInfo.LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be use original!",
                     HooksFishingEvent.DISABLE_ID));
+        if (HookConfig.fishingNullFix())
+            registerHookContainer(HooksFishingNullFix.class.getName());
+        else ModInfo.LOG.warn(String.format("Hook \"%s\" disabled! You may catch crashes while you will use " +
+                        "clear(-All) in UtilsFishing!",
+                HooksFishingEvent.DISABLE_ID));
+        if (HookConfig.fishingNullFix() || HookConfig.fishingEvent())
+            registerHookContainer(HookGetRandomFishable.class.getName());
     }
 }

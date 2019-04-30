@@ -13,17 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-/**
- * Used to connect the modular system to the modification. Installation. Create
- * an instance of the handler with modification id in the argument. Call in each
- * initialization event of modification using the same method from the handler.
- * Example: preInit({@link FMLPreInitializationEvent} e) {handler.preInit(e)}.
- * Add initSystem({@link FMLConstructionEvent} e) method to the a similar event
- * in the main class. Register your modules through the {@link Module}
- * annotation and {@link Modular} interface.
- *
- * @author MJaroslav
- */
+
 public class ModuleSystem {
     private static final Logger LOGGER = LogManager.getLogger("Module System");
     private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.priority() - o1.priority();
@@ -58,8 +48,6 @@ public class ModuleSystem {
                     Object instance = Class.forName(data.getClassName()).newInstance();
                     if (instance instanceof Modular) {
                         modules.add((Modular) instance);
-                        LOGGER.info("Found module for \"" + modID + "\": \"" + ((Modular) instance).name()
-                                + "\" with priority " + ((Modular) instance).priority());
                         count++;
                     }
                 } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -68,7 +56,10 @@ public class ModuleSystem {
             }
         }
         modules.sort(ASCENDING_COMPARATOR);
-        LOGGER.info("Search finished, found " + count + " module" + (count == 1 ? "" : "s"));
+        List<String> names = new ArrayList<>();
+        modules.forEach(module -> names.add(module.name()));
+        LOGGER.info(String.format("Search finished, found %s module%s [%s]", count, count == 1 ? "" : "s"),
+                String.join(", ", names));
         constuct(event);
     }
 
@@ -122,20 +113,6 @@ public class ModuleSystem {
                 module.postInit(event);
         if (proxy != null)
             proxy.postInit(event);
-    }
-
-    public String getModID() {
-        return modID;
-    }
-
-    /**
-     * Get list of modules. Use
-     * {@link ModuleSystem#initSystem(FMLConstructionEvent)} for search.
-     *
-     * @return List of found modules of this handler.
-     */
-    public List<Modular> getModules() {
-        return modules;
     }
 
     public static boolean modsIsLoaded(String... modIDs) {

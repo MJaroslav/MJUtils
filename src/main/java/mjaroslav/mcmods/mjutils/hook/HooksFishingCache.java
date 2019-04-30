@@ -50,23 +50,6 @@ public class HooksFishingCache {
     }
 
     @Hook(returnCondition = ALWAYS, targetMethod = "<clinit>")
-    public static void removeTreasure(FishingHooks instance) {
-    }
-
-    @Hook(returnCondition = ALWAYS)
-    public static ItemStack getRandomFishable(FishingHooks instance, Random rand, float chance, int luck, int speed) {
-        float junkChance = 0.1F - luck * 0.025F - speed * 0.01F;
-        float treasureChance = 0.05F + luck * 0.01F - speed * 0.01F;
-        junkChance = MathHelper.clamp_float(junkChance, 0.0F, 1.0F);
-        treasureChance = MathHelper.clamp_float(treasureChance, 0.0F, 1.0F);
-        if (chance < junkChance)
-            return ((WeightedRandomFishable) WeightedRandom.getRandomItem(rand,
-                    UtilsFishing.getCategory(JUNK))).func_150708_a(rand);
-        chance -= junkChance;
-        if (chance < treasureChance)
-            return ((WeightedRandomFishable) WeightedRandom.getRandomItem(rand,
-                    UtilsFishing.getCategory(TREASURE))).func_150708_a(rand);
-        return ((WeightedRandomFishable) WeightedRandom.getRandomItem(rand,
-                UtilsFishing.getCategory(FISH))).func_150708_a(rand);
+    public static void clinit(FishingHooks instance) {
     }
 }

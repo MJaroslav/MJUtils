@@ -31,7 +31,8 @@ public class HookConfig {
                     COMMENT_MARK,
                     COMMENT_MARK + " " + HooksBlockBreakingCreative.DISABLE_ID,
                     COMMENT_MARK + " " + HooksFishingEvent.DISABLE_ID,
-                    COMMENT_MARK + " " + HooksFishingCache.DISABLE_ID
+                    COMMENT_MARK + " " + HooksFishingCache.DISABLE_ID,
+                    COMMENT_MARK + " " + HooksFishingNullFix.DISABLE_ID
             };
             try {
                 Files.write(Paths.get(DISABLED_HOOKS_FILE), Arrays.asList(defaultConfiguration));
@@ -57,5 +58,9 @@ public class HookConfig {
 
     public static boolean fishingCache() {
         return hookIsEnabled(HooksFishingCache.DISABLE_ID);
+    }
+
+    public static boolean fishingNullFix() {
+        return hookIsEnabled(HooksFishingNullFix.DISABLE_ID);
     }
 }

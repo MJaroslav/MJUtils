@@ -4,13 +4,11 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLConstructionEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.*;
 import mjaroslav.mcmods.mjutils.module.AnnotationBasedConfiguration;
 import mjaroslav.mcmods.mjutils.module.ModuleSystem;
 import mjaroslav.mcmods.mjutils.module.Proxy;
+import mjaroslav.mcmods.mjutils.util.UtilsInteractions;
 
 import static mjaroslav.mcmods.mjutils.mod.lib.ModInfo.*;
 
@@ -43,5 +41,38 @@ public class ModMJUtils {
     public void constr(FMLConstructionEvent event) {
         initHandler = new ModuleSystem(MODID, config, proxy);
         initHandler.initSystem(event);
+    }
+
+    @EventHandler
+    public void communications(FMLInterModComms.IMCEvent event) {
+        for (FMLInterModComms.IMCMessage message : event.getMessages())
+            switch (message.key) {
+                case "interactions.block_in_creative": {
+                    if (message.isItemStackMessage()) {
+                        UtilsInteractions.setDisableBlockBreakingInCreative(message.getItemStackValue(), true);
+                    } else LOG.error("IMC@interactions.block_in_creative: value must be ItemStack.");
+                }
+                break;
+                case "interactions.unblock_in_creative": {
+                    if (message.isItemStackMessage()) {
+                        UtilsInteractions.setDisableBlockBreakingInCreative(message.getItemStackValue(), false);
+                    } else LOG.error("IMC@interactions.unblock_in_creative: value must be ItemStack.");
+                }
+                break;
+                case "interactions.pigzombie_trigger_block": {
+                    if (message.isItemStackMessage()) {
+                        UtilsInteractions.setPigzombieTriggerBlock(message.getItemStackValue(), true);
+                    } else LOG.error("IMC@interactions.pigzombie_trigger_block: value must be ItemStack.");
+                }
+                break;
+                case "interactions.not_pigzombie_trigger_block": {
+                    if (message.isItemStackMessage()) {
+                        UtilsInteractions.setPigzombieTriggerBlock(message.getItemStackValue(), false);
+                    } else LOG.error("IMC@not_interactions.pigzombie_trigger_block: value must be ItemStack.");
+                }
+                break;
+                default:
+                    LOG.warn(String.format("Unknown IMC message: %s", message.key));
+            }
     }
 }
