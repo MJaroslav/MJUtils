@@ -208,7 +208,6 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
     }
 
 
-
     @Override
     public int compareTo(AsmHook o) {
         if (injectorFactory.isPriorityInverted && o.injectorFactory.isPriorityInverted) {
@@ -377,7 +376,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * float f1 = ...;
          * //...
          * В таком случае у f будет номер 7, а у f1 - 8.
-         *
+         * <p>
          * Если целевой метод static, то не нужно начинать отсчет локальных переменных с нуля, номера
          * будут смещены автоматически.
          *
@@ -552,6 +551,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
 
         /**
          * Напрямую указывает тип, возвращаемый хук-методом.
+         *
          * @param type
          */
         protected void setHookMethodReturnType(Type type) {
@@ -601,7 +601,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * Задает метод, результат вызова которого будет возвращён при вызове return.
          *
          * @param methodName название метода, результат вызова которого следует возвращать
-         * @throws IllegalStateException    если возвращаемое значение не установлено на ANOTHER_METHOD_RETURN_VALUE
+         * @throws IllegalStateException если возвращаемое значение не установлено на ANOTHER_METHOD_RETURN_VALUE
          */
         public Builder setReturnMethod(String methodName) {
             if (AsmHook.this.returnValue != ReturnValue.ANOTHER_METHOD_RETURN_VALUE) {

@@ -12,7 +12,6 @@ import java.util.Random;
 
 import static mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
 import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
-import static net.minecraftforge.common.FishingHooks.FishableCategory.FISH;
 
 public class HookGetRandomFishable {
     @Hook(returnCondition = ALWAYS)

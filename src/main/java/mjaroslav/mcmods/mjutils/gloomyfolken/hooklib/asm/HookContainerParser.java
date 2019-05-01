@@ -28,7 +28,7 @@ public class HookContainerParser {
     private HashMap<Integer, Integer> parameterAnnotations = new HashMap<Integer, Integer>();
 
     private boolean inHookAnnotation;
-    
+
     private static final String HOOK_DESC = Type.getDescriptor(Hook.class);
     private static final String LOCAL_DESC = Type.getDescriptor(LocalVariable.class);
     private static final String RETURN_DESC = Type.getDescriptor(ReturnValue.class);
@@ -158,7 +158,7 @@ public class HookContainerParser {
         }
 
         if (annotationValues.containsKey("returnType")) {
-            builder.setTargetMethodReturnType((String)annotationValues.get("returnType"));
+            builder.setTargetMethodReturnType((String) annotationValues.get("returnType"));
         }
 
         ReturnCondition returnCondition = ReturnCondition.NEVER;
@@ -194,7 +194,7 @@ public class HookContainerParser {
         }
 
         if (annotationValues.containsKey("priority")) {
-            builder.setPriority(HookPriority.valueOf((String)annotationValues.get("priority")));
+            builder.setPriority(HookPriority.valueOf((String) annotationValues.get("priority")));
         }
 
         builder.setHookMethodReturnType(methodType.getReturnType());
@@ -212,7 +212,6 @@ public class HookContainerParser {
     }
 
 
-
     private class HookClassVisitor extends ClassVisitor {
 
         public HookClassVisitor() {
@@ -226,8 +225,7 @@ public class HookContainerParser {
         }
 
         @Override
-        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
-        {
+        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             boolean publicAndStatic = (access & Opcodes.ACC_PUBLIC) != 0 && (access & Opcodes.ACC_STATIC) != 0;
             HookContainerParser.this.visitMethod(name, desc, publicAndStatic);
             return new HookMethodVisitor();
@@ -247,7 +245,7 @@ public class HookContainerParser {
         public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
             HookContainerParser.this.visitAnnotation(desc);
             return new HookAnnotationVisitor();
-    }
+        }
 
         public AnnotationVisitor visitParameterAnnotation(final int parameter, String desc, boolean visible) {
             if (RETURN_DESC.equals(desc)) {

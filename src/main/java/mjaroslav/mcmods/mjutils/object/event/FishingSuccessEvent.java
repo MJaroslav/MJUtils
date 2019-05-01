@@ -8,20 +8,67 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.FishingHooks;
 
+/**
+ * Fire when player catch a item out of the water by fishing rod.
+ */
 @Cancelable
 public class FishingSuccessEvent extends Event {
+    /**
+     * FishHook rod owner.
+     */
     public final EntityPlayer fisher;
+    /**
+     * Can be changed. Should not be null;
+     */
     public FishingHooks.FishableCategory category;
+    /**
+     * Can be changed. Can be null.
+     */
     public ItemStack catchStack;
+    /**
+     * Event caller.
+     */
     public final EntityFishHook fishHook;
+    /**
+     * Original change. Value [0..1].
+     */
     public final float chance;
+    /**
+     * Level of luck enchantment.
+     */
     public final int luck;
+    /**
+     * Level of speed enchantment.
+     */
     public final int speed;
+    /**
+     * FishHook world.
+     */
     public final World world;
+    /**
+     * FishHook server posX.
+     */
     public final int x;
+    /**
+     * FishHook server posY.
+     */
     public final int y;
+    /**
+     * FishHook server posZ.
+     */
     public final int z;
 
+    /**
+     * See class documentation.
+     *
+     * @param fisher     see {@link FishingSuccessEvent#fisher}
+     * @param fishHook   see {@link FishingSuccessEvent#fishHook}
+     * @param category   see {@link FishingSuccessEvent#category}
+     * @param catchStack see {@link FishingSuccessEvent#catchStack}
+     * @param chance     see {@link FishingSuccessEvent#chance}
+     * @param luck       see {@link FishingSuccessEvent#luck}
+     * @param speed      see {@link FishingSuccessEvent#speed}
+     */
     public FishingSuccessEvent(EntityPlayer fisher, EntityFishHook fishHook, FishingHooks.FishableCategory category,
                                ItemStack catchStack, float chance, int luck, int speed) {
         this.fisher = fisher;

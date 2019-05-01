@@ -20,6 +20,7 @@ public class HookConfig {
             for (String line : Files.readAllLines(Paths.get(DISABLED_HOOKS_FILE)))
                 if (!line.startsWith(COMMENT_MARK))
                     DISABLED_HOOKS.add(line.trim().toLowerCase());
+            LOG.info(String.format("Disabled hooks: [%s]", String.join(", ", DISABLED_HOOKS)));
         } catch (IOException e) {
             LOG.error("Failed to load hooks configuration!", e);
             LOG.error("Trying to create default hooks configuration file...");
@@ -51,7 +52,6 @@ public class HookConfig {
         return hookIsEnabled(HooksBlockBreakingCreative.DISABLE_ID);
     }
 
-    @SuppressWarnings("WeakerAccess")
     public static boolean fishingEvent() {
         return hookIsEnabled(HooksFishingEvent.DISABLE_ID);
     }

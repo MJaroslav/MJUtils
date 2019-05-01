@@ -38,7 +38,8 @@ public class HookLibPlugin implements IFMLLoadingPlugin {
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {}
+    public void injectData(Map<String, Object> data) {
+    }
 
     public static boolean getObfuscated() {
         if (!cheched) {

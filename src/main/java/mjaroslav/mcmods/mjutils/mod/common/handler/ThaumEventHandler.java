@@ -1,14 +1,14 @@
 package mjaroslav.mcmods.mjutils.mod.common.handler;
 
-import static mjaroslav.mcmods.mjutils.util.UtilsThaum.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.StringUtils;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static mjaroslav.mcmods.mjutils.util.UtilsThaum.complete;
+import static mjaroslav.mcmods.mjutils.util.UtilsThaum.isComplete;
 
 public class ThaumEventHandler {
     public static final ThaumEventHandler instance = new ThaumEventHandler();

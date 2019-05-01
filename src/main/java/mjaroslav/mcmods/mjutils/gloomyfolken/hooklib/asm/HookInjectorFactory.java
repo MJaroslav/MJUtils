@@ -23,7 +23,8 @@ public abstract class HookInjectorFactory {
 
         public static final MethodEnter INSTANCE = new MethodEnter();
 
-        private MethodEnter(){}
+        private MethodEnter() {
+        }
 
         @Override
         public HookInjector createHookInjector(MethodVisitor mv, int access, String name, String desc, AsmHook hook) {
@@ -36,7 +37,7 @@ public abstract class HookInjectorFactory {
 
         public static final MethodExit INSTANCE = new MethodExit();
 
-        private MethodExit(){
+        private MethodExit() {
             isPriorityInverted = true;
         }
 
@@ -50,7 +51,7 @@ public abstract class HookInjectorFactory {
 
         private int lineNumber;
 
-        public LineNumber(int lineNumber){
+        public LineNumber(int lineNumber) {
             this.lineNumber = lineNumber;
         }
 

@@ -9,23 +9,62 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * Standard forge configuration. It is saved in the
+ * configurations directory in the {@link FileBasedConfiguration#modID}.cfg file.
+ * You can use it by yourself or with {@link ModuleSystem}.
+ *
+ * @see AnnotationBasedConfiguration
+ * @see ModuleSystem
+ */
 public abstract class FileBasedConfiguration implements Initializator {
     protected Configuration instance;
+    /**
+     * ModID of owner-modification. Used as name of
+     * configuration file as well as used in update
+     * event. Should not be null.
+     */
     public final String modID;
+    /**
+     * logger for configuration. Should not be null.
+     * You can use your mod logger.
+     */
     protected final Logger logger;
 
+    /**
+     * See class documentation.
+     *
+     * @param modID  see {@link FileBasedConfiguration#modID}
+     * @param logger see {@link FileBasedConfiguration#logger}
+     */
     public FileBasedConfiguration(String modID, Logger logger) {
         this.modID = modID;
         this.logger = logger;
         ConfigurationEventHandler.instance.addConfig(this);
     }
 
-    public abstract void readFields();
+    /**
+     * Retrieving values from a configuration object
+     * is done only in this method.
+     *
+     * @param instance configuration object.
+     */
+    public abstract void readFields(Configuration instance);
 
+    /**
+     * Get configuration object.
+     *
+     * @return Null if before PreInitialization or instance after.
+     */
     public Configuration getInstance() {
         return instance;
     }
 
+    /**
+     * Set configuration object. Use at your own risk
+     *
+     * @param newConfig new object.
+     */
     public void setInstance(Configuration newConfig) {
         instance = newConfig;
     }
@@ -46,7 +85,7 @@ public abstract class FileBasedConfiguration implements Initializator {
     }
 
     private void sync() {
-        readFields();
+        readFields(getInstance());
         if (getInstance().hasChanged())
             getInstance().save();
     }

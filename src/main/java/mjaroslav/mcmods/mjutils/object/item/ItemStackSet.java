@@ -5,8 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
+/**
+ * Set for ItemStacks.
+ */
 // TODO: Доделать как полную реализацию Set<ItemStack>
-@SuppressWarnings("ALL")
 public class ItemStackSet implements Iterable<ItemStack> {
     private ItemStack[] data;
     private boolean withStackSize;

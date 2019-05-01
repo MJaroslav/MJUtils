@@ -1,6 +1,6 @@
 package mjaroslav.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Color util (hex and int values).
@@ -11,8 +11,7 @@ public class UtilsColor {
     /**
      * Change hex color value to int.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Integer color from hex.
      */
     public static int getColorInt(String hex) {
@@ -22,8 +21,7 @@ public class UtilsColor {
     /**
      * Change hex color value to color instance.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Color from hex (AARRGGBB or RRGGBB).
      */
     public static Color getColor(String hex) {
@@ -48,8 +46,7 @@ public class UtilsColor {
     /**
      * Get red int value from hex color.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Red from hex.
      */
     public static int getRed(String hex) {
@@ -59,8 +56,7 @@ public class UtilsColor {
     /**
      * Get green int value from hex color.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Green from hex.
      */
     public static int getGreen(String hex) {
@@ -70,8 +66,7 @@ public class UtilsColor {
     /**
      * Get blue int value from hex color.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Blue from hex.
      */
     public static int getBlue(String hex) {
@@ -81,8 +76,7 @@ public class UtilsColor {
     /**
      * Get alpha int value from hex color.
      *
-     * @param hex
-     *            - hex color.
+     * @param hex - hex color.
      * @return Alpha from hex.
      */
     public static int getAlpha(String hex) {
@@ -92,8 +86,7 @@ public class UtilsColor {
     /**
      * Get hex string from color
      *
-     * @param color
-     *            - color.
+     * @param color - color.
      * @return Hex string.
      */
     public static String getHEXString(Color color) {

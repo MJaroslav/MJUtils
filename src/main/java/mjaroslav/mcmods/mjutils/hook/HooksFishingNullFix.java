@@ -30,7 +30,7 @@ public class HooksFishingNullFix {
                 b0 = 3;
             } else if (instance.field_146045_ax > 0) {
                 ItemStack catchStack = instance.func_146033_f();
-                // NullPo crash fixed
+                // NullPo crash fix
                 if (catchStack != null) {
                     EntityItem entityitem = new EntityItem(instance.worldObj, instance.posX, instance.posY,
                             instance.posZ, catchStack);
@@ -46,8 +46,8 @@ public class HooksFishingNullFix {
                     instance.field_146042_b.worldObj.spawnEntityInWorld(new EntityXPOrb(
                             instance.field_146042_b.worldObj, instance.field_146042_b.posX, instance.field_146042_b.posY
                             + 0.5D, instance.field_146042_b.posZ + 0.5D, instance.rand.nextInt(6) + 1));
+                    b0 = 1;
                 }
-                b0 = 1;
             }
             if (instance.field_146051_au)
                 b0 = 2;

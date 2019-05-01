@@ -1,12 +1,13 @@
 package mjaroslav.mcmods.mjutils.util;
 
-import static mjaroslav.mcmods.mjutils.util.UtilsSmelting.*;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.item.ItemStack;
+import static mjaroslav.mcmods.mjutils.util.UtilsSmelting.getSmeltingCountFromTicks;
+import static mjaroslav.mcmods.mjutils.util.UtilsSmelting.getTicksFromSmelting;
 
 /**
  * Wrapper for fuel handler, here you can add your fuel and get the time of its
@@ -15,9 +16,6 @@ import net.minecraft.item.ItemStack;
  * @author MJaroslav
  */
 public class UtilsFuel {
-    /**
-     * Fuel map, use {@link UtilsFuel#getFuelMap()}.
-     */
     private static final Map<ItemStack, Integer> fuelMap = new HashMap<>();
 
     /**
@@ -32,10 +30,8 @@ public class UtilsFuel {
     /**
      * Add new fuel.
      *
-     * @param itemStack
-     *            - fuel item.
-     * @param burnTime
-     *            - ticks of burn.
+     * @param itemStack - fuel item.
+     * @param burnTime  - ticks of burn.
      */
     public static void addFuel(ItemStack itemStack, int burnTime) {
         fuelMap.put(itemStack, burnTime);
@@ -44,10 +40,8 @@ public class UtilsFuel {
     /**
      * Add new fuel.
      *
-     * @param itemStack
-     *            - fuel item.
-     * @param burnCount
-     *            - count of items to burn (1F = 200 ticks).
+     * @param itemStack - fuel item.
+     * @param burnCount - count of items to burn (1F = 200 ticks).
      */
     public static void addFuel(ItemStack itemStack, float burnCount) {
         fuelMap.put(itemStack, getTicksFromSmelting(burnCount));
@@ -56,8 +50,7 @@ public class UtilsFuel {
     /**
      * Get the possible amount of fried items from the fuel.
      *
-     * @param fuel
-     *            - fuel ItemStack.
+     * @param fuel - fuel ItemStack.
      * @return The burning time of fuel in items (1F = 200 ticks).
      */
     public static float getBurnCount(ItemStack fuel) {

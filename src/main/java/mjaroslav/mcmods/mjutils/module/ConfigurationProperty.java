@@ -6,135 +6,185 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Uses for registration of configuration fields. Field should be public static.
+ * Add this annotation to the field to use it as a
+ * configuration option. Your class must be annotated
+ * with {@link ConfigurationCategory}. The field type
+ * must be an int, boolean, double or String, or an
+ * array of one of these types.
  *
- * @author MJaroslav
+ * @see ConfigurationCategory
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigurationProperty {
+    String COMMENT_NONE = "Description not provided.";
+
     /**
-     * Configuration field name. Will use field name if it null or empty.
+     * If not specified, a lowercase field name will be used,
+     * the words of which are separated by '{@literal _}'
      *
-     * @return Default "".
+     * @return Property name or formatter field name.
      */
     String name() default "";
 
     /**
-     * Comment on the configuration parameter.
+     * Property description. Should not be null.
      *
-     * @return Default "No description".
+     * @return Your value of {@link ConfigurationProperty#COMMENT_NONE}
+     * as default value.
      */
-    String comment() default "No description.";
+    String comment() default COMMENT_NONE;
 
     /**
-     * Default value for int type.
+     * Default value for int type fields.
      *
-     * @return Default 0.
+     * @return 0 as default value.
+     * @see ConfigurationProperty#minInt()
+     * @see ConfigurationProperty#maxInt()
      */
     int defaultInt() default 0;
 
     /**
-     * Maximal value of int.
+     * Maximum value for int and int array type fields.
      *
-     * @return Default {@link Integer#MAX_VALUE}.
+     * @return {@link Integer#MAX_VALUE} as default value.
      */
     int maxInt() default Integer.MAX_VALUE;
 
     /**
-     * Minimal value of int.
+     * Minimum value for int and int array type fields.
      *
-     * @return Default {@link Integer#MIN_VALUE}.
+     * @return {@link Integer#MIN_VALUE} as default value.
      */
     int minInt() default Integer.MIN_VALUE;
 
     /**
-     * Default float value.
+     * Default value for double type fields.
      *
-     * @return Default 0F.
+     * @return 0.0 as default value.
+     * @see ConfigurationProperty#minDouble()
+     * @see ConfigurationProperty#maxDouble()
      */
-    double defaultDouble() default 0F;
+    double defaultDouble() default 0.0;
 
     /**
-     * Maximal value of float.
+     * Maximum value for double and double array type fields.
      *
-     * @return Default {@link Double#MAX_VALUE}.
+     * @return {@link Double#MAX_VALUE} as default value.
      */
     double maxDouble() default Double.MAX_VALUE;
 
     /**
-     * Minimal value of float.
+     * Minimum value for double and double array type fields.
      *
-     * @return Default {@link Double#MIN_VALUE}.
+     * @return {@link Double#MIN_VALUE} as default value.
      */
     double minDouble() default Double.MIN_VALUE;
 
     /**
-     * Default boolean value.
+     * Default value for boolean type fields.
      *
-     * @return Default false.
+     * @return False as default value;
      */
     boolean defaultBoolean() default false;
 
     /**
-     * Default boolean array value.
+     * Default value for boolean array type fields.
      *
-     * @return Default - empty array.
+     * @return Empty array as default value.
+     * @see ConfigurationProperty#listLengthFixed()
+     * @see ConfigurationProperty#maxListLength()
      */
     boolean[] defaultBooleanArray() default {};
 
     /**
-     * Default String value.
+     * Default value for String type fields.
      *
-     * @return Default "".
+     * @return Empty string as default value.
      */
     String defaultString() default "";
 
     /**
-     * Default int array value.
+     * Default value for int array type fields.
      *
-     * @return Default - empty array;
+     * @return Empty array as default value.
+     * @see ConfigurationProperty#minInt()
+     * @see ConfigurationProperty#maxInt()
+     * @see ConfigurationProperty#listLengthFixed()
+     * @see ConfigurationProperty#maxListLength()
      */
     int[] defaultIntArray() default {};
 
     /**
-     * Default float array value.
+     * Default value for double array type fields.
      *
-     * @return Default - empty array.
+     * @return Empty array as default value.
+     * @see ConfigurationProperty#minDouble()
+     * @see ConfigurationProperty#maxDouble()
+     * @see ConfigurationProperty#listLengthFixed()
+     * @see ConfigurationProperty#maxListLength()
      */
     double[] defaultDoubleArray() default {};
 
     /**
-     * Default String array value.
+     * Default value for String array type fields.
      *
-     * @return Default - empty array.
+     * @return Empty array as default value.
+     * @see ConfigurationProperty#listLengthFixed()
+     * @see ConfigurationProperty#maxListLength()
      */
     String[] defaultStringArray() default {};
 
+    /**
+     * Do You need to restart the world, after changing the
+     * options within this category?
+     *
+     * @return False as default value.
+     * @see ConfigurationCategory#requiresWorldRestart()
+     */
     boolean requiresWorldRestart() default false;
 
+    /**
+     * Do You need to restart the game, after changing the
+     * options within this category?
+     *
+     * @return False as default value.
+     * @see ConfigurationCategory#requiresMcRestart()
+     */
     boolean requiresMcRestart() default false;
 
     /**
-     * Fixes the size of the array. The size of the standard value is used.
+     * Fix the size of the array fields. All default values
+     * should be this length. Array should not be dynamic.
      *
-     * @return Default false;
+     * @return False as default value.
+     * @see ConfigurationProperty#maxListLength()
+     * @see ConfigurationProperty#defaultDoubleArray()
+     * @see ConfigurationProperty#defaultBooleanArray()
+     * @see ConfigurationProperty#defaultIntArray()
+     * @see ConfigurationProperty#defaultStringArray()
      */
     boolean listLengthFixed() default false;
 
     /**
-     * Maximal array size. Use -1 for disable.
+     * Maximum length of array fields. If set to -1,
+     * the array will be dynamic.
      *
-     * @return Default -1;
+     * @return -1 as default value (array will be dynamic).
+     * @see ConfigurationProperty#listLengthFixed()
+     * @see ConfigurationProperty#defaultDoubleArray()
+     * @see ConfigurationProperty#defaultBooleanArray()
+     * @see ConfigurationProperty#defaultIntArray()
+     * @see ConfigurationProperty#defaultStringArray()
      */
     int maxListLength() default -1;
 
     /**
-     * Valid values for strings.
+     * The list of valid values is a string; other
+     * strings will be ignored. When returning an empty
+     * array, any values will be valid.
      *
-     * @return Default - empty array.
+     * @return Empty array as default value (any values valid).
      */
     String[] validValues() default {};
-
-    boolean useFloat() default false;
 }

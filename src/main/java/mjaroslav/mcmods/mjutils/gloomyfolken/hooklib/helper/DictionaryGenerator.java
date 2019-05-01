@@ -22,8 +22,8 @@ public class DictionaryGenerator {
         for (String str : lines) {
             String[] splitted = str.split(",");
             int first = splitted[0].indexOf('_');
-            int second = splitted[0].indexOf('_', first+1);
-            int id = Integer.valueOf(splitted[0].substring(first+1, second));
+            int second = splitted[0].indexOf('_', first + 1);
+            int id = Integer.valueOf(splitted[0].substring(first + 1, second));
             map.put(id, splitted[1]);
         }
 

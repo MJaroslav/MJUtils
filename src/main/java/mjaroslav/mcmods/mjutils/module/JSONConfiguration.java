@@ -13,6 +13,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 
+/**
+ * Gson based custom configuration.
+ *
+ * @author MJaroslav
+ */
 public class JSONConfiguration implements Initializator.Configurable {
     private static final JsonParser PARSER = new JsonParser();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -22,6 +27,13 @@ public class JSONConfiguration implements Initializator.Configurable {
     private final JsonElement standard;
     private File file;
 
+    /**
+     * See class documentation.
+     *
+     * @param fileName                 configuration file name. Subdirectories
+     *                                 will not be created and may cause crash.
+     * @param standardResourceLocation path to default value in resources.
+     */
     public JSONConfiguration(String fileName, String standardResourceLocation) {
         this.fileName = fileName;
         standard = PARSER.parse(new InputStreamReader(JSONConfiguration.class.getResourceAsStream("/" +
@@ -34,20 +46,36 @@ public class JSONConfiguration implements Initializator.Configurable {
         load();
     }
 
+    /**
+     * Get current instance of configuration.
+     *
+     * @return Current instance object.
+     */
     public JsonElement getInstance() {
         return instance;
     }
 
+    /**
+     * Set new instance for configuration without saving.
+     *
+     * @param instance new instance object.
+     */
     public void setInstance(JsonElement instance) {
         this.instance = instance;
     }
 
+    /**
+     * Set current instance to standard and write to file.
+     */
     public void toDefault() {
         // Copy
         instance = PARSER.parse(standard.toString());
         save();
     }
 
+    /**
+     * Read new current instance from file.
+     */
     public void load() {
         try {
             if (file.isFile()) {
@@ -58,6 +86,9 @@ public class JSONConfiguration implements Initializator.Configurable {
         }
     }
 
+    /**
+     * Write current instance to file.
+     */
     public void save() {
         try {
             Files.write(file.toPath(), Collections.singleton(GSON.toJson(instance)), StandardCharsets.UTF_8);

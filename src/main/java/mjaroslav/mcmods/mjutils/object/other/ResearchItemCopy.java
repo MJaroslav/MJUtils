@@ -10,10 +10,9 @@ import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 
 /**
- * If you use this, you must add to your modification a dependency:
- * "required-after:Thaumcraft;"
- *
- * @author MJaroslav
+ * Decorative research. Copy of vanilla research. Autocompletable
+ * by parent. If you use this, you must add to your modification a
+ * dependency: "required-after:Thaumcraft;"
  */
 public class ResearchItemCopy extends ResearchItem {
     private String originalKey;

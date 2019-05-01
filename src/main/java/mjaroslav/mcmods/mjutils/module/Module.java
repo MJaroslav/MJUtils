@@ -1,19 +1,27 @@
 package mjaroslav.mcmods.mjutils.module;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Used for modules registration. (Use with {@link Modular}).
+ * Marker for modules that need to be loaded.
+ * Use with {@link ModuleSystem}. Used only on
+ * classes that implement {@link Modular}.
  *
- * @author MJaroslav
+ * @see ModuleSystem
+ * @see Modular
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Module {
     /**
-     * Modification id.
+     * Mod ID. Should not be null. Other mod IDs
+     * will cause this module to be ignored by
+     * the correct {@link ModuleSystem}.
      *
-     * @return Modification id.
+     * @return Mod owner ID.
      */
     String value();
 }

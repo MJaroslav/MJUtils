@@ -14,7 +14,7 @@ public class AnnotationHooks {
      * Цель: при каждом ресайзе окна выводить в консоль новый размер
      */
     @Hook
-    public static void resize(Minecraft mc, int x, int y){
+    public static void resize(Minecraft mc, int x, int y) {
         System.out.println("ResizePRE1, x=" + x + ", y=" + y);
     }
 
@@ -24,7 +24,7 @@ public class AnnotationHooks {
      */
     @Hook(injectOnExit = true, returnCondition = ReturnCondition.ALWAYS)
     public static int getTotalArmorValue(ForgeHooks fh, EntityPlayer player, @ReturnValue int returnValue) {
-        return returnValue/2;
+        return returnValue / 2;
     }
 
     /**
@@ -45,8 +45,8 @@ public class AnnotationHooks {
     }
 
     public static int getBrightness(Entity entity, float f, int oldValue) {
-        int j = ((oldValue >> 20)&15)/2;
-        int k = ((oldValue >> 4)&15)/2;
+        int j = ((oldValue >> 20) & 15) / 2;
+        int k = ((oldValue >> 4) & 15) / 2;
         return j << 20 | k << 4;
     }
 }

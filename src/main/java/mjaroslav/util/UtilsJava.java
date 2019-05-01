@@ -18,8 +18,7 @@ public class UtilsJava {
     /**
      * Always return string.
      *
-     * @param input
-     *            - String object.
+     * @param input - String object.
      * @return Empty string if null.
      */
     public static String string(String input) {
@@ -29,8 +28,7 @@ public class UtilsJava {
     /**
      * Format display name from stack.
      *
-     * @param stack
-     *            - ItemStack for format.
+     * @param stack - ItemStack for format.
      * @return - Display name in lower case without spaces.
      */
     public static String nameFormat(ItemStack stack) {
@@ -40,8 +38,7 @@ public class UtilsJava {
     /**
      * Format string, usually display name of ItemStack.
      *
-     * @param name
-     *            - String for format.
+     * @param name - String for format.
      * @return - String in lower case without spaces.
      */
     public static String nameFormat(String name) {
@@ -55,7 +52,7 @@ public class UtilsJava {
                 result[id] = (float) input[id];
             return result;
         }
-        return new float[] {};
+        return new float[]{};
     }
 
     public static double[] toDoubleArray(float[] input) {
@@ -65,6 +62,6 @@ public class UtilsJava {
                 result[id] = input[id];
             return result;
         }
-        return new double[] {};
+        return new double[]{};
     }
 }

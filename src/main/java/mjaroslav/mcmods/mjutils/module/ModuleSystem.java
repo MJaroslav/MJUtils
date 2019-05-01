@@ -13,7 +13,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-
+/**
+ * A powerful feature that allows you to automate and
+ * split the initialization of proxies, configurations
+ * and the rest of the game content, which can be divided
+ * into modules (for example, blocks and items).
+ *
+ * @see Module
+ * @see Modular
+ * @see Proxy
+ * @see Configurable
+ * @see FileBasedConfiguration
+ * @see AnnotationBasedConfiguration
+ */
 public class ModuleSystem {
     private static final Logger LOGGER = LogManager.getLogger("Module System");
     private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.priority() - o1.priority();
@@ -25,18 +37,37 @@ public class ModuleSystem {
     private final Set<Configurable> configurations = new HashSet<>();
 
 
+    /**
+     * See class documentation.
+     *
+     * @param modID owner mod modID.
+     */
     public ModuleSystem(String modID) {
         this(modID, null, null);
     }
 
+    /**
+     * See class documentation.
+     *
+     * @param modID                owner mod modID.
+     * @param config               see {@link FileBasedConfiguration}. Can be null.
+     * @param proxy                see {@link Proxy}. Can be null.
+     * @param customConfigurations see {@link Configurable}. Can be empty or null.
+     */
     public ModuleSystem(String modID, FileBasedConfiguration config, Proxy proxy,
                         Configurable... customConfigurations) {
         this.modID = modID;
         this.config = config;
         this.proxy = proxy;
-        configurations.addAll(Arrays.asList(customConfigurations));
+        if (customConfigurations != null)
+            configurations.addAll(Arrays.asList(customConfigurations));
     }
 
+    /**
+     * Should be called in mod construction event.
+     *
+     * @param event event object from owner mod.
+     */
     public void initSystem(FMLConstructionEvent event) {
         LOGGER.log(Level.INFO, String.format("Looking for modules for \"%s\"", modID));
         Iterator<ASMData> iterator = event.getASMHarvestedData().getAll(Module.class.getName()).iterator();
@@ -76,6 +107,11 @@ public class ModuleSystem {
             proxy.construct(event);
     }
 
+    /**
+     * Should be called in mod pre initialization event.
+     *
+     * @param event event object from owner mod.
+     */
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info(String.format("Pre initialization of \"%s\"", modID));
         if (config != null)
@@ -89,6 +125,11 @@ public class ModuleSystem {
             proxy.preInit(event);
     }
 
+    /**
+     * Should be called in mod initialization event.
+     *
+     * @param event event object from owner mod.
+     */
     public void init(FMLInitializationEvent event) {
         LOGGER.info(String.format("Initialization of \"%s\"", modID));
         if (config != null)
@@ -102,6 +143,11 @@ public class ModuleSystem {
             proxy.init(event);
     }
 
+    /**
+     * Should be called in mod post initialization event.
+     *
+     * @param event event object from owner mod.
+     */
     public void postInit(FMLPostInitializationEvent event) {
         LOGGER.info(String.format("Post initialization of \"%s\"", modID));
         if (config != null)
@@ -115,7 +161,7 @@ public class ModuleSystem {
             proxy.postInit(event);
     }
 
-    public static boolean modsIsLoaded(String... modIDs) {
+    private static boolean modsIsLoaded(String... modIDs) {
         if (modIDs != null && modIDs.length > 0)
             for (String modID : modIDs)
                 if (!Loader.isModLoaded(modID))

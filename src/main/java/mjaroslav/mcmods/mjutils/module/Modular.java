@@ -1,28 +1,26 @@
 package mjaroslav.mcmods.mjutils.module;
 
-import cpw.mods.fml.common.Loader;
-
 /**
- * Add a {@link Module} annotation to connect a module to modification.
+ * Use with {@link Module} and {@link ModuleSystem}
+ * to automatically perform initialization.
  *
- * @author MJaroslav
+ * @see Module
+ * @see ModuleSystem
  */
 public interface Modular extends Initializator {
     /**
-     * Module name, optional.
+     * Module name.
      *
-     * @return Module name.
+     * @return Simple class name as default value;
      */
     default String name() {
         return this.getClass().getSimpleName();
     }
 
     /**
-     * Priority of module loading. If you use an existing level, then this
-     * module will shift the rest. If you use an extra-high level, the module
-     * will be installed at the end of the list.
+     * Priority (ascending) of loading the module.
      *
-     * @return Priority: 0 - first, 1 - second...
+     * @return 0 as default value;
      */
     default int priority() {
         return 0;
@@ -31,18 +29,20 @@ public interface Modular extends Initializator {
     String[] NONE_DEPENDENCIES = new String[]{};
 
     /**
-     * Will be checked in {@link Loader#isModLoaded(String)}.
+     * List of modIDs that will be checked for load.
+     * If the array is empty, it is ignored.
      *
-     * @return Array of modID.
+     * @return {@link Modular#NONE_DEPENDENCIES} as default value.
      */
     default String[] dependencies() {
         return NONE_DEPENDENCIES;
     }
 
     /**
-     * Can load module.
+     * Place for your own conditions for module
+     * loading possibility.
      *
-     * @return Set true if you wont use it.
+     * @return True as default value;
      */
     default boolean canLoad() {
         return true;

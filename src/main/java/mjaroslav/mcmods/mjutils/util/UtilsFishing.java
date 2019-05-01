@@ -16,6 +16,9 @@ import java.util.*;
 
 import static cpw.mods.fml.relauncher.ReflectionHelper.getPrivateValue;
 
+/**
+ * A set of tools to change the list of fishing catch.
+ */
 public class UtilsFishing {
     private static final Map<FishableCategory, Set<WeightedRandomFishable>> FISHABLE_MAP = new HashMap<>();
 
@@ -29,6 +32,12 @@ public class UtilsFishing {
         }
     }
 
+    /**
+     * Add new item to fishing category.
+     *
+     * @param fishable item to add.
+     * @param category fishing category for modification.
+     */
     public static void add(WeightedRandomFishable fishable, FishableCategory category) {
         if (HookConfig.fishingCache())
             FISHABLE_MAP.get(category).add(fishable);
@@ -43,6 +52,15 @@ public class UtilsFishing {
         }
     }
 
+    /**
+     * Add new item to fishing category.
+     *
+     * @param itemStack    item stack to add.
+     * @param category     fishing category for modification.
+     * @param weight       weight of item in randomizer.
+     * @param enchantable  item will be randomly enchanted.
+     * @param randomDamage item will be randomly damaged.
+     */
     public static void add(ItemStack itemStack, FishableCategory category, int weight, boolean enchantable,
                            float randomDamage) {
         WeightedRandomFishable fishable = new WeightedRandomFishable(itemStack, weight);
@@ -52,23 +70,55 @@ public class UtilsFishing {
         add(fishable, category);
     }
 
+    /**
+     * Remove item from fishing category.
+     *
+     * @param fishable pattern to remove.
+     * @param category fishing category for modification.
+     */
     public static void remove(WeightedRandomFishable fishable, FishableCategory category) {
         remove(Predicates.not(new PredicateItemStacksEquals(fishable)), category);
     }
 
+    /**
+     * Remove item from fishing category.
+     *
+     * @param itemStack    item stack to remove.
+     * @param category     fishing category for modification.
+     * @param enchantable  item randomly enchanted?
+     * @param randomDamage item randomly damaged?
+     */
     public static void remove(ItemStack itemStack, FishableCategory category, boolean enchantable,
                               float randomDamage) {
         remove(Predicates.not(new PredicateItemStacksEquals(itemStack, enchantable, randomDamage)), category);
     }
 
+    /**
+     * Remove all block variants from specified fishing category.
+     *
+     * @param block    block to remove.
+     * @param category fishing category for modification.
+     */
     public static void remove(Block block, FishableCategory category) {
         remove(Predicates.not(new PredicateItemTypesEquals(block)), category);
     }
 
+    /**
+     * Remove all item variants from specified fishing category.
+     *
+     * @param item     item to remove.
+     * @param category fishing category for modification.
+     */
     public static void remove(Item item, FishableCategory category) {
         remove(Predicates.not(new PredicateItemTypesEquals(item)), category);
     }
 
+    /**
+     * Remove items from fishing category by filter.
+     *
+     * @param test     filter for remover.
+     * @param category fishing category for modification.
+     */
     public static void remove(Predicate<WeightedRandomFishable> test, FishableCategory category) {
         if (HookConfig.fishingCache()) {
             Iterator<WeightedRandomFishable> iterator;
@@ -96,6 +146,12 @@ public class UtilsFishing {
         }
     }
 
+    /**
+     * Get values of fishing category
+     *
+     * @param category specified fishing category.
+     * @return Set of fishing category values.
+     */
     public static Set<WeightedRandomFishable> getCategory(FishableCategory category) {
         if (HookConfig.fishingCache())
             return FISHABLE_MAP.get(category);
@@ -117,6 +173,11 @@ public class UtilsFishing {
         return Collections.emptySet();
     }
 
+    /**
+     * Remove all values from fishing category.
+     *
+     * @param category specified category.
+     */
     public static void clear(FishableCategory category) {
         if (HookConfig.fishingCache())
             getCategory(category).clear();
@@ -124,6 +185,9 @@ public class UtilsFishing {
             remove(fishable, category);
     }
 
+    /**
+     * Remove all values from all fishing categories.
+     */
     public static void clearAll() {
         for (FishableCategory category : FishableCategory.values())
             clear(category);

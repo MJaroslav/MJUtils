@@ -1,5 +1,8 @@
 package mjaroslav.mcmods.mjutils.object.constant;
 
+/**
+ * Real time in ticks.
+ */
 public class ConstantsTime {
     public static final int SECOND = 20;
     public static final int MINUTE = SECOND * 60;

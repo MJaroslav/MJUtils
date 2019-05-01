@@ -4,8 +4,7 @@ import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.minecraft.HookLoader;
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.minecraft.PrimaryClassTransformer;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 
-// Don't forget -Dfml.coreMods.load=mjaroslav.mcmods.mjutils.hook.MJUtilsHookLoader
-@SuppressWarnings("unused")
+// TODO: Don't forget -Dfml.coreMods.load=mjaroslav.mcmods.mjutils.hook.MJUtilsHookLoader
 public class MJUtilsHookLoader extends HookLoader {
     @Override
     public String[] getASMTransformerClass() {

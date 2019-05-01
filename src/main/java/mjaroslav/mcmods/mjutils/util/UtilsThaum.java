@@ -1,7 +1,5 @@
 package mjaroslav.mcmods.mjutils.util;
 
-import static thaumcraft.common.lib.events.EventHandlerRunic.*;
-
 import baubles.api.BaublesApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,6 +8,8 @@ import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.network.PacketHandler;
 import thaumcraft.common.lib.network.playerdata.PacketSyncResearch;
+
+import static thaumcraft.common.lib.events.EventHandlerRunic.getFinalWarp;
 
 /**
  * ThaumCraft util.
@@ -33,8 +33,7 @@ public class UtilsThaum {
     /**
      * Get total (all types) warp count from player.
      *
-     * @param player
-     *            - target.
+     * @param player - target.
      * @return Warp count, all types in one.
      */
     public static int getWarpTotal(EntityPlayer player) {

@@ -4,15 +4,11 @@ import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.Hook;
 import mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.ReturnCondition;
 import mjaroslav.mcmods.mjutils.object.event.FishingSuccessEvent;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 
-@SuppressWarnings("ALL")
 public class HooksFishingEvent {
     public static final String DISABLE_ID = "hooks_fishing_event";
 
@@ -28,7 +24,7 @@ public class HooksFishingEvent {
                 chance, luck, speed);
         // Hooked custom event
         MinecraftForge.EVENT_BUS.post(event);
-        if(event.category != null)
+        if (event.category != null)
             instance.field_146042_b.addStat(event.category.stat, 1);
         return event.catchStack;
     }

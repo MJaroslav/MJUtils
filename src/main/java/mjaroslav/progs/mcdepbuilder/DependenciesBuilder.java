@@ -1,8 +1,8 @@
 package mjaroslav.progs.mcdepbuilder;
 
-import java.util.ArrayList;
-
 import mjaroslav.util.UtilsJava;
+
+import java.util.ArrayList;
 
 public class DependenciesBuilder {
     public ArrayList<DependenceInfo> list = new ArrayList<DependenceInfo>();
@@ -25,11 +25,11 @@ public class DependenciesBuilder {
         ArrayList<String> result = new ArrayList<String>();
         for (DependenceInfo info : list)
             result.add(info.build());
-        return result.toArray(new String[] {});
+        return result.toArray(new String[]{});
     }
 
     public void add(String modid, PriorityType priorityType, boolean isRequired, VersionType versionSensitivity,
-            String version) {
+                    String version) {
         add(new DependenceInfo(modid, priorityType, isRequired, versionSensitivity, version));
     }
 
@@ -89,7 +89,7 @@ public class DependenciesBuilder {
         public String version;
 
         public DependenceInfo(String modid, PriorityType priorityType, boolean isRequired,
-                VersionType versionSensitivity, String version) {
+                              VersionType versionSensitivity, String version) {
             if (UtilsJava.stringIsNotEmpty(modid)) {
                 this.modid = modid;
             } else
@@ -138,11 +138,11 @@ public class DependenciesBuilder {
                 DependenceInfo dep = (DependenceInfo) obj;
                 return modid.equals(dep.modid) && (!isRequired || !dep.isRequired || isRequired == dep.isRequired)
                         && (priority == PriorityType.NONE || dep.priority == PriorityType.NONE
-                                || priority == dep.priority)
+                        || priority == dep.priority)
                         && ((versionSensitivity == VersionType.NONE || dep.versionSensitivity == VersionType.NONE)
-                                ? true
-                                : (versionSensitivity.equals(dep.versionSensitivity) && (version.equals("*")
-                                        || dep.version.equals("*") || version.equals(dep.version))));
+                        ? true
+                        : (versionSensitivity.equals(dep.versionSensitivity) && (version.equals("*")
+                        || dep.version.equals("*") || version.equals(dep.version))));
             }
             return false;
         }

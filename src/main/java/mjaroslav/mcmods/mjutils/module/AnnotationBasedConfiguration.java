@@ -17,6 +17,13 @@ import java.util.*;
 
 import static mjaroslav.util.FieldType.get;
 
+/**
+ * Use this object instead of FileBasedConfiguration
+ * to create a configuration via annotations.
+ *
+ * @see ConfigurationCategory
+ * @see mjaroslav.mcmods.mjutils.module.FileBasedConfiguration
+ */
 public class AnnotationBasedConfiguration extends FileBasedConfiguration {
     private final Set<Class> rawCategories = new HashSet<>();
 
@@ -25,6 +32,12 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
 
     private boolean hasCache = false;
 
+    /**
+     * See class documentation.
+     *
+     * @param modID  see {@link FileBasedConfiguration#modID}
+     * @param logger see {@link FileBasedConfiguration#logger}
+     */
     public AnnotationBasedConfiguration(String modID, Logger logger) {
         super(modID, logger);
     }
@@ -52,17 +65,17 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
     }
 
     @Override
-    public void readFields() {
+    public void readFields(Configuration instance) {
         if (!hasCache) {
             for (Class categoryClass : rawCategories)
-                addCategoryClass(categoryClass, null);
+                addCategoryClass(categoryClass, null, instance);
             hasCache = false;
         }
         categories.forEach((name, category) -> category.second().forEach(property ->
-                parseField(property.second(), property.first(), category.first(), name)));
+                parseField(property.second(), property.first(), category.first(), name, instance)));
     }
 
-    private void addCategoryClass(Class categoryClass, String parentName) {
+    private void addCategoryClass(Class categoryClass, String parentName, Configuration instance) {
         ConfigurationCategory configInfo =
                 (ConfigurationCategory) categoryClass.getAnnotation(ConfigurationCategory.class);
         String name = configInfo.name();
@@ -70,13 +83,13 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
         boolean mc = configInfo.requiresMcRestart();
         if (UtilsJava.stringIsNotEmpty(parentName))
             name = String.format("%s.%s", parentName, name);
-        getInstance().addCustomCategoryComment(name, configInfo.comment());
-        getInstance().setCategoryRequiresMcRestart(name, mc);
-        getInstance().setCategoryRequiresWorldRestart(name, world);
+        instance.addCustomCategoryComment(name, configInfo.comment());
+        instance.setCategoryRequiresMcRestart(name, mc);
+        instance.setCategoryRequiresWorldRestart(name, world);
         categories.put(name, Pair.of(configInfo, findFields(categoryClass)));
         for (Class memberClass : categoryClass.getDeclaredClasses())
             if (memberClass.isAnnotationPresent(ConfigurationCategory.class))
-                addCategoryClass(memberClass, name);
+                addCategoryClass(memberClass, name, instance);
     }
 
     private Set<Pair<ConfigurationProperty, Field>> findFields(Class categoryClass) {
@@ -99,7 +112,7 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
     }
 
     private void parseField(Field field, ConfigurationProperty info, ConfigurationCategory categoryInfo,
-                            String categoryFullName) {
+                            String categoryFullName, Configuration instance) {
         try {
             String name;
             if (UtilsJava.stringIsNotEmpty(info.name()))
@@ -121,15 +134,11 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
                     value = instance.get(categoryFullName, name, info.defaultDouble(), info.comment(), info.minDouble(),
                             info.maxDouble()).setRequiresMcRestart(mcRestart).
                             setRequiresWorldRestart(worldRestart).getDouble();
-                    if (info.useFloat())
-                        value = (float) ((double) value);
                     break;
                 case DOUBLE_ARRAY:
                     value = instance.get(categoryFullName, name, info.defaultDoubleArray(), info.comment(),
                             info.minDouble(), info.maxDouble(), info.listLengthFixed(), info.maxListLength())
                             .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getDoubleList();
-                    if (info.useFloat())
-                        value = UtilsJava.toFloatArray((double[]) value);
                     break;
                 case STRING:
                     value = instance.get(categoryFullName, name, info.defaultString(), info.comment(),
@@ -170,11 +179,32 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
         }
     }
 
+    /**
+     * Use to get a list of all IConfigElements for the
+     * specified category. Used
+     * for {@link cpw.mods.fml.client.config.GuiConfig}.
+     *
+     * @param name full category name. Must be in lower case.
+     * @return List of IConfigElement for specified category.
+     * @throws NullPointerException if the specified category
+     *                              does not exist.
+     */
     @SuppressWarnings("unchecked")
     public List<IConfigElement> categoryToElementList(String name) {
         return new ConfigElement(getInstance().getCategory(name)).getChildElements();
     }
 
+    /**
+     * Typically, the configuration consists of a general
+     * category and its subcategories. You can use this to
+     * get a list of all IConfigElement for this category.
+     *
+     * @return List of IConfigElement for
+     * {@link Configuration#CATEGORY_GENERAL}
+     * @throws NullPointerException if general category does
+     *                              not exist.
+     * @see AnnotationBasedConfiguration#categoryToElementList(String)
+     */
     public List<IConfigElement> generalToElementList() {
         return categoryToElementList(Configuration.CATEGORY_GENERAL);
     }

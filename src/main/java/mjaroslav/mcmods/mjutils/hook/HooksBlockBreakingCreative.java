@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 
-@SuppressWarnings("unused")
 public class HooksBlockBreakingCreative {
     public static final String DISABLE_ID = "hooks_block_breaking_creative";
 
@@ -34,7 +33,7 @@ public class HooksBlockBreakingCreative {
     // TODO: Выбрать между hook'ом и BreakEvent'ом.
     @Hook(returnCondition = ReturnCondition.ALWAYS)
     public static BlockEvent.BreakEvent onBlockBreakEvent(ForgeHooks instance, World world,
-                                                          WorldSettings.GameType gameType,  EntityPlayerMP entityPlayer,
+                                                          WorldSettings.GameType gameType, EntityPlayerMP entityPlayer,
                                                           int x, int y, int z) {
         // TODO: Попробовать реализовать через hook локальной переменной.
         boolean preCancelEvent = false;

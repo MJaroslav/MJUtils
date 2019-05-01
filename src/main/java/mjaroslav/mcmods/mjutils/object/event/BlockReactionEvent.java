@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 @Cancelable
@@ -29,10 +30,9 @@ public class BlockReactionEvent extends Event {
     }
 
     /**
-     * Fired if {@link mjaroslav.mcmods.mjutils.util.UtilsInteractions#blockIsPigzombieTrigger(Block, int)
-     * blockIsPigzombieTrigger(Block, meta)} is true.
-     *
-     * @author MJaroslav
+     * Fire if any broken by player block return true from
+     * {@link mjaroslav.mcmods.mjutils.util.UtilsInteractions#blockBreakingIsDisabledInCreative(ItemStack)
+     * blockBreakingIsDisabledInCreative}. Can be canceled.
      */
     @Cancelable
     public static class PigZombieEvent extends BlockReactionEvent {
