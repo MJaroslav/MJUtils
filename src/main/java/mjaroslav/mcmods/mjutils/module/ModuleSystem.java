@@ -28,7 +28,7 @@ import java.util.*;
  */
 public class ModuleSystem {
     private static final Logger LOGGER = LogManager.getLogger("Module System");
-    private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o2.priority() - o1.priority();
+    private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o1.priority() - o2.priority();
 
     private final String modID;
     private final FileBasedConfiguration config;

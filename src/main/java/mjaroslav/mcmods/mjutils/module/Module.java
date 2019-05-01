@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
  * Marker for modules that need to be loaded.
  * Use with {@link ModuleSystem}. Used only on
  * classes that implement {@link Modular}.
+ * All instances of modules are created in
+ * {@link cpw.mods.fml.common.event.FMLConstructionEvent
+ * FMLConstructionEvent}!
  *
  * @see ModuleSystem
  * @see Modular

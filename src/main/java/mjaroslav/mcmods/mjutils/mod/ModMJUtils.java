@@ -58,13 +58,13 @@ public class ModMJUtils {
                 break;
                 case "interactions.pigzombie_trigger_block": {
                     if (message.isItemStackMessage()) {
-                        UtilsInteractions.setPigzombieTriggerBlock(message.getItemStackValue(), true);
+                        UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), true);
                     } else LOG.error("IMC@interactions.pigzombie_trigger_block: value must be ItemStack.");
                 }
                 break;
                 case "interactions.not_pigzombie_trigger_block": {
                     if (message.isItemStackMessage()) {
-                        UtilsInteractions.setPigzombieTriggerBlock(message.getItemStackValue(), false);
+                        UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), false);
                     } else LOG.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
                 }
                 break;

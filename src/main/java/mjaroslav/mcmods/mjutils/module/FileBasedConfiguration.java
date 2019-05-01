@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @see AnnotationBasedConfiguration
  * @see ModuleSystem
  */
+// TODO: Написать afterSync интерфейс для действий пользователя после обновления конфигурации.
 public abstract class FileBasedConfiguration implements Initializator {
     protected Configuration instance;
     /**
@@ -88,6 +89,7 @@ public abstract class FileBasedConfiguration implements Initializator {
         readFields(getInstance());
         if (getInstance().hasChanged())
             getInstance().save();
+        // Place for afterSync
     }
 
     public static class ConfigurationEventHandler {

@@ -44,5 +44,10 @@ public interface Initializator {
      * @see ModuleSystem
      */
     interface Configurable extends Initializator {
+        /**
+         * You can call this after any changes in your configuration.
+         */
+        default void sync() {
+        }
     }
 }

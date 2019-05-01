@@ -12,29 +12,34 @@ import thaumcraft.common.lib.network.playerdata.PacketSyncResearch;
 import static thaumcraft.common.lib.events.EventHandlerRunic.getFinalWarp;
 
 /**
- * ThaumCraft util.
- *
- * @author MJaroslav
+ * Utilities for Thaumcraft mod integration. It works
+ * only when Thaumcraft is loaded.
  */
 public class UtilsThaum {
     private static boolean thaumExist = false;
 
     /**
-     * Thaumcraft is loaded.
+     * Activate this integration. Needed for the library.
+     * Please do not use.
      */
     public static void activate() {
         thaumExist = true;
     }
 
+    /**
+     * Thaumcraft is loaded.
+     *
+     * @return True if loaded.
+     */
     public static boolean exist() {
         return thaumExist;
     }
 
     /**
-     * Get total (all types) warp count from player.
+     * Get total (all types) player's warp.
      *
-     * @param player - target.
-     * @return Warp count, all types in one.
+     * @param player player to check.
+     * @return Total player's warp or 0 if thaumcraft not loaded.
      */
     public static int getWarpTotal(EntityPlayer player) {
         if (!thaumExist)
@@ -42,24 +47,49 @@ public class UtilsThaum {
         return getWarpInventory(player) + getWarpPerm(player) + getWarpSticky(player) + getWarpTemp(player);
     }
 
+    /**
+     * Calculate total player's sticky warp.
+     *
+     * @param player player to check.
+     * @return Total player's sticky warp or 0 if thaumcraft not loaded.
+     */
     public static int getWarpSticky(EntityPlayer player) {
         if (!thaumExist)
             return 0;
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpSticky(player.getCommandSenderName());
     }
 
+    /**
+     * Calculate total player's temporal warp.
+     *
+     * @param player player to check.
+     * @return Total player's temporal warp or 0 if thaumcraft not loaded.
+     */
     public static int getWarpTemp(EntityPlayer player) {
         if (!thaumExist)
             return 0;
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpTemp(player.getCommandSenderName());
     }
 
+    /**
+     * Calculate total player's permanent warp.
+     *
+     * @param player player to check.
+     * @return Total player's permanent warp or 0 if thaumcraft not loaded.
+     */
     public static int getWarpPerm(EntityPlayer player) {
         if (!thaumExist)
             return 0;
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpPerm(player.getCommandSenderName());
     }
 
+    /**
+     * Calculate total warp from items in player inventory
+     * (included armor and baubles).
+     *
+     * @param player player to check.
+     * @return Total player's inventory warp or 0 if thaumcraft not loaded.
+     */
     public static int getWarpInventory(EntityPlayer player) {
         if (!thaumExist)
             return 0;
@@ -73,6 +103,12 @@ public class UtilsThaum {
         return warp;
     }
 
+    /**
+     * Add specified research to player knowledge.
+     *
+     * @param player   player for knowledge modification.
+     * @param research specified research.
+     */
     public static void complete(EntityPlayer player, String research) {
         if (!thaumExist)
             return;
@@ -83,6 +119,14 @@ public class UtilsThaum {
             PacketHandler.INSTANCE.sendTo(new PacketSyncResearch(player), (EntityPlayerMP) player);
     }
 
+    /**
+     * Check if the player’s knowledge contains
+     * the specified research.
+     *
+     * @param player   player to check.
+     * @param research research to check.
+     * @return True if player knowledge has this research.
+     */
     public static boolean isComplete(EntityPlayer player, String research) {
         if (!thaumExist)
             return false;

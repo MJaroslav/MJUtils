@@ -2,7 +2,10 @@ package mjaroslav.mcmods.mjutils.util;
 
 import mjaroslav.mcmods.mjutils.object.constant.ConstantsTime;
 
-public class UtilsSmelting {
+/**
+ * A set of tools to translate time.
+ */
+public class UtilsTime {
     /**
      * Change seconds to ticks.
      *
@@ -62,7 +65,7 @@ public class UtilsSmelting {
      * @return Burnt items in ticks.
      */
     public static int getTicksFromSmelting(float count) {
-        return Math.round(count * ConstantsTime.ONE_SMELT);
+        return (int) (count * ConstantsTime.ONE_SMELT);
     }
 
     /**

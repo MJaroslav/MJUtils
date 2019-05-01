@@ -6,11 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-/**
- * WIP
- *
- * @author MJaroslav
- */
+// TODO: Начать делать в следующем обновлении. Не забыть о вращении.
 public class UtilsMultiBlock {
     public static ItemStack replaceBlock(World world, int x, int y, int z, Block block, int meta) {
         ItemStack temp = new ItemStack(Blocks.air, 1, 0);
