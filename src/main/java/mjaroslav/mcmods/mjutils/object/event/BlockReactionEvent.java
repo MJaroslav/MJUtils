@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class BlockReactionEvent extends Event {
     /**
@@ -42,7 +43,7 @@ public class BlockReactionEvent extends Event {
     /**
      * Fire if any broken by player block return true from
      * {@link mjaroslav.mcmods.mjutils.util.UtilsInteractions#blockIsPigmanTrigger(Block, int)
-     * blockIsPigmanTrigger}. Can be canceled.
+     * blockIsPigmanTrigger}. Can be canceled. Bus: {@link MinecraftForge#EVENT_BUS}.
      */
     @Cancelable
     public static class PigmanTriggerEvent extends BlockReactionEvent {

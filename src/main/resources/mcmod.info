@@ -2,7 +2,7 @@
 {
   "modid": "mjutils",
   "name": "MJUtils",
-  "description": "Mod-lib for MJaroslav's mods",
+  "description": "A set of tools to simplify writing mods. It contains a modular system for initialization of mods and a system of configurations by annotations.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://minecraft.curseforge.com/projects/mjutils",

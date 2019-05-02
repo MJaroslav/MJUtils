@@ -7,8 +7,8 @@ import net.minecraft.util.StringUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-import static mjaroslav.mcmods.mjutils.util.UtilsThaum.complete;
-import static mjaroslav.mcmods.mjutils.util.UtilsThaum.isComplete;
+import static mjaroslav.mcmods.mjutils.util.UtilsThaumcraft.complete;
+import static mjaroslav.mcmods.mjutils.util.UtilsThaumcraft.isComplete;
 
 public class ThaumEventHandler {
     public static final ThaumEventHandler instance = new ThaumEventHandler();

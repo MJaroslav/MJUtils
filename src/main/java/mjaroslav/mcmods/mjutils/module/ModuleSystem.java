@@ -27,7 +27,7 @@ import java.util.*;
  * @see AnnotationBasedConfiguration
  */
 public class ModuleSystem {
-    private static final Logger LOGGER = LogManager.getLogger("Module System");
+    static final Logger LOGGER = LogManager.getLogger("Module System");
     private static final Comparator<Modular> ASCENDING_COMPARATOR = (o1, o2) -> o1.priority() - o2.priority();
 
     private final String modID;

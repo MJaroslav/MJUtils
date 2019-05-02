@@ -7,6 +7,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.FishingHooks;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Fire when player catch a item out of the water by fishing rod.
@@ -59,7 +60,7 @@ public class FishingSuccessEvent extends Event {
     public final double z;
 
     /**
-     * See class documentation.
+     * See class documentation. Bus: {@link MinecraftForge#EVENT_BUS}.
      *
      * @param fisher     see {@link FishingSuccessEvent#fisher}
      * @param fishHook   see {@link FishingSuccessEvent#fishHook}

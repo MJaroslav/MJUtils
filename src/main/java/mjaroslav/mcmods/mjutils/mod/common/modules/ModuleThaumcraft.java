@@ -7,10 +7,10 @@ import mjaroslav.mcmods.mjutils.mod.common.handler.ThaumEventHandler;
 import mjaroslav.mcmods.mjutils.mod.lib.ModInfo;
 import mjaroslav.mcmods.mjutils.module.Modular;
 import mjaroslav.mcmods.mjutils.module.Module;
-import mjaroslav.mcmods.mjutils.util.UtilsThaum;
+import mjaroslav.mcmods.mjutils.util.UtilsThaumcraft;
 
 @Module(ModInfo.MODID)
-public class ModuleThaum implements Modular {
+public class ModuleThaumcraft implements Modular {
     @Override
     public int priority() {
         return 10;
@@ -18,7 +18,7 @@ public class ModuleThaum implements Modular {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        UtilsThaum.activate();
+        UtilsThaumcraft.activate();
     }
 
     @Override

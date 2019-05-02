@@ -40,7 +40,7 @@ public abstract class FileBasedConfiguration implements Initializator {
      */
     public FileBasedConfiguration(String modID, Logger logger) {
         this.modID = modID;
-        this.logger = logger;
+        this.logger = logger == null ? ModuleSystem.LOGGER : logger;
         ConfigurationEventHandler.instance.addConfig(this);
     }
 
