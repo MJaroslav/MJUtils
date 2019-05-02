@@ -1,6 +1,5 @@
 package mjaroslav.mcmods.mjutils.module;
 
-import com.mojang.realmsclient.util.Pair;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
@@ -13,7 +12,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import static mjaroslav.util.FieldType.get;
 
@@ -24,11 +26,11 @@ import static mjaroslav.util.FieldType.get;
  * @see ConfigurationCategory
  * @see mjaroslav.mcmods.mjutils.module.FileBasedConfiguration
  */
+// TODO: Оптимизировать поиск опций и, возможно, разбить основную аннотацию на составные.
 public class AnnotationBasedConfiguration extends FileBasedConfiguration {
     private final Set<Class> rawCategories = new HashSet<>();
 
-    private final Map<String, Pair<ConfigurationCategory, Set<Pair<ConfigurationProperty, Field>>>> categories
-            = new HashMap<>();
+    private final Set<Property> properties = new HashSet<>();
 
     private boolean hasCache = false;
 
@@ -68,14 +70,14 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
     public void readFields(Configuration instance) {
         if (!hasCache) {
             for (Class categoryClass : rawCategories)
-                addCategoryClass(categoryClass, null, instance);
+                cacheProperties(categoryClass, null, instance);
             hasCache = false;
         }
-        categories.forEach((name, category) -> category.second().forEach(property ->
-                parseField(property.second(), property.first(), category.first(), name, instance)));
+        properties.forEach(property -> parseField(property.field, property.info, property.categoryInfo,
+                property.categoryFullName, instance));
     }
 
-    private void addCategoryClass(Class categoryClass, String parentName, Configuration instance) {
+    private void cacheProperties(Class categoryClass, String parentName, Configuration instance) {
         ConfigurationCategory configInfo =
                 (ConfigurationCategory) categoryClass.getAnnotation(ConfigurationCategory.class);
         String name = configInfo.name();
@@ -86,14 +88,6 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
         instance.addCustomCategoryComment(name, configInfo.comment());
         instance.setCategoryRequiresMcRestart(name, mc);
         instance.setCategoryRequiresWorldRestart(name, world);
-        categories.put(name, Pair.of(configInfo, findFields(categoryClass)));
-        for (Class memberClass : categoryClass.getDeclaredClasses())
-            if (memberClass.isAnnotationPresent(ConfigurationCategory.class))
-                addCategoryClass(memberClass, name, instance);
-    }
-
-    private Set<Pair<ConfigurationProperty, Field>> findFields(Class categoryClass) {
-        Set<Pair<ConfigurationProperty, Field>> result = new HashSet<>();
         int mods;
         for (Field field : categoryClass.getFields()) {
             mods = field.getModifiers();
@@ -104,11 +98,14 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
                                         "must be float or double or boolean or int and their array type.",
                                 field.getName(), categoryClass.getName()));
                     else
-                        result.add(Pair.of(field.getAnnotation(ConfigurationProperty.class), field));
+                        properties.add(new Property(field, field.getAnnotation(ConfigurationProperty.class), configInfo,
+                                name));
                 else logger.warn(String.format("Field \"%s\" in \"%s\" will be ignored. @ConfigurationProperty must " +
                         "be public, static and not final", field.getName(), categoryClass.getName()));
         }
-        return result;
+        for (Class memberClass : categoryClass.getDeclaredClasses())
+            if (memberClass.isAnnotationPresent(ConfigurationCategory.class))
+                cacheProperties(memberClass, name, instance);
     }
 
     private void parseField(Field field, ConfigurationProperty info, ConfigurationCategory categoryInfo,
@@ -207,5 +204,21 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
      */
     public List<IConfigElement> generalToElementList() {
         return categoryToElementList(Configuration.CATEGORY_GENERAL);
+    }
+
+    private static class Property {
+        private final ConfigurationCategory categoryInfo;
+        private final ConfigurationProperty info;
+        private final Field field;
+        private final String categoryFullName;
+
+        private Property(Field field, ConfigurationProperty info, ConfigurationCategory category, String
+                categoryFullName) {
+            this.info = info;
+            this.field = field;
+            this.categoryInfo = category;
+            this.categoryFullName = categoryFullName;
+        }
+
     }
 }

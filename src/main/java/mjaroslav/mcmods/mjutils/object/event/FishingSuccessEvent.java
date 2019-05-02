@@ -46,17 +46,17 @@ public class FishingSuccessEvent extends Event {
      */
     public final World world;
     /**
-     * FishHook server posX.
+     * FishHook posX.
      */
-    public final int x;
+    public final double x;
     /**
-     * FishHook server posY.
+     * FishHook posY.
      */
-    public final int y;
+    public final double y;
     /**
-     * FishHook server posZ.
+     * FishHook posZ.
      */
-    public final int z;
+    public final double z;
 
     /**
      * See class documentation.
@@ -79,9 +79,9 @@ public class FishingSuccessEvent extends Event {
         this.luck = luck;
         this.speed = speed;
         world = fishHook.worldObj;
-        x = fishHook.serverPosX;
-        y = fishHook.serverPosY;
-        z = fishHook.serverPosZ;
+        x = fishHook.posX;
+        y = fishHook.posY;
+        z = fishHook.posZ;
     }
 
     @Override

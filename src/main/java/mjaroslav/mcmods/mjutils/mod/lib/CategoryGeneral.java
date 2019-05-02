@@ -13,7 +13,7 @@ public class CategoryGeneral {
                 "Show ore dict names in tooltip (in advanced tooltip mode).")
         public static boolean showOreDictNames;
 
-        @ConfigurationProperty(defaultBoolean = false, comment =
+        @ConfigurationProperty(comment =
                 "Show ore dict names always.")
         public static boolean alwaysShowOreDictNames;
     }
