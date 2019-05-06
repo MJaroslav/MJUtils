@@ -150,7 +150,8 @@ public class AnnotationBasedConfiguration extends FileBasedConfiguration {
                     break;
                 case INT:
                     value = instance.get(categoryFullName, name, info.defaultInt(), info.comment())
-                            .setRequiresMcRestart(mcRestart).setRequiresWorldRestart(worldRestart).getInt();
+                            .setMinValue(info.minInt()).setMaxValue(info.maxInt()).setRequiresMcRestart(mcRestart)
+                            .setRequiresWorldRestart(worldRestart).getInt();
                     break;
                 case INT_ARRAY:
                     value = instance.get(categoryFullName, name, info.defaultIntArray(), info.comment(), info.minInt(),

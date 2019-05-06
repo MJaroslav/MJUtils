@@ -10,12 +10,12 @@ import mjaroslav.mcmods.mjutils.util.UtilsInteractions;
 
 import static mjaroslav.mcmods.mjutils.mod.lib.ModInfo.*;
 
-@Mod(modid = MODID, name = NAME, version = VERSION, guiFactory = GUI_FACTORY)
-public class ModMJUtils {
-    @Instance(MODID)
-    public static ModMJUtils instance;
+@Mod(modid = MOD_ID, name = NAME, version = VERSION, guiFactory = GUI_FACTORY)
+public class MJUtils {
+    @Instance(MOD_ID)
+    public static MJUtils instance;
 
-    public static final AnnotationBasedConfiguration CONFIG = new AnnotationBasedConfiguration(MODID, LOG);
+    public static final AnnotationBasedConfiguration CONFIG = new AnnotationBasedConfiguration(MOD_ID, LOG);
 
     private static ModuleSystem initHandler;
 
@@ -36,7 +36,7 @@ public class ModMJUtils {
 
     @EventHandler
     public void constr(FMLConstructionEvent event) {
-        initHandler = new ModuleSystem(MODID, CONFIG, null);
+        initHandler = new ModuleSystem(MOD_ID, CONFIG, null);
         initHandler.initSystem(event);
     }
 

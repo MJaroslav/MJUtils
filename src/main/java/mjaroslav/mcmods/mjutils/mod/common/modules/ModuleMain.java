@@ -16,7 +16,7 @@ import mjaroslav.mcmods.mjutils.util.UtilsInteractions;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 
-@Module(ModInfo.MODID)
+@Module(ModInfo.MOD_ID)
 public class ModuleMain implements Modular {
     @Override
     public void init(FMLInitializationEvent event) {

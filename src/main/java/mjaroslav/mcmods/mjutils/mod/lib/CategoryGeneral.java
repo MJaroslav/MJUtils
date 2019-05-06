@@ -4,7 +4,7 @@ import mjaroslav.mcmods.mjutils.module.ConfigurationCategory;
 import mjaroslav.mcmods.mjutils.module.ConfigurationProperty;
 
 // TODO: Добавить выключатели для некоторых особенностей библиотеки.
-@ConfigurationCategory(modID = ModInfo.MODID, name = ConfigurationCategory.GENERAL_NAME,
+@ConfigurationCategory(modID = ModInfo.MOD_ID, name = ConfigurationCategory.GENERAL_NAME,
         comment = ConfigurationCategory.GENERAL_COMMENT)
 public class CategoryGeneral {
     @ConfigurationCategory(name = "client")

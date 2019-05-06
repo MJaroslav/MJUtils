@@ -9,7 +9,7 @@ import mjaroslav.mcmods.mjutils.module.Modular;
 import mjaroslav.mcmods.mjutils.module.Module;
 import mjaroslav.mcmods.mjutils.util.UtilsThaumcraft;
 
-@Module(ModInfo.MODID)
+@Module(ModInfo.MOD_ID)
 public class ModuleThaumcraft implements Modular {
     @Override
     public int priority() {
