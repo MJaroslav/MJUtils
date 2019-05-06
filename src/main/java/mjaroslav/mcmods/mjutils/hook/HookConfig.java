@@ -1,23 +1,25 @@
 package mjaroslav.mcmods.mjutils.hook;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static mjaroslav.mcmods.mjutils.mod.lib.ModInfo.LOG;
+import static mjaroslav.mcmods.mjutils.mod.lib.ModInfo.MOD_ID;
 
 public class HookConfig {
-    private static final String DISABLED_HOOKS_FILE = "disabled_hooks_mjutils.txt";
+    private static final String DISABLED_HOOKS_FILE = String.format("%s_disabled_hooks.txt", MOD_ID);
     private static final String COMMENT_MARK = "#";
     private static final Set<String> DISABLED_HOOKS = new HashSet<>();
+    private static final File CONFIG = new File("config");
 
     static {
         LOG.info("Trying to load hooks configuration...");
         try {
-            for (String line : Files.readAllLines(Paths.get(DISABLED_HOOKS_FILE)))
+            for (String line : Files.readAllLines(CONFIG.toPath().resolve(DISABLED_HOOKS_FILE)))
                 if (!line.startsWith(COMMENT_MARK))
                     DISABLED_HOOKS.add(line.trim().toLowerCase());
             LOG.info(String.format("Disabled hooks: [%s]", String.join(", ", DISABLED_HOOKS)));
@@ -36,8 +38,10 @@ public class HookConfig {
                     COMMENT_MARK + " " + HooksFishingNullFix.DISABLE_ID
             };
             try {
-                Files.write(Paths.get(DISABLED_HOOKS_FILE), Arrays.asList(defaultConfiguration));
-                LOG.info("Default hooks configuration created!");
+                if (CONFIG.isDirectory() || CONFIG.mkdirs()) {
+                    Files.write(CONFIG.toPath().resolve(DISABLED_HOOKS_FILE), Arrays.asList(defaultConfiguration));
+                    LOG.info("Default hooks configuration created!");
+                } else throw new IOException("Can not create config folder");
             } catch (IOException ex) {
                 LOG.error("Can not generate default hooks configuration!", ex);
             }
