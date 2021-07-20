@@ -6,6 +6,9 @@ bin
 .classpath
 .project
 
+# vs code
+.vscode
+
 # idea
 out
 *.ipr
@@ -17,8 +20,6 @@ out
 build
 .gradle
 
-# other
+# Minecraft
 eclipse
 run
-changelog.txt
-logs/
