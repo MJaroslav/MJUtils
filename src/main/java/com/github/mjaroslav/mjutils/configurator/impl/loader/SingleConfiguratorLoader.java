@@ -1,21 +1,29 @@
 package com.github.mjaroslav.mjutils.configurator.impl.loader;
 
 import com.github.mjaroslav.mjutils.configurator.Configurator;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents;
 import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
+import cpw.mods.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 
 public class SingleConfiguratorLoader<T extends Configurator> implements ConfiguratorsLoader {
     @Nonnull
-    public T config;
+    protected T config;
+    protected boolean enableEvents;
 
-    public SingleConfiguratorLoader(@Nonnull T configuratorForWrap) {
+    public SingleConfiguratorLoader(@Nonnull T configuratorForWrap, boolean enableEvents) {
         config = configuratorForWrap;
+        this.enableEvents = enableEvents;
+    }
+
+    @Nonnull
+    public T data() {
+        return config;
     }
 
     @Override
-    public boolean addConfigurators(Configurator... configurators) {
-        return false;
+    public void addConfigurators(Configurator... configurators) {
     }
 
     @Override
@@ -34,14 +42,15 @@ public class SingleConfiguratorLoader<T extends Configurator> implements Configu
 
     @Override
     public void save() {
-        if (config.hasChanges() && config.save().isNotCool() && config.canCrashOnError())
+        if (!config.isReadOnly() && config.hasChanges() && config.save().isNotCool() && config.canCrashOnError())
             throw new RuntimeException("Error on configuration saving! See console for more info");
     }
 
     @Override
     public void restoreToDefault() {
-        if (config.load().isNotCool() && config.canCrashOnError())
+        if (!config.isReadOnly() && config.load().isNotCool() && config.canCrashOnError())
             throw new RuntimeException("Error on configuration restoring! See console for more info");
+        save();
     }
 
     @Override
@@ -50,6 +59,9 @@ public class SingleConfiguratorLoader<T extends Configurator> implements Configu
         if (state.isNotCool() && config.canCrashOnError())
             throw new RuntimeException("Error on configuration syncing! See console for more info");
         // TODO: Write asking for world/game restart.
+        if (enableEvents)
+            if (ConfiguratorEvents.onConfiguratorChangedEventPost(config, false, false) != Event.Result.DENY)
+                ConfiguratorEvents.postConfiguratorChangedEventPost(config, false, false);
     }
 
     @Override
@@ -57,7 +69,7 @@ public class SingleConfiguratorLoader<T extends Configurator> implements Configu
         return config;
     }
 
-    public static <T extends Configurator> SingleConfiguratorLoader<T> wrap(T configurator) {
-        return new SingleConfiguratorLoader<>(configurator);
+    public static <T extends Configurator> SingleConfiguratorLoader<T> wrap(T configurator, boolean enableEvents) {
+        return new SingleConfiguratorLoader<>(configurator, enableEvents);
     }
 }

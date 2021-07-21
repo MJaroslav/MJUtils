@@ -118,6 +118,7 @@ public interface Configurator {
      * When enabled, configurator will crash game on any {@link State#ERROR} return.
      * <br><br>
      * If you write custom realization/loader, you should crash the game on any ERROR return when this is true :) You can also crash on {@link State#UNKNOWN} too.
+     *
      * @return True for error crashing.
      */
     boolean canCrashOnError();
@@ -141,5 +142,14 @@ public interface Configurator {
         public boolean isNotCool() {
             return this == UNKNOWN || this == OK;
         }
+    }
+
+    /**
+     * Function interface for extra sync operations. Just call it after {@link Configurator#sync()} if its return {@link State#OK}.
+     *
+     * @param <T> Current configuration instance with your realization type.
+     */
+    interface SyncCallback<T> {
+        State sync(T instance);
     }
 }

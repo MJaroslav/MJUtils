@@ -7,19 +7,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ManualJson5Configurator extends Json5ConfiguratorBase {
-    protected final SyncFunction SYNC_FUNC;
+    protected SyncCallback<JsonObject> syncFunc;
     protected ResourcePath defaultPath;
     protected JsonObject oldJsonInstance;
 
-    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull ResourcePath defaultPath, @Nullable SyncFunction syncFunc) {
+    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull ResourcePath defaultPath) {
         super(modId, fileName);
-        SYNC_FUNC = syncFunc;
         this.defaultPath = defaultPath;
     }
 
-    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull JsonObject defaultInstance, @Nullable SyncFunction syncFunc) {
+    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull JsonObject defaultInstance) {
         super(modId, fileName);
-        SYNC_FUNC = syncFunc;
         defaultJsonInstance = defaultInstance;
     }
 
@@ -37,7 +35,7 @@ public class ManualJson5Configurator extends Json5ConfiguratorBase {
     @Nonnull
     @Override
     public State sync() {
-        return SYNC_FUNC != null && jsonInstance != null ? SYNC_FUNC.sync(jsonInstance) : State.OK;
+        return syncFunc != null && jsonInstance != null ? syncFunc.sync(jsonInstance) : State.OK;
     }
 
     @Nonnull
@@ -46,10 +44,13 @@ public class ManualJson5Configurator extends Json5ConfiguratorBase {
         JsonObject loaded = loadJsonObject(defaultPath);
         if (loaded != null)
             return loaded;
-        else throw new RuntimeException(String.format("Error on loading default configuration from \"%s\"", defaultPath));
+        else
+            throw new RuntimeException(String.format("Error on loading default configuration from \"%s\"", defaultPath));
     }
 
-    public interface SyncFunction {
-        State sync(JsonObject instance);
+    @SuppressWarnings("unchecked")
+    public <T extends ManualJson5Configurator> T withSyncCallback(SyncCallback<JsonObject> syncFunc) {
+        this.syncFunc = syncFunc;
+        return (T) this;
     }
 }

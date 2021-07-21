@@ -16,6 +16,7 @@ public class ConfiguratorEvents {
         return event.getResult();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static Event.Result postConfiguratorChangedEventPost(@Nonnull Configurator configurator, boolean isWorldRunning, boolean requiresMcRestart) {
         ConfigChangedEvent event =
                 new PostConfigChangedEvent(configurator.getModId(), configurator.getFile(), isWorldRunning, requiresMcRestart);

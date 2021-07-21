@@ -3,7 +3,7 @@ package com.github.mjaroslav.mjutils.configurator.impl.configurator.json;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.api.SyntaxError;
-import com.github.mjaroslav.mjutils.configurator.Configurator;
+import com.github.mjaroslav.mjutils.configurator.impl.configurator.ConfiguratorAdapter;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 
 import javax.annotation.Nonnull;
@@ -13,43 +13,22 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
-public abstract class Json5ConfiguratorBase implements Configurator {
+public abstract class Json5ConfiguratorBase extends ConfiguratorAdapter {
     public static final String VERSION_KEY = "version";
-    public static final String FILE_EXT = "json5";
+    public static final String EXT = "json5";
     public static final Jankson JANKSON = Jankson.builder().build();
 
-    @Nonnull
-    protected final String MOD_ID;
-
-    @Nonnull
-    protected String fileName;
     protected JsonObject jsonInstance;
     protected JsonObject defaultJsonInstance;
-    protected boolean crashOnError = false;
-    protected boolean readOnly = false;
-    protected String name;
     protected boolean hasChanges = false;
 
     public Json5ConfiguratorBase(@Nonnull String modId, @Nonnull String fileName) {
-        MOD_ID = modId;
-        this.fileName = fileName;
+        super(modId, fileName, EXT);
     }
 
     @Override
     public boolean hasChanges() {
         return hasChanges;
-    }
-
-    @Override
-    @Nullable
-    public String getName() {
-        return name;
-    }
-
-    @Nonnull
-    @Override
-    public String getModId() {
-        return MOD_ID;
     }
 
     @Nonnull
@@ -81,12 +60,6 @@ public abstract class Json5ConfiguratorBase implements Configurator {
             return UNKNOWN_VERSION;
         String loaded = jsonInstance.get(String.class, VERSION_KEY);
         return loaded != null ? loaded : UNKNOWN_VERSION;
-    }
-
-    @Nonnull
-    @Override
-    public String getFile() {
-        return String.format(PATH_PATTERN, fileName, FILE_EXT);
     }
 
     @Nonnull
@@ -139,34 +112,6 @@ public abstract class Json5ConfiguratorBase implements Configurator {
             e.printStackTrace();
             return State.ERROR;
         }
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    @Override
-    public boolean canCrashOnError() {
-        return crashOnError;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Json5ConfiguratorBase> T makeCrashOnError() {
-        crashOnError = true;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Json5ConfiguratorBase> T makeReadOnly() {
-        readOnly = true;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Json5ConfiguratorBase> T setName(String name) {
-        this.name = name;
-        return (T) this;
     }
 
     @Nullable

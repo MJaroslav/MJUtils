@@ -4,13 +4,12 @@ import blue.endless.jankson.JsonObject;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 
 public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
-    protected final SyncFunction<T> SYNC_FUNC;
+    protected SyncCallback<T> syncFunc;
     protected Class<T> lazyLoadedTypeClass;
     protected T defaultGenericInstance;
     protected T genericInstance;
@@ -18,16 +17,14 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
     // TODO: Make normal checking for changes.
     protected T oldGenericInstance;
 
-    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, ResourcePath defaultPath, @Nullable SyncFunction<T> syncFunc) {
+    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, ResourcePath defaultPath) {
         super(modId, fileName);
         this.defaultPath = defaultPath;
-        SYNC_FUNC = syncFunc;
     }
 
-    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, T defaultInstance, @Nullable SyncFunction<T> syncFunc) {
+    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, T defaultInstance) {
         super(modId, fileName);
         defaultGenericInstance = defaultInstance;
-        SYNC_FUNC = syncFunc;
     }
 
     @SuppressWarnings("unchecked")
@@ -38,7 +35,7 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
     }
 
     public T getGenericInstance() {
-        if(!readOnly) {
+        if (!readOnly) {
             if (oldGenericInstance != null) {
                 JsonObject old = (JsonObject) JANKSON.toJson(oldGenericInstance);
                 JsonObject current = (JsonObject) JANKSON.toJson(genericInstance);
@@ -62,7 +59,7 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
     @Nonnull
     @Override
     public State sync() {
-        return SYNC_FUNC != null && jsonInstance != null ? SYNC_FUNC.sync(getGenericInstance()) : State.OK;
+        return syncFunc != null && jsonInstance != null ? syncFunc.sync(getGenericInstance()) : State.OK;
     }
 
     @Nonnull
@@ -95,7 +92,9 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
         }
     }
 
-    public interface SyncFunction<T> {
-        State sync(T instance);
+    @SuppressWarnings("unchecked")
+    public <E extends GenericJson5Configurator<T>> E  withSyncCallback(SyncCallback<T> syncFunc) {
+        this.syncFunc = syncFunc;
+        return (E) this;
     }
 }

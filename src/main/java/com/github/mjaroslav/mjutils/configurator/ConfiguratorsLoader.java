@@ -7,9 +7,8 @@ public interface ConfiguratorsLoader {
      * Add configurators to loading list.
      *
      * @param configurators New configurators array.
-     * @return True if all configurators added correctly.
      */
-    boolean addConfigurators(Configurator... configurators);
+    void addConfigurators(Configurator... configurators);
 
     /**
      * Call {@link Configurator#load()} for each configurator.
