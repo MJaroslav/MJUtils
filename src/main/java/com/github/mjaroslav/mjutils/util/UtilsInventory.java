@@ -2,6 +2,8 @@ package com.github.mjaroslav.mjutils.util;
 
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 import static net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE;
 
 /**
@@ -15,7 +17,7 @@ public class UtilsInventory {
      * @return True of stack, item from stack
      * is not null and stack size more then 0
      */
-    public static boolean itemStackNotNull(ItemStack stack) {
+    public static boolean itemStackNotNull(@Nullable ItemStack stack) {
         return stack != null && stack.getItem() != null && stack.stackSize > 0;
     }
 
@@ -30,7 +32,7 @@ public class UtilsInventory {
      * @param withNBT    if false, item NBT data will be ignored.
      * @return True if stacks equals.
      */
-    public static boolean itemStacksEquals(ItemStack first, ItemStack second,
+    public static boolean itemStacksEquals(@Nullable ItemStack first, @Nullable ItemStack second,
                                            boolean canBeNull, boolean withSize, boolean withDamage, boolean withNBT) {
         if (itemStackNotNull(first) && itemStackNotNull(second)) {
             return first.getItem() == second.getItem() && (!withSize || first.stackSize == second.stackSize) &&
@@ -54,7 +56,7 @@ public class UtilsInventory {
      * @param canBeNull if true, two nulls will return true.
      * @return True if stacks equals.
      */
-    public static boolean itemStackTypeEquals(ItemStack first, ItemStack second, boolean canBeNull) {
+    public static boolean itemStackTypeEquals(@Nullable ItemStack first, @Nullable ItemStack second, boolean canBeNull) {
         return itemStacksEquals(first, second, canBeNull, false, true, false);
     }
 }

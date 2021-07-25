@@ -1,35 +1,54 @@
 package com.github.mjaroslav.mjutils.configurator.impl.configurator.json;
 
 import blue.endless.jankson.JsonObject;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ManualJson5Configurator extends Json5ConfiguratorBase {
+public class ManualJson5Configurator extends Json5ConfiguratorBase<JsonObject> {
     protected SyncCallback<JsonObject> syncFunc;
     protected ResourcePath defaultPath;
-    protected JsonObject oldJsonInstance;
 
-    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull ResourcePath defaultPath) {
-        super(modId, fileName);
+    public ManualJson5Configurator(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, @Nonnull ResourcePath defaultPath) {
+        super(loader, fileName);
         this.defaultPath = defaultPath;
     }
 
-    public ManualJson5Configurator(@Nonnull String modId, @Nonnull String fileName, @Nonnull JsonObject defaultInstance) {
-        super(modId, fileName);
+    public ManualJson5Configurator(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, @Nonnull JsonObject defaultInstance) {
+        super(loader, fileName);
         defaultJsonInstance = defaultInstance;
+    }
+
+    @Nonnull
+    @Override
+    public State restoreDefault() {
+        if (isReadOnly())
+            return State.READONLY;
+        setInstance(getDefaultJsonInstance());
+        return State.OK;
     }
 
     @Nullable
     @Override
-    public JsonObject getJsonInstance() {
-        if (!readOnly) {
-            if (oldJsonInstance != null)
-                hasChanges = !oldJsonInstance.equals(jsonInstance);
-            oldJsonInstance = jsonInstance.clone();
+    public JsonObject getInstance() {
+        return getJsonInstance();
+    }
+
+    @Override
+    public void setInstance(@Nonnull JsonObject value) {
+        if (isUseEvents()) {
+            ConfiguratorEvents.ConfiguratorInstanceChangedEvent event = ConfiguratorEvents.configuratorInstanceChangedEventPost(jsonInstance, value, false);
+            if (!event.isCanceled()) {
+                jsonInstance = (JsonObject) event.newInstance;
+                hasChanges = true;
+            }
+        } else {
+            jsonInstance = value;
+            hasChanges = true;
         }
-        return jsonInstance;
     }
 
     @Nonnull
@@ -48,9 +67,7 @@ public class ManualJson5Configurator extends Json5ConfiguratorBase {
             throw new RuntimeException(String.format("Error on loading default configuration from \"%s\"", defaultPath));
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ManualJson5Configurator> T withSyncCallback(SyncCallback<JsonObject> syncFunc) {
+    public void setSyncCallback(SyncCallback<JsonObject> syncFunc) {
         this.syncFunc = syncFunc;
-        return (T) this;
     }
 }

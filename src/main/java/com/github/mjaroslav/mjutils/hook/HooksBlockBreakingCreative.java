@@ -20,8 +20,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 
 public class HooksBlockBreakingCreative {
-    public static final String DISABLE_ID = "hooks_block_breaking_creative";
-
     // TODO: Поискать альтернативу, которая предусмотрена mc/forge.
     @SideOnly(Side.CLIENT)
     @Hook(returnCondition = ReturnCondition.ON_TRUE)

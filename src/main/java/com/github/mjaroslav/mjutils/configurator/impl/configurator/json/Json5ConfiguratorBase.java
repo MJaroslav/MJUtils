@@ -3,6 +3,7 @@ package com.github.mjaroslav.mjutils.configurator.impl.configurator.json;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.api.SyntaxError;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 import com.github.mjaroslav.mjutils.configurator.impl.configurator.ConfiguratorAdapter;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 
@@ -13,7 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
-public abstract class Json5ConfiguratorBase extends ConfiguratorAdapter {
+public abstract class Json5ConfiguratorBase<T> extends ConfiguratorAdapter<T> {
     public static final String VERSION_KEY = "version";
     public static final String EXT = "json5";
     public static final Jankson JANKSON = Jankson.builder().build();
@@ -22,8 +23,8 @@ public abstract class Json5ConfiguratorBase extends ConfiguratorAdapter {
     protected JsonObject defaultJsonInstance;
     protected boolean hasChanges = false;
 
-    public Json5ConfiguratorBase(@Nonnull String modId, @Nonnull String fileName) {
-        super(modId, fileName, EXT);
+    public Json5ConfiguratorBase(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName) {
+        super(loader, fileName, EXT);
     }
 
     @Override
@@ -41,9 +42,8 @@ public abstract class Json5ConfiguratorBase extends ConfiguratorAdapter {
         return defaultJsonInstance;
     }
 
-    @Nullable
     public JsonObject getJsonInstance() {
-        return jsonInstance;
+        return jsonInstance.clone();
     }
 
     @Nonnull
@@ -82,18 +82,6 @@ public abstract class Json5ConfiguratorBase extends ConfiguratorAdapter {
                 e.printStackTrace();
                 return State.ERROR;
             }
-        }
-    }
-
-    @Nonnull
-    @Override
-    public State restoreDefault() {
-        try {
-            jsonInstance = getDefaultJsonInstance();
-            return State.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return State.ERROR;
         }
     }
 

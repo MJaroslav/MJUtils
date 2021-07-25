@@ -7,14 +7,29 @@ import cpw.mods.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 
-public class SingleConfiguratorLoader<T extends Configurator> implements ConfiguratorsLoader {
+public class SingleConfiguratorLoader<T extends Configurator<?>> implements ConfiguratorsLoader {
+    @Nonnull
+    protected final String MOD_ID;
+
     @Nonnull
     protected T config;
     protected boolean enableEvents;
 
-    public SingleConfiguratorLoader(@Nonnull T configuratorForWrap, boolean enableEvents) {
+    public SingleConfiguratorLoader(@Nonnull String modId, @Nonnull T configuratorForWrap, boolean enableEvents) {
         config = configuratorForWrap;
+        MOD_ID = modId;
         this.enableEvents = enableEvents;
+    }
+
+    @Nonnull
+    @Override
+    public String getModId() {
+        return MOD_ID;
+    }
+
+    @Nonnull
+    public T getConfig() {
+        return config;
     }
 
     @Nonnull
@@ -23,7 +38,7 @@ public class SingleConfiguratorLoader<T extends Configurator> implements Configu
     }
 
     @Override
-    public void addConfigurators(Configurator... configurators) {
+    public void addConfigurators(Configurator<?>... configurators) {
     }
 
     @Override
@@ -65,11 +80,11 @@ public class SingleConfiguratorLoader<T extends Configurator> implements Configu
     }
 
     @Override
-    public Configurator getConfigurator(String name) {
+    public T getConfigurator(String name) {
         return config;
     }
 
-    public static <T extends Configurator> SingleConfiguratorLoader<T> wrap(T configurator, boolean enableEvents) {
-        return new SingleConfiguratorLoader<>(configurator, enableEvents);
+    public static <T extends Configurator<?>> SingleConfiguratorLoader<T> wrap(String modId, T configurator, boolean enableEvents) {
+        return new SingleConfiguratorLoader<>(modId, configurator, enableEvents);
     }
 }

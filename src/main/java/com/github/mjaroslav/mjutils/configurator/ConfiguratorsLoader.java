@@ -1,14 +1,23 @@
 package com.github.mjaroslav.mjutils.configurator;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ConfiguratorsLoader {
+    /**
+     * Get loader owner mod id.
+     *
+     * @return Mod id string of loader owner mod.
+     */
+    @Nonnull
+    String getModId();
+
     /**
      * Add configurators to loading list.
      *
      * @param configurators New configurators array.
      */
-    void addConfigurators(Configurator... configurators);
+    void addConfigurators(Configurator<?>... configurators);
 
     /**
      * Call {@link Configurator#load()} for each configurator.
@@ -46,5 +55,5 @@ public interface ConfiguratorsLoader {
      * @return Configurator with same name or null if no one found.
      */
     @Nullable
-    Configurator getConfigurator(String name);
+    Configurator<?> getConfigurator(String name);
 }

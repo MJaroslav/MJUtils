@@ -28,6 +28,12 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
         this.enableEvents = enableEvents;
     }
 
+    @Nonnull
+    @Override
+    public String getModId() {
+        return MOD_ID;
+    }
+
     public int makeConfigurators(FMLConstructionEvent event) {
         Iterator<ASMDataTable.ASMData> iterator = event.getASMHarvestedData()
                 .getAll(AnnotationConfiguratorsLoadedMarker.class.getName()).iterator();
@@ -38,8 +44,9 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
             if (MOD_ID.equals(data.getAnnotationInfo().get("modId")))
                 try {
                     Class<?> clazz = Class.forName(data.getClassName());
-                    AnnotationForgeConfigurator<?> configurator = new AnnotationForgeConfigurator<>(MOD_ID,
-                            (String) data.getAnnotationInfo().get("fileName"), clazz).turnToStatic().withName(clazz.getName());
+                    AnnotationForgeConfigurator<?> configurator = new AnnotationForgeConfigurator<>(this,
+                            (String) data.getAnnotationInfo().get("fileName"), clazz, true);
+                    configurator.setName(clazz.getName());
                     if (shouldCrashOnError)
                         configurator.makeCrashOnError();
                     addConfigurators(configurator);
@@ -52,9 +59,9 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
     }
 
     @Override
-    public void addConfigurators(Configurator... configurators) {
+    public void addConfigurators(Configurator<?>... configurators) {
         AnnotationForgeConfigurator<?> afc;
-        for (Configurator configurator : configurators)
+        for (Configurator<?> configurator : configurators)
             if (configurator instanceof AnnotationForgeConfigurator) {
                 afc = (AnnotationForgeConfigurator<?>) configurator;
                 if (afc.getName() == null)
@@ -110,7 +117,7 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
 
     @Nullable
     @Override
-    public Configurator getConfigurator(String name) {
+    public Configurator<?> getConfigurator(String name) {
         return configurators.get(name);
     }
 

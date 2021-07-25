@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm;
 
+import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import org.objectweb.asm.*;
 
 import java.io.InputStream;
@@ -9,9 +10,9 @@ import java.util.List;
 public class VariableIdHelper {
 
     public static List<String> listLocalVariables(InputStream classData, final String methodName, Type... argTypes) {
-        final List<String> localVariables = new ArrayList<String>();
+        final List<String> localVariables = new ArrayList<>();
         String methodDesc = Type.getMethodDescriptor(Type.VOID_TYPE, argTypes);
-        final String methodDescWithoutReturnType = methodDesc.substring(0, methodDesc.length() - 1);
+        final String methodDescWithoutReturnType = methodDesc.substring(0, methodDesc.length()-1);
 
         ClassVisitor cv = new ClassVisitor(Opcodes.ASM4) {
 
@@ -44,7 +45,7 @@ public class VariableIdHelper {
     public static void printLocalVariables(InputStream classData, String methodName, Type... argTypes) {
         List<String> locals = listLocalVariables(classData, methodName, argTypes);
         for (String str : locals) {
-            System.out.println(str);
+            ModInfo.LOGGER_HOOKS.info(str);
         }
     }
 

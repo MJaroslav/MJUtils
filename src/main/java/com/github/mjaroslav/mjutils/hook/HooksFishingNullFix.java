@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
 public class HooksFishingNullFix {
-    public static final String DISABLE_ID = "hooks_fishing_null_fix";
-
     // Return fishingEvent rood damage after right click.
     @Hook(returnCondition = ReturnCondition.ALWAYS)
     public static int func_146034_e(EntityFishHook instance) {

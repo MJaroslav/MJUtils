@@ -1,6 +1,8 @@
 package com.github.mjaroslav.mjutils.mod;
 
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import com.github.mjaroslav.mjutils.modular.Loader;
+import com.github.mjaroslav.mjutils.modular.ModuleLoader;
 import com.github.mjaroslav.mjutils.module.AnnotationBasedConfiguration;
 import com.github.mjaroslav.mjutils.module.ModuleSystem;
 import com.github.mjaroslav.mjutils.util.UtilsInteractions;
@@ -18,9 +20,15 @@ public class MJUtils {
 
     private static ModuleSystem initHandler;
 
+    @Loader
+    public ModuleLoader loader = new ModuleLoader(ModInfo.MOD_ID);
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         initHandler.preInit(event);
+        System.out.println("===========================");
+        ModInfo.LOG.debug("Высер дебага");
+        System.out.println("Debug enabled: " + ModInfo.LOG.isDebugEnabled());
     }
 
     @EventHandler

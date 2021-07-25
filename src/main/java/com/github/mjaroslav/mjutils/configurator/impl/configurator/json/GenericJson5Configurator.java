@@ -1,29 +1,30 @@
 package com.github.mjaroslav.mjutils.configurator.impl.configurator.json;
 
 import blue.endless.jankson.JsonObject;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 
-public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
+public class GenericJson5Configurator<T> extends Json5ConfiguratorBase<T> {
     protected SyncCallback<T> syncFunc;
     protected Class<T> lazyLoadedTypeClass;
     protected T defaultGenericInstance;
     protected T genericInstance;
     protected ResourcePath defaultPath;
-    // TODO: Make normal checking for changes.
-    protected T oldGenericInstance;
 
-    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, ResourcePath defaultPath) {
-        super(modId, fileName);
+    public GenericJson5Configurator(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, ResourcePath defaultPath) {
+        super(loader, fileName);
         this.defaultPath = defaultPath;
     }
 
-    public GenericJson5Configurator(@Nonnull String modId, @Nonnull String fileName, T defaultInstance) {
-        super(modId, fileName);
+    public GenericJson5Configurator(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, T defaultInstance) {
+        super(loader, fileName);
         defaultGenericInstance = defaultInstance;
     }
 
@@ -34,16 +35,27 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
         return lazyLoadedTypeClass;
     }
 
-    public T getGenericInstance() {
-        if (!readOnly) {
-            if (oldGenericInstance != null) {
-                JsonObject old = (JsonObject) JANKSON.toJson(oldGenericInstance);
-                JsonObject current = (JsonObject) JANKSON.toJson(genericInstance);
-                hasChanges = !old.equals(current);
-            }
-            oldGenericInstance = genericInstance;
-        }
+    @Nullable
+    @Override
+    public T getInstance() {
         return genericInstance;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setInstance(@Nonnull T value) {
+        if (isUseEvents()) {
+            ConfiguratorEvents.ConfiguratorInstanceChangedEvent event = ConfiguratorEvents.configuratorInstanceChangedEventPost(genericInstance, value, false);
+            if (!event.isCanceled()) {
+                genericInstance = (T) event.newInstance;
+                jsonInstance = (JsonObject) JANKSON.toJson(genericInstance);
+                hasChanges = true;
+            }
+        } else {
+            genericInstance = value;
+            jsonInstance = (JsonObject) JANKSON.toJson(genericInstance);
+            hasChanges = true;
+        }
     }
 
     @Nonnull
@@ -58,8 +70,17 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
 
     @Nonnull
     @Override
+    public State restoreDefault() {
+        if (isReadOnly())
+            return State.READONLY;
+        setInstance(defaultGenericInstance);
+        return State.OK;
+    }
+
+    @Nonnull
+    @Override
     public State sync() {
-        return syncFunc != null && jsonInstance != null ? syncFunc.sync(getGenericInstance()) : State.OK;
+        return syncFunc != null && jsonInstance != null ? syncFunc.sync(genericInstance) : State.OK;
     }
 
     @Nonnull
@@ -92,9 +113,7 @@ public class GenericJson5Configurator<T> extends Json5ConfiguratorBase {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <E extends GenericJson5Configurator<T>> E  withSyncCallback(SyncCallback<T> syncFunc) {
+    public void setSyncCallback(SyncCallback<T> syncFunc) {
         this.syncFunc = syncFunc;
-        return (E) this;
     }
 }

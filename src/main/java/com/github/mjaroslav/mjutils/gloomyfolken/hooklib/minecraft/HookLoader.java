@@ -1,10 +1,10 @@
 package com.github.mjaroslav.mjutils.gloomyfolken.hooklib.minecraft;
 
-import cpw.mods.fml.common.asm.transformers.DeobfuscationTransformer;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.AsmHook;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.HookClassTransformer;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReadClassHelper;
+import cpw.mods.fml.common.asm.transformers.DeobfuscationTransformer;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;

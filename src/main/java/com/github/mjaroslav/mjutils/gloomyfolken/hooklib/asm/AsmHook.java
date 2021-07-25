@@ -1,12 +1,12 @@
 package com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm;
 
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.HookInjectorFactory.MethodEnter;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.HookInjectorFactory.MethodExit;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -21,18 +21,19 @@ import static org.objectweb.asm.Type.*;
  * hookMethod (хук-метод) - ваш статический метод, который вызывается из стороннего кода
  * hookClass (класс с хуком) - класс, в котором содержится хук-метод
  */
+@SuppressWarnings("UnusedReturnValue")
 public class AsmHook implements Cloneable, Comparable<AsmHook> {
 
     private String targetClassName;
     private String targetMethodName;
-    private List<Type> targetMethodParameters = new ArrayList<Type>(2);
+    private final List<Type> targetMethodParameters = new ArrayList<>(2);
     private Type targetMethodReturnType; //если не задано, то не проверяется
 
     private String hooksClassName;
     private String hookMethodName;
     // -1 - значение return
-    private List<Integer> transmittableVariableIds = new ArrayList<Integer>(2);
-    private List<Type> hookMethodParameters = new ArrayList<Type>(2);
+    private final List<Integer> transmittableVariableIds = new ArrayList<>(2);
+    private final List<Type> hookMethodParameters = new ArrayList<>(2);
     private Type hookMethodReturnType = Type.VOID_TYPE;
     private boolean hasReturnValueParameter; // если в хук-метод передается значение из return
 
@@ -45,8 +46,8 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
     private HookInjectorFactory injectorFactory = ON_ENTER_FACTORY;
     private HookPriority priority = HookPriority.NORMAL;
 
-    public static final HookInjectorFactory ON_ENTER_FACTORY = MethodEnter.INSTANCE;
-    public static final HookInjectorFactory ON_EXIT_FACTORY = MethodExit.INSTANCE;
+    public static final HookInjectorFactory ON_ENTER_FACTORY = HookInjectorFactory.MethodEnter.INSTANCE;
+    public static final HookInjectorFactory ON_EXIT_FACTORY = HookInjectorFactory.MethodExit.INSTANCE;
 
     // может быть без возвращаемого типа
     private String targetMethodDescription;
@@ -168,6 +169,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void injectInvokeStatic(HookInjector inj, int returnLocalId, String name, String desc) {
         for (int i = 0; i < hookMethodParameters.size(); i++) {
             Type parameterType = hookMethodParameters.get(i);
@@ -199,17 +201,18 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
         sb.append(hooksClassName).append('#').append(hookMethodName);
         sb.append(hookMethodDescription);
 
-        sb.append(", ReturnCondition=" + returnCondition);
-        sb.append(", ReturnValue=" + returnValue);
-        if (returnValue == ReturnValue.PRIMITIVE_CONSTANT) sb.append(", Constant=" + primitiveConstant);
-        sb.append(", InjectorFactory: " + injectorFactory.getClass().getName());
+        sb.append(", ReturnCondition=").append(returnCondition);
+        sb.append(", ReturnValue=").append(returnValue);
+        if (returnValue == ReturnValue.PRIMITIVE_CONSTANT) sb.append(", Constant=").append(primitiveConstant);
+        sb.append(", InjectorFactory: ").append(injectorFactory.getClass().getName());
 
         return sb.toString();
     }
 
 
+
     @Override
-    public int compareTo(AsmHook o) {
+    public int compareTo(@Nonnull AsmHook o) {
         if (injectorFactory.isPriorityInverted && o.injectorFactory.isPriorityInverted) {
             return priority.ordinal() > o.priority.ordinal() ? -1 : 1;
         } else if (!injectorFactory.isPriorityInverted && !o.injectorFactory.isPriorityInverted) {
@@ -249,12 +252,13 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * Определяет название метода, в который необходимо вставить хук.
          * Если этот метод находится в пакете net.minecraft (и, соответственно, его название обфусцируется),
          * то нужно вызвать ещё и setTargetMethodObfuscatedName().
-         * Если нужно пропатчить конструктор, то в названии метода нужно указать <modules>, а обфусцированное название
+         * Если нужно пропатчить конструктор, то в названии метода нужно указать <init>, а обфусцированное название
          * указывать не нужно.
          *
          * @param methodName Необфусцированное название метода.
          *                   Например: getBlockId
          */
+        @SuppressWarnings("UnusedReturnValue")
         public Builder setTargetMethod(String methodName) {
             AsmHook.this.targetMethodName = methodName;
             return this;
@@ -268,7 +272,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * Чтобы однозначно определить целевой метод, недостаточно только его названия - нужно ещё и описание.
          * <p/>
          * Примеры использования:
-         * import static mjaroslav.mcmods.mjutils.gloomyfolken.hooklib.asm.TypeHelper.*
+         * import static gloomyfolken.hooklib.asm.TypeHelper.*
          * //...
          * addTargetMethodParameters(Type.INT_TYPE)
          * Type worldType = getType("net.minecraft.world.World")
@@ -279,9 +283,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * @see TypeHelper
          */
         public Builder addTargetMethodParameters(Type... parameterTypes) {
-            for (Type type : parameterTypes) {
-                AsmHook.this.targetMethodParameters.add(type);
-            }
+            AsmHook.this.targetMethodParameters.addAll(Arrays.asList(parameterTypes));
             return this;
         }
 
@@ -376,7 +378,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * float f1 = ...;
          * //...
          * В таком случае у f будет номер 7, а у f1 - 8.
-         * <p>
+         *
          * Если целевой метод static, то не нужно начинать отсчет локальных переменных с нуля, номера
          * будут смещены автоматически.
          *
@@ -551,8 +553,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
 
         /**
          * Напрямую указывает тип, возвращаемый хук-методом.
-         *
-         * @param type
+         * @param type Возрващаемый тип
          */
         protected void setHookMethodReturnType(Type type) {
             AsmHook.this.hookMethodReturnType = type;
@@ -601,7 +602,7 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
          * Задает метод, результат вызова которого будет возвращён при вызове return.
          *
          * @param methodName название метода, результат вызова которого следует возвращать
-         * @throws IllegalStateException если возвращаемое значение не установлено на ANOTHER_METHOD_RETURN_VALUE
+         * @throws IllegalStateException    если возвращаемое значение не установлено на ANOTHER_METHOD_RETURN_VALUE
          */
         public Builder setReturnMethod(String methodName) {
             if (AsmHook.this.returnValue != ReturnValue.ANOTHER_METHOD_RETURN_VALUE) {
@@ -660,13 +661,15 @@ public class AsmHook implements Cloneable, Comparable<AsmHook> {
                         hook.hookMethodParameters.toArray(new Type[0]));
             }
             if (hook.returnValue == ReturnValue.ANOTHER_METHOD_RETURN_VALUE) {
+                //noinspection ConstantConditions
                 hook.returnMethodDescription = Type.getMethodDescriptor(hook.targetMethodReturnType,
                         hook.hookMethodParameters.toArray(new Type[0]));
             }
 
             try {
                 hook = (AsmHook) AsmHook.this.clone();
-            } catch (CloneNotSupportedException impossible) {
+            } catch (CloneNotSupportedException ignored) {
+                // impossible
             }
 
             if (hook.targetClassName == null) {

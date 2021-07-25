@@ -1,8 +1,7 @@
 package com.github.mjaroslav.mjutils.util;
 
+import com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader;
 import com.github.mjaroslav.mjutils.object.item.ItemStackSet;
-import com.github.mjaroslav.mjutils.hook.HookConfig;
-import com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -23,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
-import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOG;
+import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER;
 
 /**
  * The utilities for interactions that carry
@@ -64,12 +63,12 @@ public class UtilsInteractions {
      * @param value true to disable block breaking.
      */
     public static void setDisableBlockBreakingInCreative(ItemStack stack, boolean value) {
-        if (HookConfig.blockBreakingCreative())
+        if (MJUtilsHookLoader.CONFIG.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative"))
             if (value)
                 DISABLED_BREAKING_IN_CREATIVE.add(stack);
             else DISABLED_BREAKING_IN_CREATIVE.remove(stack);
-        else LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be ignored!",
-                HooksBlockBreakingCreative.DISABLE_ID));
+        else
+            LOGGER.warn("Hook \"%s\" disabled! All dependent methods will be ignored!", "com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative");
     }
 
     /**
@@ -83,12 +82,12 @@ public class UtilsInteractions {
      */
     public static boolean blockBreakingIsDisabledInCreative(ItemStack stack) {
         // TODO: Убрать меч из проверки и добавлять всех его наследников вручную, по опции в конфигурации.
-        if (HookConfig.blockBreakingCreative())
+        if (MJUtilsHookLoader.CONFIG.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative"))
             return UtilsInventory.itemStackNotNull(stack) && (stack.getItem() instanceof ItemSword ||
                     DISABLED_BREAKING_IN_CREATIVE.contains(stack));
         else {
-            LOG.warn(String.format("Hook \"%s\" disabled! All dependent methods will be ignored!",
-                    HooksBlockBreakingCreative.DISABLE_ID));
+            LOGGER.warn("Hook \"%s\" disabled! All dependent methods will be ignored!",
+                    "com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative");
             // Vailla checking
             return UtilsInventory.itemStackNotNull(stack) && stack.getItem() instanceof ItemSword;
         }

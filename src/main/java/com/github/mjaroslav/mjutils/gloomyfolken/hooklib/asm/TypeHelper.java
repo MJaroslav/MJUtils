@@ -12,35 +12,32 @@ public class TypeHelper {
      * Создает тип по названию класса.
      * Этот метод стоит использовать для классов майнкрафта, форджа и других модов.
      * Пример использования: getType("net.minecraft.world.World") - вернёт тип для World
-     *
      * @param className необфусцированное название класса
      * @return соответствующий тип
      */
-    public static Type getType(String className) {
+    public static Type getType(String className){
         return getArrayType(className, 0);
     }
 
     /**
      * Создает тип для одномерного массива указанного класса.
      * Пример использования: getArrayType("net.minecraft.world.World") - вернёт тип для World[]
-     *
      * @param className необфусцированное название класса
      * @return соответствующий классу тип одномерного массива
      */
-    public static Type getArrayType(String className) {
+    public static Type getArrayType(String className){
         return getArrayType(className, 1);
     }
 
     /**
      * Создает тип для n-мерного массива указанного класса.
      * Пример использования: getArrayType("net.minecraft.world.World", 2) - вернёт тип для World[][]
-     *
      * @param className необфусцированное название класса
      * @return соответствующий классу тип n-мерного массива
      */
-    public static Type getArrayType(String className, int arrayDimensions) {
+    public static Type getArrayType(String className, int arrayDimensions){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < arrayDimensions; i++) {
+        for (int i = 0; i < arrayDimensions; i++){
             sb.append("[");
         }
         sb.append("L");
@@ -66,11 +63,10 @@ public class TypeHelper {
      * НЕЛЬЗЯ: getType(EntityPlayer.class) - это загрузит класс майнкрафта, чего делать нельзя
      * НЕЛЬЗЯ: getType(Class.forName(net.minecraft.entity.player.EntityPlayer)) - то же самое
      * НЕЛЬЗЯ: getType(new EntityPlayer[0]) - и даже это загрузит класс из майна.
-     *
      * @param clazz Может быть только примитивом, системным классом или классом из подключенной либы.
      * @return соответствующий тип
      */
-    public static Type getType(Class clazz) {
+    public static Type getType(Class<?> clazz){
         return Type.getType(clazz);
     }
 

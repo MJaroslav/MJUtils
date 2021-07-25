@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.gloomyfolken.hooklib.minecraft;
 
-import cpw.mods.fml.common.Loader;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
+import cpw.mods.fml.common.Loader;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
 public class SecondaryTransformerHook {
@@ -11,7 +11,7 @@ public class SecondaryTransformerHook {
      */
     @Hook
     public static void injectData(Loader loader, Object... data) {
-        LaunchClassLoader classLoader = (LaunchClassLoader) SecondaryTransformerHook.class.getClassLoader();
+        LaunchClassLoader classLoader = (LaunchClassLoader)SecondaryTransformerHook.class.getClassLoader();
         classLoader.registerTransformer(MinecraftClassTransformer.class.getName());
     }
 

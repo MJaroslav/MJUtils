@@ -10,8 +10,6 @@ import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 
 public class HooksFishingEvent {
-    public static final String DISABLE_ID = "hooks_fishing_event";
-
     @Hook(returnCondition = ReturnCondition.ALWAYS)
     public static ItemStack func_146033_f(EntityFishHook instance) {
         float chance = instance.worldObj.rand.nextFloat();

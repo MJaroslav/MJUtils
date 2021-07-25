@@ -56,11 +56,11 @@ tasks.withType(JavaCompile) {
 // Use IDEA building method instead of Gradle. It"s don"t work for me too >.<
 
 // Only this work for me:
-sourceSets {
-    main {
-        output.resourcesDir = output.getClassesDirs().getSingleFile()
-    }
-}
+//sourceSets {
+//    main {
+//        output.resourcesDir = output.getClassesDirs().getSingleFile()
+//    }
+//}
 
 //
 // Artifacts
@@ -90,11 +90,12 @@ javadoc {
 
 // Manifest attributes for all artifacts
 tasks.withType(Jar) {
-    manifest {
-        attributes 'FMLAT': 'mjutils_at.cfg' 
-        attributes 'FMLCorePlugin': 'mjaroslav.mcmods.mjutils.hook.MJUtilsHookLoader'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
+    if(name == "Jar" || name == "deobfJar" || name == "srcJar")
+        manifest {
+            attributes 'FMLAT': 'mjutils_at.cfg'
+            attributes 'FMLCorePlugin': 'com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader'
+            attributes 'FMLCorePluginContainsFMLMod': 'true'
+        }
 }
 
 artifacts {
@@ -107,7 +108,7 @@ artifacts {
 minecraft {
     version = "$mc_version-$forge_version-$mc_version"
     runDir = mc_run_dir
-    replace '@VERSION@', version
+    replace '@VERSION@', project.version
 }
 
 dependencies {

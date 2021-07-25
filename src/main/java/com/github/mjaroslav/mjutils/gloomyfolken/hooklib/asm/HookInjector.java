@@ -77,7 +77,7 @@ public abstract class HookInjector extends AdviceAdapter {
      */
     public static class LineNumber extends HookInjector {
 
-        private int lineNumber;
+        private final int lineNumber;
 
         public LineNumber(MethodVisitor mv, int access, String name, String desc, AsmHook hook, int lineNumber) {
             super(mv, access, name, desc, hook);

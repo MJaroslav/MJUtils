@@ -1,26 +1,35 @@
 package com.github.mjaroslav.mjutils.configurator.impl.configurator;
 
 import com.github.mjaroslav.mjutils.configurator.Configurator;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class ConfiguratorAdapter implements Configurator {
-    @Nonnull
-    protected final String MOD_ID;
+public abstract class ConfiguratorAdapter<T> implements Configurator<T> {
     @Nonnull
     protected final String FILE_NAME;
     @Nonnull
     protected final String FILE_EXT;
+    @Nonnull
+    protected final ConfiguratorsLoader LOADER;
 
     protected String name;
     protected boolean readOnly;
     protected boolean crashOnError;
+    protected boolean hasChanges;
+    protected boolean useEvents;
 
-    public ConfiguratorAdapter(@Nonnull String modId, @Nonnull String fileName, @Nonnull String fileExt) {
-        MOD_ID = modId;
+    public ConfiguratorAdapter(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, @Nonnull String fileExt) {
+        LOADER = loader;
         FILE_NAME = fileName;
         FILE_EXT = fileExt;
+    }
+
+    @Nonnull
+    @Override
+    public ConfiguratorsLoader getLoader() {
+        return LOADER;
     }
 
     @Nonnull
@@ -35,15 +44,23 @@ public abstract class ConfiguratorAdapter implements Configurator {
         return name;
     }
 
-    @Nonnull
-    @Override
-    public String getModId() {
-        return MOD_ID;
-    }
-
     @Override
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    @Override
+    public boolean hasChanges() {
+        return hasChanges;
+    }
+
+    public void makeDirty() {
+        hasChanges = true;
+    }
+
+    @Override
+    public boolean isUseEvents() {
+        return useEvents;
     }
 
     @Override
@@ -51,21 +68,19 @@ public abstract class ConfiguratorAdapter implements Configurator {
         return crashOnError;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ConfiguratorAdapter> T makeCrashOnError() {
+    public void makeCrashOnError() {
         crashOnError = true;
-        return (T) this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ConfiguratorAdapter> T makeReadOnly() {
+    public void makeReadOnly() {
         readOnly = true;
-        return (T) this;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ConfiguratorAdapter> T withName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
-        return (T) this;
+    }
+
+    public void shouldUseEvents() {
+        useEvents = true;
     }
 }

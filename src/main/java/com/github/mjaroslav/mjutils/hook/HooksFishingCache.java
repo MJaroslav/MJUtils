@@ -11,8 +11,6 @@ import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
 
 // TODO: Решить, необходимо ли это или нет
 public class HooksFishingCache {
-    public static final String DISABLE_ID = "hooks_fishing_cache";
-
     @Hook(returnCondition = ALWAYS)
     public static void addFish(FishingHooks instance, WeightedRandomFishable item) {
         UtilsFishing.add(item, FISH);

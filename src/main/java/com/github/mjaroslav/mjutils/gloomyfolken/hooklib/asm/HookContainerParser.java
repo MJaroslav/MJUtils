@@ -4,13 +4,15 @@ import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook.LocalVariable;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook.ReturnValue;
 import org.objectweb.asm.*;
 
+import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER_HOOKS;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class HookContainerParser {
 
-    private HookClassTransformer transformer;
+    private final HookClassTransformer transformer;
     private String currentClassName;
     private String currentMethodName;
     private String currentMethodDesc;
@@ -25,10 +27,10 @@ public class HookContainerParser {
     Ключ - номер параметра, значение - номер локальной переменной для перехвата
     или -1 для перехвата значения наверху стека.
      */
-    private HashMap<Integer, Integer> parameterAnnotations = new HashMap<Integer, Integer>();
+    private final HashMap<Integer, Integer> parameterAnnotations = new HashMap<>();
 
     private boolean inHookAnnotation;
-
+    
     private static final String HOOK_DESC = Type.getDescriptor(Hook.class);
     private static final String LOCAL_DESC = Type.getDescriptor(LocalVariable.class);
     private static final String RETURN_DESC = Type.getDescriptor(ReturnValue.class);
@@ -38,7 +40,7 @@ public class HookContainerParser {
     }
 
     protected void parseHooks(String className) {
-        transformer.logger.debug("Parsing hook contatiner " + className);
+        LOGGER_HOOKS.info("Parsing hooks contatiner " + className);
         parseHooks(ReadClassHelper.getClassData(className));
     }
 
@@ -58,7 +60,7 @@ public class HookContainerParser {
 
     protected void visitAnnotation(String desc) {
         if (HOOK_DESC.equals(desc)) {
-            annotationValues = new HashMap<String, Object>();
+            annotationValues = new HashMap<>();
             inHookAnnotation = true;
         }
     }
@@ -72,8 +74,8 @@ public class HookContainerParser {
     }
 
     private void invalidHook(String message) {
-        transformer.logger.warning("Found invalid hook " + currentClassName + "#" + currentMethodName);
-        transformer.logger.warning(message);
+        LOGGER_HOOKS.warn("Found invalid hook " + currentClassName + "#" + currentMethodName);
+        LOGGER_HOOKS.warn(message);
     }
 
     protected void visitValue(String name, Object value) {
@@ -158,7 +160,7 @@ public class HookContainerParser {
         }
 
         if (annotationValues.containsKey("returnType")) {
-            builder.setTargetMethodReturnType((String) annotationValues.get("returnType"));
+            builder.setTargetMethodReturnType((String)annotationValues.get("returnType"));
         }
 
         ReturnCondition returnCondition = ReturnCondition.NEVER;
@@ -170,15 +172,15 @@ public class HookContainerParser {
         if (returnCondition != ReturnCondition.NEVER) {
             Object primitiveConstant = getPrimitiveConstant();
             if (primitiveConstant != null) {
-                builder.setReturnValue(ReturnValue.PRIMITIVE_CONSTANT);
+                builder.setReturnValue(com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnValue.PRIMITIVE_CONSTANT);
                 builder.setPrimitiveConstant(primitiveConstant);
             } else if (Boolean.TRUE.equals(annotationValues.get("returnNull"))) {
-                builder.setReturnValue(ReturnValue.NULL);
+                builder.setReturnValue(com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnValue.NULL);
             } else if (annotationValues.containsKey("returnAnotherMethod")) {
-                builder.setReturnValue(ReturnValue.ANOTHER_METHOD_RETURN_VALUE);
+                builder.setReturnValue(com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnValue.ANOTHER_METHOD_RETURN_VALUE);
                 builder.setReturnMethod((String) annotationValues.get("returnAnotherMethod"));
             } else if (methodType.getReturnType() != Type.VOID_TYPE) {
-                builder.setReturnValue(ReturnValue.HOOK_RETURN_VALUE);
+                builder.setReturnValue(com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnValue.HOOK_RETURN_VALUE);
             }
         }
 
@@ -194,7 +196,7 @@ public class HookContainerParser {
         }
 
         if (annotationValues.containsKey("priority")) {
-            builder.setPriority(HookPriority.valueOf((String) annotationValues.get("priority")));
+            builder.setPriority(HookPriority.valueOf((String)annotationValues.get("priority")));
         }
 
         builder.setHookMethodReturnType(methodType.getReturnType());
@@ -212,6 +214,7 @@ public class HookContainerParser {
     }
 
 
+
     private class HookClassVisitor extends ClassVisitor {
 
         public HookClassVisitor() {
@@ -225,7 +228,8 @@ public class HookContainerParser {
         }
 
         @Override
-        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
+        {
             boolean publicAndStatic = (access & Opcodes.ACC_PUBLIC) != 0 && (access & Opcodes.ACC_STATIC) != 0;
             HookContainerParser.this.visitMethod(name, desc, publicAndStatic);
             return new HookMethodVisitor();
@@ -245,7 +249,7 @@ public class HookContainerParser {
         public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
             HookContainerParser.this.visitAnnotation(desc);
             return new HookAnnotationVisitor();
-        }
+    }
 
         public AnnotationVisitor visitParameterAnnotation(final int parameter, String desc, boolean visible) {
             if (RETURN_DESC.equals(desc)) {

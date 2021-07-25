@@ -1,63 +1,100 @@
 package com.github.mjaroslav.mjutils.configurator.impl.configurator.forge;
 
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents.ConfiguratorInstanceChangedEvent;
+import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
+public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase<T> {
     public static final String VERSION_FIELD_NAME = "VERSION";
 
-    protected Class<T> lazyLoadedTypeClass;
+    @Nonnull
+    protected Class<T> typeClass;
     protected SyncCallback<T> syncFunc;
     protected T genericInstance;
     protected String parsedVersion;
     protected boolean staticMode;
 
-    public AnnotationForgeConfigurator(@Nonnull String modId, @Nonnull String fileName) {
-        super(modId, fileName);
+    protected final Map<Field, Object> DEFAULT_VALUES = new HashMap<>(); // Cringe code.
 
-        // Parse actual version
-        try {
-            int mods;
-            for (Field field : lazyLoadedTypeClass.getFields()) {
-                mods = field.getModifiers();
-                if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods)
-                        && field.getName().equals(VERSION_FIELD_NAME) && field.getType().equals(String.class)) {
-                    parsedVersion = (String) field.get(null);
-                    break;
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+    public AnnotationForgeConfigurator(@Nonnull ConfiguratorsLoader loader, @Nonnull String fileName, @Nonnull Class<T> typeClass, boolean staticMode) {
+        super(loader, fileName);
+        this.typeClass = typeClass;
+        this.staticMode = staticMode;
     }
 
-    public AnnotationForgeConfigurator(@Nonnull String modId, @Nonnull String fileName, Class<T> typeClass) {
-        this(modId, fileName);
-        lazyLoadedTypeClass = typeClass;
+    @Nullable
+    @Override
+    public T getInstance() {
+        return genericInstance;
     }
 
     @SuppressWarnings("unchecked")
-    protected Class<T> getTypeClass() {
-        if (lazyLoadedTypeClass == null)
-            lazyLoadedTypeClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        return lazyLoadedTypeClass;
+    @Override
+    public void setInstance(@Nonnull T value) {
+        if (isUseEvents()) {
+            ConfiguratorInstanceChangedEvent event = ConfiguratorEvents.configuratorInstanceChangedEventPost(genericInstance, value, staticMode);
+            if (!staticMode && !event.isCanceled())
+                genericInstance = (T) event.newInstance;
+        } else
+            genericInstance = value;
+        hasChanges = true;
+        loadProperties(configurationInstance);
+    }
+
+    @Nonnull
+    @Override
+    public State restoreDefault() {
+        if (isReadOnly())
+            return State.READONLY;
+        try {
+            T generatedDefault = staticMode ? genericInstance : typeClass.newInstance();
+            for (Map.Entry<Field, Object> entry : DEFAULT_VALUES.entrySet())
+                entry.getKey().set(staticMode ? null : generatedDefault, entry.getValue());
+            setInstance(generatedDefault);
+            return State.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return State.ERROR;
+        }
     }
 
     @Nonnull
     @Override
     public String getActualVersion() {
-        return parsedVersion != null ? parsedVersion : UNKNOWN_VERSION;
+        if (parsedVersion == null) {
+            // Parse actual version
+            try {
+                int mods;
+                for (Field field : typeClass.getFields()) {
+                    mods = field.getModifiers();
+                    if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods)
+                            && field.getName().equals(VERSION_FIELD_NAME) && field.getType().equals(String.class)) {
+                        parsedVersion = (String) field.get(null);
+                        break;
+                    }
+                }
+                if (parsedVersion == null)
+                    parsedVersion = UNKNOWN_VERSION;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return parsedVersion;
     }
 
     @SuppressWarnings("unchecked")
@@ -86,7 +123,7 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
     @Override
     protected State loadProperties(Configuration instance) {
         try {
-            parseClass(getInstance(), getTypeClass(), null, staticMode ? null : getGenericInstance());
+            parseClass(getConfigurationInstance(), typeClass, null, staticMode ? null : getGenericInstance());
             return State.OK;
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,12 +201,15 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
                 if (!(field.isAnnotationPresent(DefaultInt.class) || field.isAnnotationPresent(DefaultIntArray.class)))
                     return;
                 if (isArray) {
-                    property = instance.get(categoryName, propertyName,
-                            field.getDeclaredAnnotation(DefaultIntArray.class).value(), propertyComment);
+                    int[] defaultValue = field.getDeclaredAnnotation(DefaultIntArray.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue, propertyComment);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getIntList());
                 } else {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultInt.class).value(),
+                    int defaultValue = field.getDeclaredAnnotation(DefaultInt.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getInt());
                 }
                 boolean hasRange = false;
@@ -191,12 +231,16 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
                 if (!(field.isAnnotationPresent(DefaultBoolean.class) || field.isAnnotationPresent(DefaultBooleanArray.class)))
                     return;
                 if (isArray) {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultBooleanArray.class).value(),
+                    boolean[] defaultValue = field.getDeclaredAnnotation(DefaultBooleanArray.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getBooleanList());
                 } else {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultBoolean.class).value(),
+                    boolean defaultValue = field.getDeclaredAnnotation(DefaultBoolean.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getBoolean());
                 }
                 if (StringUtils.isNotBlank(property.comment))
@@ -207,13 +251,17 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
                 if (!(field.isAnnotationPresent(DefaultDouble.class) || field.isAnnotationPresent(DefaultDoubleArray.class)))
                     return;
                 if (isArray) {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultDoubleArray.class).value(),
+                    double[] defaultValue = field.getDeclaredAnnotation(DefaultDoubleArray.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getDoubleList());
                 } else {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultBoolean.class).value(),
+                    double defaultValue = field.getDeclaredAnnotation(DefaultDouble.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
-                    field.set(staticMode ? null : classInstance, property.getDouble());
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
+                    field.set(staticMode ? null : classInstance, defaultValue);
                 }
                 boolean hasRange = false;
                 DoubleRange doubleRange = field.getDeclaredAnnotation(DoubleRange.class);
@@ -234,12 +282,16 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
                 if (!(field.isAnnotationPresent(DefaultString.class) || field.isAnnotationPresent(DefaultStringArray.class)))
                     return;
                 if (isArray) {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultStringArray.class).value(),
+                    String[] defaultValue = field.getDeclaredAnnotation(DefaultStringArray.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment, parsedType);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getStringList());
                 } else {
-                    property = instance.get(categoryName, propertyName, field.getDeclaredAnnotation(DefaultString.class).value(),
+                    String defaultValue = field.getDeclaredAnnotation(DefaultString.class).value();
+                    property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment, parsedType);
+                    DEFAULT_VALUES.putIfAbsent(field, defaultValue);
                     field.set(staticMode ? null : classInstance, property.getString());
                 }
                 if (StringUtils.isNotBlank(property.comment))
@@ -278,16 +330,8 @@ public class AnnotationForgeConfigurator<T> extends ForgeConfiguratorBase {
         return null; // Is a subcategory.
     }
 
-    @SuppressWarnings("unchecked")
-    public <E extends AnnotationForgeConfigurator<T>> E withSyncCallback(SyncCallback<T> syncFunc) {
+    public void setSyncCallback(SyncCallback<T> syncFunc) {
         this.syncFunc = syncFunc;
-        return (E) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <E extends AnnotationForgeConfigurator<T>> E turnToStatic() {
-        staticMode = true;
-        return (E) this;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

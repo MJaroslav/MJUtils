@@ -8,10 +8,15 @@ import javax.annotation.Nullable;
 /**
  * Base configurator interface, you can use any prebuild implementation of this or write your own.
  */
-public interface Configurator {
+public interface Configurator<T> {
     String PATH_PATTERN = "./config/%s.%s";
     String UNKNOWN_VERSION = "unknown";
     String OLD_VERSION_FILE_EXT = "old";
+
+    @Nullable
+    T getInstance();
+
+    void setInstance(@Nonnull T value);
 
     /**
      * Configurator unique name, used for getting in {@link ConfiguratorsLoader#getConfigurator(String)}.
@@ -32,12 +37,12 @@ public interface Configurator {
     boolean hasChanges();
 
     /**
-     * Configurator owner mod id. Uses in {@link ConfiguratorEvents}.
+     * Get loader of this configurator <b>instance</b>.
      *
-     * @return Mo id string of configurator owner.
+     * @return Instance of configurator loader.
      */
     @Nonnull
-    String getModId();
+    ConfiguratorsLoader getLoader();
 
     /**
      * Actual configuration structure version. If it does not match with the {@link Configurator#getLocalVersion()}, the configuration file will be recreated.
@@ -124,6 +129,15 @@ public interface Configurator {
     boolean canCrashOnError();
 
     /**
+     * Should configurator fire events from {@link ConfiguratorEvents}?
+     * <br><br>
+     * If you write custom realization/loader, you should check this and {@link Configurator#isReadOnly()}
+     * before fires events (in {@link Configurator#setInstance(Object)} and {@link Configurator#restoreDefault()}).
+     * @return True if events needed.
+     */
+    boolean isUseEvents();
+
+    /**
      * States for {@link Configurator} methods.
      * <br><br>
      * Use {@link State#UNKNOWN} as placeholder for unknown results. Can be used as {@link State#ERROR}.
@@ -140,7 +154,7 @@ public interface Configurator {
         UNKNOWN, ERROR, OK, READONLY, REQUIRES_MC_RESTART, REQUIRES_WORLD_RESTART;
 
         public boolean isNotCool() {
-            return this == UNKNOWN || this == OK;
+            return this == UNKNOWN || this == ERROR;
         }
     }
 
@@ -149,6 +163,7 @@ public interface Configurator {
      *
      * @param <T> Current configuration instance with your realization type.
      */
+    @FunctionalInterface
     interface SyncCallback<T> {
         State sync(T instance);
     }

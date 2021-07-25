@@ -13,7 +13,7 @@ import java.util.Random;
 import static com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
 import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
 
-public class HookGetRandomFishable {
+public class HooksGetRandomFishable {
     @Hook(returnCondition = ALWAYS)
     public static ItemStack getRandomFishable(FishingHooks instance, Random rand, float chance, int luck, int speed) {
         float junkChance = 0.1F - luck * 0.025F - speed * 0.01F;

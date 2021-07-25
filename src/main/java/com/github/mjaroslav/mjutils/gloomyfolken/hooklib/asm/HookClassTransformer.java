@@ -9,17 +9,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class HookClassTransformer {
+import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER_HOOKS;
 
-    public HookLogger logger = new HookLogger.SystemOutLogger();
-    protected HashMap<String, List<AsmHook>> hooksMap = new HashMap<String, List<AsmHook>>();
-    private HookContainerParser containerParser = new HookContainerParser(this);
+public class HookClassTransformer {
+    protected HashMap<String, List<AsmHook>> hooksMap = new HashMap<>();
+    private final HookContainerParser containerParser = new HookContainerParser(this);
 
     public void registerHook(AsmHook hook) {
         if (hooksMap.containsKey(hook.getTargetClassName())) {
             hooksMap.get(hook.getTargetClassName()).add(hook);
         } else {
-            List<AsmHook> list = new ArrayList<AsmHook>(2);
+            List<AsmHook> list = new ArrayList<>(2);
             list.add(hook);
             hooksMap.put(hook.getTargetClassName(), list);
         }
@@ -39,7 +39,7 @@ public class HookClassTransformer {
         if (hooks != null) {
             Collections.sort(hooks);
             try {
-                logger.debug("Injecting hook into class " + className);
+                LOGGER_HOOKS.info("Injecting hooks into class " + className);
                 int numHooks = hooks.size();
                 int majorVersion = ((bytecode[6] & 0xFF) << 8) | (bytecode[7] & 0xFF);
                 boolean java7 = majorVersion > 50;
@@ -50,19 +50,17 @@ public class HookClassTransformer {
                 cr.accept(hooksWriter, java7 ? ClassReader.SKIP_FRAMES : ClassReader.EXPAND_FRAMES);
 
                 int numInjectedHooks = numHooks - hooksWriter.hooks.size();
-                logger.debug("Successfully injected " + numInjectedHooks + " hook" + (numInjectedHooks == 1 ? "" : "s"));
-                for (AsmHook notInjected : hooksWriter.hooks) {
-                    logger.warning("Can not found target method of hook " + notInjected);
-                }
+                LOGGER_HOOKS.info("Successfully injected " + numInjectedHooks + " hook" + (numInjectedHooks == 1 ? "" : "s"));
+                for (AsmHook notInjected : hooksWriter.hooks)
+                    LOGGER_HOOKS.warn("Can not found target method of hook " + notInjected);
 
                 return cw.toByteArray();
             } catch (Exception e) {
-                logger.severe("A problem has occured during transformation of class " + className + ".");
-                logger.severe("Attached hook:");
-                for (AsmHook hook : hooks) {
-                    logger.severe(hook.toString());
-                }
-                logger.severe("Stack trace:", e);
+                LOGGER_HOOKS.error("A problem has occurred during transformation of class " + className + ".");
+                LOGGER_HOOKS.error("Attached hooks:");
+                for (AsmHook hook : hooks)
+                    LOGGER_HOOKS.error(hook.toString());
+                LOGGER_HOOKS.error("Stack trace:", e);
             }
         }
         return bytecode;

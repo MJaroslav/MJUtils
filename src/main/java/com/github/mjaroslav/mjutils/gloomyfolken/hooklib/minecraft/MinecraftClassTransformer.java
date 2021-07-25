@@ -3,6 +3,7 @@ package com.github.mjaroslav.mjutils.gloomyfolken.hooklib.minecraft;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.AsmHook;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.HookClassTransformer;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.HookInjectorClassVisitor;
+import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 
@@ -27,9 +28,9 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
                 long timeStart = System.currentTimeMillis();
                 methodNames = loadMethodNames();
                 long time = System.currentTimeMillis() - timeStart;
-                logger.debug("Methods dictionary loaded in " + time + " ms");
+                ModInfo.LOGGER_HOOKS.info("Methods dictionary loaded in " + time + " ms");
             } catch (IOException e) {
-                logger.severe("Can not load obfuscated method names", e);
+                ModInfo.LOGGER_HOOKS.error("Can not load obfuscated method names", e);
             }
         }
 
@@ -43,7 +44,7 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
         if (resourceStream == null) throw new IOException("Methods dictionary not found");
         DataInputStream input = new DataInputStream(new BufferedInputStream(resourceStream));
         int numMethods = input.readInt();
-        HashMap<Integer, String> map = new HashMap<Integer, String>(numMethods);
+        HashMap<Integer, String> map = new HashMap<>(numMethods);
         for (int i = 0; i < numMethods; i++) {
             map.put(input.readInt(), input.readUTF());
         }
@@ -63,8 +64,8 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
             protected boolean isTargetMethod(AsmHook hook, String name, String desc) {
                 if (HookLibPlugin.getObfuscated() && name.startsWith("func_")) {
                     int first = name.indexOf('_');
-                    int second = name.indexOf('_', first + 1);
-                    int methodId = Integer.valueOf(name.substring(first + 1, second));
+                    int second = name.indexOf('_', first+1);
+                    int methodId = Integer.parseInt(name.substring(first+1, second));
                     String mcpName = methodNames.get(methodId);
                     if (mcpName != null && super.isTargetMethod(hook, mcpName, desc)) {
                         return true;
@@ -72,8 +73,6 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
                 }
                 return super.isTargetMethod(hook, name, desc);
             }
-
-            ;
         };
     }
 }
