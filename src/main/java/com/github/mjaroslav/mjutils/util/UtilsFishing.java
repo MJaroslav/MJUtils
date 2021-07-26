@@ -1,6 +1,8 @@
 package com.github.mjaroslav.mjutils.util;
 
 import com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.block.Block;
@@ -215,7 +217,7 @@ public class UtilsFishing {
         public boolean apply(WeightedRandomFishable input) {
             if (input == null)
                 return false;
-            return UtilsInventory.itemStacksEquals(input.field_150711_b, pattern, false, true, true, false) &&
+            return UtilsItemStack.isEquals(input.field_150711_b, pattern, CompareParameter.ITEM, CompareParameter.META, CompareParameter.COUNT) &&
                     input.field_150710_d == enchantable && input.field_150712_c == randomDamage;
         }
     }
@@ -235,7 +237,7 @@ public class UtilsFishing {
         public boolean apply(WeightedRandomFishable input) {
             if (input == null)
                 return false;
-            return UtilsInventory.itemStackTypeEquals(input.field_150711_b, pattern, false);
+            return UtilsItemStack.isEquals(input.field_150711_b, pattern, CompareParameter.ITEM,  CompareParameter.META);
         }
     }
 }

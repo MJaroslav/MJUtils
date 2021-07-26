@@ -1,6 +1,7 @@
 package com.github.mjaroslav.mjutils.object.item;
 
-import com.github.mjaroslav.mjutils.util.UtilsInventory;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
 import net.minecraft.item.ItemStack;
 
 import java.util.*;
@@ -9,31 +10,18 @@ import java.util.*;
  * Set for ItemStacks.
  */
 // TODO: Доделать как полную реализацию Set<ItemStack>
+@SuppressWarnings("UnusedReturnValue")
 public class ItemStackSet implements Iterable<ItemStack> {
     private ItemStack[] data;
-    private boolean withStackSize;
-    private boolean withDamage;
-    private boolean withNBT;
+    private final CompareParameter[] params;
 
-    public ItemStackSet() {
-        this(true, true, true);
-    }
-
-    public ItemStackSet(boolean withStackSize, boolean withDamage, boolean withNBT) {
-        this.withStackSize = withStackSize;
-        this.withNBT = withNBT;
-        this.withDamage = withDamage;
+    public ItemStackSet(CompareParameter... params) {
+        this.params = params;
         data = new ItemStack[]{};
     }
 
-    public ItemStackSet(Collection<ItemStack> stacks) {
-        this(true, true, true, stacks);
-    }
-
-    public ItemStackSet(boolean withStackSize, boolean withDamage, boolean withNBT, Collection<ItemStack> stacks) {
-        this.withStackSize = withStackSize;
-        this.withNBT = withNBT;
-        this.withDamage = withDamage;
+    public ItemStackSet(Collection<ItemStack> stacks, CompareParameter... params) {
+        this.params = params;
         data = new ItemStack[]{};
         addAll(stacks);
     }
@@ -57,7 +45,7 @@ public class ItemStackSet implements Iterable<ItemStack> {
         ItemStack[] newData = new ItemStack[data.length];
         int pos = 0;
         for (ItemStack check : data) {
-            if (UtilsInventory.itemStacksEquals(check, stack, false, withStackSize, withDamage, withNBT)) {
+            if (UtilsItemStack.isEquals(check, stack, params)) {
                 has = true;
                 break;
             } else {
@@ -74,7 +62,7 @@ public class ItemStackSet implements Iterable<ItemStack> {
 
     public boolean contains(ItemStack stack) {
         for (ItemStack check : data) {
-            if (UtilsInventory.itemStacksEquals(check, stack, false, withStackSize, withDamage, withNBT))
+            if (UtilsItemStack.isEquals(check, stack, params))
                 return true;
         }
         return false;
@@ -115,20 +103,8 @@ public class ItemStackSet implements Iterable<ItemStack> {
         } else return false;
     }
 
-    public boolean isWithDamage() {
-        return withDamage;
-    }
-
-    public boolean isWithNBT() {
-        return withNBT;
-    }
-
-    public boolean isWithStackSize() {
-        return withStackSize;
-    }
-
     public ItemStackSet copy() {
-        ItemStackSet result = new ItemStackSet(withStackSize, withDamage, withNBT);
+        ItemStackSet result = new ItemStackSet(params);
         ItemStack[] copyData = new ItemStack[data.length];
         for (int i = 0; i < data.length; i++)
             copyData[i] = data[i].copy();

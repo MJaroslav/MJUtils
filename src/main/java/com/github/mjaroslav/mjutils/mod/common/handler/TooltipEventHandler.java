@@ -1,9 +1,9 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
-import com.github.mjaroslav.mjutils.util.UtilsInventory;
+import com.github.mjaroslav.mjutils.mod.lib.CategoryGeneral.CategoryClient;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import com.github.mjaroslav.mjutils.mod.lib.CategoryGeneral.CategoryClient;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -16,10 +16,11 @@ public class TooltipEventHandler {
     private TooltipEventHandler() {
     }
 
+    // TODO: Remake this
     @SubscribeEvent
     public void itemTooltipEvent(ItemTooltipEvent event) {
         if (((event.showAdvancedItemTooltips && CategoryClient.showOreDictNames) ||
-                CategoryClient.alwaysShowOreDictNames) && UtilsInventory.itemStackNotNull(event.itemStack)
+                CategoryClient.alwaysShowOreDictNames) && UtilsItemStack.isNotEmpty(event.itemStack)
                 && OreDictionary.getOreIDs(event.itemStack).length > 0) {
             List<String> lines = new ArrayList<>();
             StringBuilder line = new StringBuilder();

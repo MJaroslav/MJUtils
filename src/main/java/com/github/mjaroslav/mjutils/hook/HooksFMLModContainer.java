@@ -31,7 +31,7 @@ public class HooksFMLModContainer {
             lazyMethods.put("serverStarting", FMLServerStartingEvent.class);
             lazyMethods.put("serverStarted", FMLServerStartedEvent.class);
             lazyMethods.put("loadComplete", FMLLoadCompleteEvent.class);
-
+            lazyMethods.put("communications", FMLInterModComms.IMCEvent.class);
         }
         return lazyMethods;
     }
@@ -46,11 +46,13 @@ public class HooksFMLModContainer {
                 if (modInstance != null) {
                     for (Field field : modInstance.getClass().getFields())
                         if (field.isAnnotationPresent(Loader.class)) {
-                            ModuleLoader loader = (ModuleLoader) field.get(modInstance);
+                            // TODO: Make creating loader from class name from loader
+                            ModuleLoader loader = new ModuleLoader(instance.getModId(), modInstance);
+                            field.set(null, loader);
                             Class<?> loaderClass = loader.getClass();
 
                             for (Map.Entry<String, Class<? extends FMLEvent>> entry : getMethods().entrySet()) {
-                                temp = loaderClass.getDeclaredMethod(entry.getKey(), entry.getValue());
+                                temp = loaderClass.getMethod(entry.getKey(), entry.getValue());
                                 temp.setAccessible(true);
                                 METHODS.get(instance).add(new ModuleLoaderMethod(entry.getValue(), loader, temp));
                             }

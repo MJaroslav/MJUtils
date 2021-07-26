@@ -3,7 +3,6 @@ package com.github.mjaroslav.mjutils.modular;
 import cpw.mods.fml.common.event.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public interface Modular {
@@ -15,12 +14,10 @@ public interface Modular {
     String CONFIGURATOR_NAME_PREFIX = "CONFIGURATOR@";
 
     @Nonnull
+    ModuleLoader getLoader();
+
+    @Nonnull
     String getName();
-
-    @Nullable
-    Modular getParentModule();
-
-    void setParentModule(@Nullable Modular parent);
 
     int getPriority();
 
@@ -29,17 +26,6 @@ public interface Modular {
 
     @Nonnull
     List<String> getModuleDependencies();
-
-    boolean isCanCrash();
-
-    boolean isSubmodule();
-
-    boolean canLoad();
-
-    @Nonnull
-    List<Modular> getSubModules();
-
-    void addSubModule(@Nonnull Modular module);
 
     void preInitialization(FMLPreInitializationEvent event);
 
@@ -60,4 +46,6 @@ public interface Modular {
     void serverStarted(FMLServerStartedEvent event);
 
     void loadComplete(FMLLoadCompleteEvent event);
+
+    void communications(FMLInterModComms.IMCEvent event);
 }

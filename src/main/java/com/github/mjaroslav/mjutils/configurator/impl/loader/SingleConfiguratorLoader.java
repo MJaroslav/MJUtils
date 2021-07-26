@@ -15,10 +15,10 @@ public class SingleConfiguratorLoader<T extends Configurator<?>> implements Conf
     protected T config;
     protected boolean enableEvents;
 
-    public SingleConfiguratorLoader(@Nonnull String modId, @Nonnull T configuratorForWrap, boolean enableEvents) {
+    public SingleConfiguratorLoader(@Nonnull String modId, @Nonnull T configuratorForWrap) {
         config = configuratorForWrap;
         MOD_ID = modId;
-        this.enableEvents = enableEvents;
+        this.enableEvents = configuratorForWrap.isUseEvents();
     }
 
     @Nonnull
@@ -84,7 +84,7 @@ public class SingleConfiguratorLoader<T extends Configurator<?>> implements Conf
         return config;
     }
 
-    public static <T extends Configurator<?>> SingleConfiguratorLoader<T> wrap(String modId, T configurator, boolean enableEvents) {
-        return new SingleConfiguratorLoader<>(modId, configurator, enableEvents);
+    public static <T extends Configurator<?>> SingleConfiguratorLoader<T> wrap(String modId, T configurator) {
+        return new SingleConfiguratorLoader<>(modId, configurator);
     }
 }

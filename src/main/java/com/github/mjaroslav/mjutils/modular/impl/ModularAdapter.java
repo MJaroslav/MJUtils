@@ -1,55 +1,41 @@
 package com.github.mjaroslav.mjutils.modular.impl;
 
 import com.github.mjaroslav.mjutils.modular.Modular;
+import com.github.mjaroslav.mjutils.modular.ModuleLoader;
 import cpw.mods.fml.common.event.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class ModularAdapter implements Modular {
-    protected Modular parent;
     @Nonnull
     protected final String NAME;
-    protected final int PRIORITY;
-    protected final List<Modular> SUBMODULES;
+    @Nonnull
+    protected final ModuleLoader LOADER;
 
-    public ModularAdapter(@Nullable Modular parent, @Nonnull String name, int priority) {
-        this.parent = parent;
+    protected final int PRIORITY;
+
+    public ModularAdapter(@Nonnull ModuleLoader loader, @Nonnull String name, int priority) {
         NAME = name;
         PRIORITY = priority;
-        SUBMODULES = new ArrayList<>();
+        LOADER = loader;
     }
 
-    public ModularAdapter(@Nonnull String name, int priority) {
-        this(null, name, priority);
+    public ModularAdapter(@Nonnull ModuleLoader loader, @Nonnull String name) {
+        this(loader, name, DEFAULT_PRIORITY);
     }
 
-    public ModularAdapter(@Nullable Modular parent, @Nonnull String name) {
-        this(parent, name, 0);
-    }
-
-    public ModularAdapter(@Nonnull String name) {
-        this(null, name, 0);
+    @Nonnull
+    @Override
+    public ModuleLoader getLoader() {
+        return LOADER;
     }
 
     @Nonnull
     @Override
     public String getName() {
         return NAME;
-    }
-
-    @Nullable
-    @Override
-    public Modular getParentModule() {
-        return parent;
-    }
-
-    @Override
-    public void setParentModule(@Nullable Modular parent) {
-        this.parent = parent;
     }
 
     @Override
@@ -67,33 +53,6 @@ public abstract class ModularAdapter implements Modular {
     @Override
     public List<String> getModuleDependencies() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isCanCrash() {
-        return false;
-    }
-
-    @Override
-    public boolean isSubmodule() {
-        return parent != null;
-    }
-
-    @Override
-    public boolean canLoad() {
-        return true;
-    }
-
-    @Nonnull
-    @Override
-    public List<Modular> getSubModules() {
-        return SUBMODULES;
-    }
-
-    @Override
-    public void addSubModule(@Nonnull Modular module) {
-        module.setParentModule(this);
-        SUBMODULES.add(module);
     }
 
     @Override
@@ -134,5 +93,9 @@ public abstract class ModularAdapter implements Modular {
 
     @Override
     public void loadComplete(FMLLoadCompleteEvent event) {
+    }
+
+    @Override
+    public void communications(FMLInterModComms.IMCEvent event) {
     }
 }

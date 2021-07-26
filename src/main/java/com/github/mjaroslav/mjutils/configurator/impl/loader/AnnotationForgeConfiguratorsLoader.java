@@ -4,15 +4,19 @@ import com.github.mjaroslav.mjutils.configurator.Configurator;
 import com.github.mjaroslav.mjutils.configurator.ConfiguratorEvents;
 import com.github.mjaroslav.mjutils.configurator.ConfiguratorsLoader;
 import com.github.mjaroslav.mjutils.configurator.impl.configurator.forge.AnnotationForgeConfigurator;
+import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
     protected Map<String, AnnotationForgeConfigurator<?>> configurators = new HashMap<>();
@@ -34,9 +38,20 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
         return MOD_ID;
     }
 
+    @SuppressWarnings("rawtypes")
+    public List<IConfigElement> categoryToElementList(String from, String category) {
+        if (configurators.containsKey(from)) {
+            AnnotationForgeConfigurator<?> configurator = configurators.get(from);
+            Configuration configuration = configurator.getConfigurationInstance();
+            return new ConfigElement<>(configuration.getCategory(category)).getChildElements();
+        }
+        return Collections.emptyList();
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
     public int makeConfigurators(FMLConstructionEvent event) {
         Iterator<ASMDataTable.ASMData> iterator = event.getASMHarvestedData()
-                .getAll(AnnotationConfiguratorsLoadedMarker.class.getName()).iterator();
+                .getAll(AnnotationConfiguratorsLoaderMarker.class.getName()).iterator();
         int count = 0;
         ASMDataTable.ASMData data;
         while (iterator.hasNext()) {
@@ -49,6 +64,9 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
                     configurator.setName(clazz.getName());
                     if (shouldCrashOnError)
                         configurator.makeCrashOnError();
+                    if (enableEvents)
+                        configurator.shouldUseEvents();
+                    ConfigurationEventHandler.instance.addConfig(configurator);
                     addConfigurators(configurator);
                     count++;
                 } catch (ClassNotFoundException e) {
@@ -78,7 +96,7 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
         for (AnnotationForgeConfigurator<?> configurator : configurators.values())
             if (configurator.load().isNotCool()) {
                 if (configurator.canCrashOnError())
-                throw new RuntimeException("Error on configuration loading! See console for more info");
+                    throw new RuntimeException("Error on configuration loading! See console for more info");
                 notCool = true;
                 break;
             }
@@ -109,9 +127,9 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
             if (state.isNotCool() && configurator.canCrashOnError())
                 throw new RuntimeException("Error on configuration syncing! See console for more info");
             // TODO: Write asking for world/game restart.
-            if(enableEvents)
-            if (ConfiguratorEvents.onConfiguratorChangedEventPost(configurator, false, false) != Event.Result.DENY)
-                ConfiguratorEvents.postConfiguratorChangedEventPost(configurator, false, false);
+            if (enableEvents)
+                if (ConfiguratorEvents.onConfiguratorChangedEventPost(configurator, false, false) != Event.Result.DENY)
+                    ConfiguratorEvents.postConfiguratorChangedEventPost(configurator, false, false);
         }
     }
 
@@ -121,11 +139,35 @@ public class AnnotationForgeConfiguratorsLoader implements ConfiguratorsLoader {
         return configurators.get(name);
     }
 
-    public @interface AnnotationConfiguratorsLoadedMarker {
+    public @interface AnnotationConfiguratorsLoaderMarker {
         @Nonnull
         String modId();
 
         @Nonnull
         String fileName();
+    }
+
+    public static class ConfigurationEventHandler {
+        public static final ConfigurationEventHandler instance = new ConfigurationEventHandler();
+
+        private ConfigurationEventHandler() {
+        }
+
+        private final ArrayList<AnnotationForgeConfigurator<?>> list = new ArrayList<>();
+
+        private void addConfig(AnnotationForgeConfigurator<?> newConfig) {
+            list.add(newConfig);
+            ModInfo.LOG.info(String.format("Added configuration file for \"%s\" mod. Configuration contained in \"%s\" file.", newConfig.getLoader().getModId(), newConfig.getFile()));
+        }
+
+        @SubscribeEvent
+        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+            for (AnnotationForgeConfigurator<?> config : list)
+                if (event.modID.equals(config.getLoader().getModId())) {
+                    config.sync();
+                    ModInfo.LOGGER_MODULES.info(String.format("Configuration synchronized for \"%s\" mod. Configuration contained in \"%s\" file.", config.getLoader().getModId(), config.getFile()));
+                    break;
+                }
+        }
     }
 }

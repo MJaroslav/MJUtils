@@ -1,7 +1,8 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
 import com.github.mjaroslav.mjutils.util.UtilsFuel;
-import com.github.mjaroslav.mjutils.util.UtilsInventory;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
 import cpw.mods.fml.common.IFuelHandler;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +17,7 @@ public class FuelHandler implements IFuelHandler {
     @Override
     public int getBurnTime(ItemStack fuel) {
         for (Entry<ItemStack, Integer> entry : UtilsFuel.getFuelMap().entrySet())
-            if (UtilsInventory.itemStackTypeEquals(fuel, entry.getKey(), true))
+            if (UtilsItemStack.isEquals(fuel, entry.getKey(), CompareParameter.ITEM, CompareParameter.META))
                 return entry.getValue();
         return 0;
     }

@@ -13,9 +13,12 @@ public class ModInfo {
     public static final String VERSION = "@VERSION@";
     public static final String GUI_FACTORY = "com.github.mjaroslav.mjutils.mod.client.gui.GUIFactory";
 
+    public static final String CLIENT_PROXY = "com.github.mjaroslav.mjutils.mod.client.ClientProxy";
+    public static final String SERVER_PROXY = "com.github.mjaroslav.mjutils.mod.server.ServerProxy";
+
     public static final Logger LOG = LogManager.getLogger("PLACEHOLDER"); // TODO: Replace by ModLogger
 
     public static final ModLogger LOGGER = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, NAME);
     public static final ModLogger LOGGER_HOOKS = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, NAME + " HOOKS", ModLoggerLevel.OFF);
-    public static final ModLogger LOGGER_MODULES = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, NAME + " MODULES", ModLoggerLevel.OFF);
+    public static final ModLogger LOGGER_MODULES = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, NAME + " MODULES", ModLoggerLevel.ERROR);
 }

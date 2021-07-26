@@ -56,11 +56,11 @@ tasks.withType(JavaCompile) {
 // Use IDEA building method instead of Gradle. It"s don"t work for me too >.<
 
 // Only this work for me:
-//sourceSets {
-//    main {
-//        output.resourcesDir = output.getClassesDirs().getSingleFile()
-//    }
-//}
+sourceSets {
+    main {
+        output.resourcesDir = output.getClassesDirs().getSingleFile()
+    }
+}
 
 //
 // Artifacts

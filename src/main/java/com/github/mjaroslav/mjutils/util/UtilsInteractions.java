@@ -2,6 +2,8 @@ package com.github.mjaroslav.mjutils.util;
 
 import com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader;
 import com.github.mjaroslav.mjutils.object.item.ItemStackSet;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -30,8 +32,8 @@ import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER;
  * or mobs.
  */
 public class UtilsInteractions {
-    private static final ItemStackSet DISABLED_BREAKING_IN_CREATIVE = new ItemStackSet(false, true, false);
-    private static final ItemStackSet PIGMAN_TRIGGER_BLOCKS = new ItemStackSet(false, true, false);
+    private static final ItemStackSet DISABLED_BREAKING_IN_CREATIVE = new ItemStackSet(CompareParameter.ITEM, CompareParameter.META);
+    private static final ItemStackSet PIGMAN_TRIGGER_BLOCKS = new ItemStackSet(CompareParameter.ITEM, CompareParameter.META);
 
     /**
      * To prohibit the breaking of blocks by
@@ -83,13 +85,13 @@ public class UtilsInteractions {
     public static boolean blockBreakingIsDisabledInCreative(ItemStack stack) {
         // TODO: Убрать меч из проверки и добавлять всех его наследников вручную, по опции в конфигурации.
         if (MJUtilsHookLoader.CONFIG.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative"))
-            return UtilsInventory.itemStackNotNull(stack) && (stack.getItem() instanceof ItemSword ||
+            return UtilsItemStack.isNotEmpty(stack) && (stack.getItem() instanceof ItemSword ||
                     DISABLED_BREAKING_IN_CREATIVE.contains(stack));
         else {
             LOGGER.warn("Hook \"%s\" disabled! All dependent methods will be ignored!",
                     "com.github.mjaroslav.mjutils.hook.HooksBlockBreakingCreative");
             // Vailla checking
-            return UtilsInventory.itemStackNotNull(stack) && stack.getItem() instanceof ItemSword;
+            return UtilsItemStack.isNotEmpty(stack) && stack.getItem() instanceof ItemSword;
         }
     }
 

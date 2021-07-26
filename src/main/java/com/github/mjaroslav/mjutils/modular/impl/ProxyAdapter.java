@@ -1,6 +1,5 @@
 package com.github.mjaroslav.mjutils.modular.impl;
 
-import com.github.mjaroslav.mjutils.modular.Modular;
 import com.github.mjaroslav.mjutils.modular.Proxy;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
@@ -8,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,17 +15,6 @@ public abstract class ProxyAdapter implements Proxy {
     @Override
     public String getName() {
         return PROXY_NAME_PREFIX + FMLCommonHandler.instance().getEffectiveSide().name();
-    }
-
-    @Nullable
-    @Override
-    public Modular getParentModule() {
-        return null;
-    }
-
-    @Override
-    public void setParentModule(@Nullable Modular parent) {
-
     }
 
     @Override
@@ -45,31 +32,6 @@ public abstract class ProxyAdapter implements Proxy {
     @Override
     public List<String> getModuleDependencies() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isCanCrash() {
-        return false;
-    }
-
-    @Override
-    public boolean isSubmodule() {
-        return false;
-    }
-
-    @Override
-    public boolean canLoad() {
-        return true;
-    }
-
-    @Nonnull
-    @Override
-    public List<Modular> getSubModules() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void addSubModule(@Nonnull Modular module) {
     }
 
     @Override
@@ -110,6 +72,10 @@ public abstract class ProxyAdapter implements Proxy {
 
     @Override
     public void loadComplete(FMLLoadCompleteEvent event) {
+    }
+
+    @Override
+    public void communications(FMLInterModComms.IMCEvent event) {
     }
 
     @Override

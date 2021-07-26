@@ -1,10 +1,12 @@
 package com.github.mjaroslav.mjutils.modular.impl;
 
+import com.github.mjaroslav.mjutils.modular.ModuleLoader;
+
 import javax.annotation.Nonnull;
 
-public class ConfiguratorsModule extends ModularAdapter {
-    public ConfiguratorsModule(@Nonnull String name) {
-        super(name);
+public abstract class ConfiguratorsModule extends ModularAdapter {
+    public ConfiguratorsModule(@Nonnull ModuleLoader loader, @Nonnull String name) {
+        super(loader, name);
     }
 
     @Nonnull
@@ -16,10 +18,5 @@ public class ConfiguratorsModule extends ModularAdapter {
     @Override
     public int getPriority() {
         return CONFIGURATORS_PRIORITY;
-    }
-
-    @Override
-    public boolean isSubmodule() {
-        return false;
     }
 }

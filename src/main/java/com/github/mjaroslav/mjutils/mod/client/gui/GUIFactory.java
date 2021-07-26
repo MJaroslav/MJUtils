@@ -1,9 +1,9 @@
 package com.github.mjaroslav.mjutils.mod.client.gui;
 
+import com.github.mjaroslav.mjutils.mod.common.modular.ConfigurationModule;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
-import com.github.mjaroslav.mjutils.mod.MJUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -31,7 +31,7 @@ public class GUIFactory implements IModGuiFactory {
 
     public static class MJUtilsGUIConfig extends GuiConfig {
         public MJUtilsGUIConfig(GuiScreen parentScreen) {
-            super(parentScreen, MJUtils.CONFIG.generalToElementList(), ModInfo.MOD_ID, false, false, ModInfo.NAME);
+            super(parentScreen, ConfigurationModule.loader.categoryToElementList("mjutils", "general"), ModInfo.MOD_ID, false, false, ModInfo.NAME);
         }
     }
 }

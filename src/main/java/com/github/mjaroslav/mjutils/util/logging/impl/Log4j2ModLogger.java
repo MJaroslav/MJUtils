@@ -21,8 +21,8 @@ public class Log4j2ModLogger extends ModLoggerAdapter {
     public void log(@Nonnull ModLoggerLevel level, @Nullable String text, @Nullable Throwable e, @Nullable Object... args) {
         String message = StringUtils.isBlank(text) ? String.format("[%s]", level.name()) : String.format("[%s] %s", level.name(), text);
         if (e == null)
-            logger.log(Level.INFO, message, args);
+            logger.log(Level.INFO, String.format(message, args));
         else
-            logger.log(Level.INFO, message, e, args);
+            logger.log(Level.INFO, String.format(message, args), e);
     }
 }
