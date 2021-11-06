@@ -23,3 +23,8 @@ build
 # Minecraft
 eclipse
 run
+
+# Other
+logs/
+log/
+gradle.properties

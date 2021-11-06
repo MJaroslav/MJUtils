@@ -7,10 +7,10 @@ import com.github.mjaroslav.mjutils.modular.Proxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 
-@Mod(modid = ModInfo.MOD_ID, name = ModInfo.NAME, version = ModInfo.VERSION,
-        guiFactory = ModInfo.GUI_FACTORY)
+@Mod(modid = ModInfo.modId, name = ModInfo.name, version = ModInfo.version,
+        guiFactory = ModInfo.guiFactory)
 public class MJUtils {
-    @SidedProxy(clientSide = ModInfo.CLIENT_PROXY, serverSide = ModInfo.SERVER_PROXY)
+    @SidedProxy(clientSide = ModInfo.clientProxy, serverSide = ModInfo.serverProxy)
     public static Proxy proxy;
 
     @Loader

@@ -1,8 +1,8 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
-import com.github.mjaroslav.mjutils.util.UtilsFuel;
-import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
-import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
+import com.github.mjaroslav.mjutils.util.game.UtilsFuel;
+import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
 import cpw.mods.fml.common.IFuelHandler;
 import net.minecraft.item.ItemStack;
 

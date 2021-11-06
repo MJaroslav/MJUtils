@@ -45,7 +45,7 @@ public class VariableIdHelper {
     public static void printLocalVariables(InputStream classData, String methodName, Type... argTypes) {
         List<String> locals = listLocalVariables(classData, methodName, argTypes);
         for (String str : locals) {
-            ModInfo.LOGGER_HOOKS.info(str);
+            ModInfo.loggerHooks.info(str);
         }
     }
 

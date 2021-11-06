@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
-import com.github.mjaroslav.mjutils.util.UtilsThaumcraft;
+import com.github.mjaroslav.mjutils.util.game.compat.UtilsThaumcraft;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.StringUtils;

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER_HOOKS;
+import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.loggerHooks;
 
 public class HookClassTransformer {
     protected HashMap<String, List<AsmHook>> hooksMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class HookClassTransformer {
         if (hooks != null) {
             Collections.sort(hooks);
             try {
-                LOGGER_HOOKS.info("Injecting hooks into class " + className);
+                loggerHooks.info("Injecting hooks into class " + className);
                 int numHooks = hooks.size();
                 int majorVersion = ((bytecode[6] & 0xFF) << 8) | (bytecode[7] & 0xFF);
                 boolean java7 = majorVersion > 50;
@@ -50,17 +50,17 @@ public class HookClassTransformer {
                 cr.accept(hooksWriter, java7 ? ClassReader.SKIP_FRAMES : ClassReader.EXPAND_FRAMES);
 
                 int numInjectedHooks = numHooks - hooksWriter.hooks.size();
-                LOGGER_HOOKS.info("Successfully injected " + numInjectedHooks + " hook" + (numInjectedHooks == 1 ? "" : "s"));
+                loggerHooks.info("Successfully injected " + numInjectedHooks + " hook" + (numInjectedHooks == 1 ? "" : "s"));
                 for (AsmHook notInjected : hooksWriter.hooks)
-                    LOGGER_HOOKS.warn("Can not found target method of hook " + notInjected);
+                    loggerHooks.warn("Can not found target method of hook " + notInjected);
 
                 return cw.toByteArray();
             } catch (Exception e) {
-                LOGGER_HOOKS.error("A problem has occurred during transformation of class " + className + ".");
-                LOGGER_HOOKS.error("Attached hooks:");
+                loggerHooks.error("A problem has occurred during transformation of class " + className + ".");
+                loggerHooks.error("Attached hooks:");
                 for (AsmHook hook : hooks)
-                    LOGGER_HOOKS.error(hook.toString());
-                LOGGER_HOOKS.error("Stack trace:", e);
+                    loggerHooks.error(hook.toString());
+                loggerHooks.error("Stack trace:", e);
             }
         }
         return bytecode;

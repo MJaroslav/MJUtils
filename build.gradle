@@ -1,122 +1,78 @@
 buildscript {
-    repositories {
-        mavenCentral()
+	repositories {
+		mavenCentral()
         maven {
-            name = 'sonatype'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            name = "github"
+            url = "https://github.com/juanmuscaria/maven/raw/master"
         }
-        maven {
-            name = 'forge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-    }
-    // Fixed forge gradle fork
-    dependencies {
-        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
-            changing = true
-        }
-    }
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.4-SNAPSHOT,)'
+	}
 }
 
 repositories {
 	maven {
         name 'ProfMobius Repo'
-        url 'http://mobiusstrip.eu/maven' // Why https don't work?
+        url 'http://mobiusstrip.eu/maven'
     }
     maven {
         name 'ChickenBones Repo'
         url 'https://chickenbones.net/maven/'
     }
+    mavenCentral()
 }
 
+apply plugin: 'java'
 apply plugin: 'forge'
 
-version = mod_version
-group = mod_group
-archivesBaseName = "$mc_version-$mod_name" // MC version at begin added for correct core mod loading.
+def modprop = new Properties()
+file("mod.properties").withInputStream { modprop.load(it) }
 
-//
-// Use UTF-8 encoding and compile on JDK 1.8
-//
-compileJava.options.encoding = 'UTF-8'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+def buildprop = new Properties()
+file("build.properties").withInputStream { buildprop.load(it) }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-//
-// Idea resources visibility
-// 
+version = modprop.version
+group = modprop.group
+archivesBaseName = "${modprop.game_version}-${modprop.name}"
 
-// It"s don"t work for me -.-
-// idea.module.inheritOutputDirs = true
-
-// Use IDEA building method instead of Gradle. It"s don"t work for me too >.<
-
-// Only this work for me:
 sourceSets {
     main {
         output.resourcesDir = output.getClassesDirs().getSingleFile()
     }
 }
 
-//
-// Artifacts
-//
+minecraft {
+    version = "${modprop.game_version}-${modprop.forge_version}-${modprop.game_version}"
+    runDir = modprop.run_dir
+    replace '@VERSION@', project.version
+}
 
-// Used for adding external dependencies to mod jar insted of "compile"
 configurations {
     shade
 
     compile.extendsFrom(shade)
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-task srcJar(type: Jar, dependsOn:classes) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
-}
-
-javadoc {
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
-}
-
-// Manifest attributes for all artifacts
-tasks.withType(Jar) {
-    if(name == "Jar" || name == "deobfJar" || name == "srcJar")
-        manifest {
-            attributes 'FMLAT': 'mjutils_at.cfg'
-            attributes 'FMLCorePlugin': 'com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader'
-            attributes 'FMLCorePluginContainsFMLMod': 'true'
-        }
-}
-
-artifacts {
-    archives srcJar, deobfJar
-}
-
-//
-// Minecraft, sources and resources
-//
-minecraft {
-    version = "$mc_version-$forge_version-$mc_version"
-    runDir = mc_run_dir
-    replace '@VERSION@', project.version
+test {
+    useJUnitPlatform()
 }
 
 dependencies {
-    compile "codechicken:CodeChickenLib:$ccl_version:dev"
-    compile "codechicken:CodeChickenCore:$ccc_version:dev"
-    compile "codechicken:NotEnoughItems:$nei_version:dev"
-    compile "mcp.mobius.waila:Waila:$waila_version"
-    shade "blue.endless:jankson:$jankson_version"
+    compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
+    compile "mcp.mobius.waila:Waila:${buildprop.waila_version}"
+    shade "blue.endless:jankson:${buildprop.jankson_version}"
+
+    compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+
+    testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
 }
 
 processResources {
@@ -127,17 +83,36 @@ processResources {
         include 'mcmod.info'
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
     
     rename '(.+_at.cfg)', 'META-INF/$1'
+}
 
-    // Adding external dependencies to mod jar
-    // And i don't know why this don't work in Jar tasks
-    configurations.shade.each { dep ->
-        from project.zipTree(dep)
+task devJar(type: Jar) {
+	classifier = 'dev'
+	from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    if(name == "jar" || name == "devJar" || name == "srcJar") {
+        manifest {
+            attributes "FMLAT": "${modprop.name}_at.cfg"
+            attributes "FMLCorePlugin": "${modprop.group}.hook.MJUtilsHookLoader"
+            attributes "FMLCorePluginContainsFMLMod": "true"
+        }
+        configurations.shade.each { dep ->
+            from project.zipTree(dep)
+        }
     }
+}
+
+artifacts {
+	archives devJar
+	archives sourcesJar
 }
 

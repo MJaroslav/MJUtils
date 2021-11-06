@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.object.item;
 
-import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
-import com.github.mjaroslav.mjutils.util.common.UtilsItemStack.CompareParameter;
+import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
 import net.minecraft.item.ItemStack;
 
 import java.util.*;

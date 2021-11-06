@@ -13,11 +13,15 @@ public class ResourcePath {
     @Nonnull
     private final String PATH;
 
-    public ResourcePath(String path) {
-        PATH = path.startsWith("/") ? path : "/" + path;
+    public ResourcePath(@Nonnull String path) {
+        String[] info = path.split(":");
+        if (info.length == 1)
+            PATH = path.startsWith("/") ? path : "/" + path;
+        else
+            PATH = "/assets/" + info[0] + "/" + info[1];
     }
 
-    public ResourcePath(ResourceLocation location) {
+    public ResourcePath(@Nonnull  ResourceLocation location) {
         PATH = "/assets/" + location.toString().replace(":", "/");
     }
 

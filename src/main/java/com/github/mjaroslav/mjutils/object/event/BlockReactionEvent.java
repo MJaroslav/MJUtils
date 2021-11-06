@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.object.event;
 
-import com.github.mjaroslav.mjutils.util.UtilsInteractions;
+import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.block.Block;

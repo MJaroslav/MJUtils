@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
-import com.github.mjaroslav.mjutils.mod.lib.CategoryGeneral.CategoryClient;
-import com.github.mjaroslav.mjutils.util.common.UtilsItemStack;
+import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot.CategoryClient;
+import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;

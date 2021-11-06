@@ -2,50 +2,40 @@ package com.github.mjaroslav.mjutils.modular;
 
 import cpw.mods.fml.common.event.*;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-
 public interface Modular {
-    int CONFIGURATORS_PRIORITY = Integer.MIN_VALUE;
-    int PROXY_PRIORITY = Integer.MAX_VALUE;
-    int DEFAULT_PRIORITY = 0;
+    default void listen(FMLConstructionEvent event) {
+    }
 
-    String PROXY_NAME_PREFIX = "PROXY@";
-    String CONFIGURATOR_NAME_PREFIX = "CONFIGURATOR@";
+    default void listen(FMLPreInitializationEvent event) {
+    }
 
-    @Nonnull
-    ModuleLoader getLoader();
+    default void listen(FMLInitializationEvent event) {
+    }
 
-    @Nonnull
-    String getName();
+    default void listen(FMLPostInitializationEvent event) {
+    }
 
-    int getPriority();
+    default void listen(FMLServerStoppingEvent event) {
+    }
 
-    @Nonnull
-    List<String> getModDependencies();
+    default void listen(FMLServerStoppedEvent event) {
+    }
 
-    @Nonnull
-    List<String> getModuleDependencies();
+    default void listen(FMLServerAboutToStartEvent event) {
+    }
 
-    void preInitialization(FMLPreInitializationEvent event);
+    default void listen(FMLServerStartingEvent event) {
+    }
 
-    void initialization(FMLInitializationEvent event);
+    default void listen(FMLServerStartedEvent event) {
+    }
 
-    void postInitialization(FMLPostInitializationEvent event);
+    default void listen(FMLLoadCompleteEvent event) {
+    }
 
-    void construction(FMLConstructionEvent event);
+    default void listen(FMLInterModComms.IMCEvent event) {
+    }
 
-    void serverStopping(FMLServerStoppingEvent event);
-
-    void serverStopped(FMLServerStoppedEvent event);
-
-    void serverAboutToStart(FMLServerAboutToStartEvent event);
-
-    void serverStarting(FMLServerStartingEvent event);
-
-    void serverStarted(FMLServerStartedEvent event);
-
-    void loadComplete(FMLLoadCompleteEvent event);
-
-    void communications(FMLInterModComms.IMCEvent event);
+    default void listen(FMLModDisabledEvent event) {
+    }
 }

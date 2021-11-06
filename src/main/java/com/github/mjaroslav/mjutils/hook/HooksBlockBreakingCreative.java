@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.hook;
 
-import com.github.mjaroslav.mjutils.util.UtilsInteractions;
+import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;

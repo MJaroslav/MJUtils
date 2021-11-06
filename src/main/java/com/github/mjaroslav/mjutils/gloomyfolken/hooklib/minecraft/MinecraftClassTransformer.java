@@ -28,9 +28,9 @@ public class MinecraftClassTransformer extends HookClassTransformer implements I
                 long timeStart = System.currentTimeMillis();
                 methodNames = loadMethodNames();
                 long time = System.currentTimeMillis() - timeStart;
-                ModInfo.LOGGER_HOOKS.info("Methods dictionary loaded in " + time + " ms");
+                ModInfo.loggerHooks.info("Methods dictionary loaded in " + time + " ms");
             } catch (IOException e) {
-                ModInfo.LOGGER_HOOKS.error("Can not load obfuscated method names", e);
+                ModInfo.loggerHooks.error("Can not load obfuscated method names", e);
             }
         }
 

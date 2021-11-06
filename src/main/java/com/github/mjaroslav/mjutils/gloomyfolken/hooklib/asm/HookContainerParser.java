@@ -4,7 +4,7 @@ import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook.LocalVariable;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook.ReturnValue;
 import org.objectweb.asm.*;
 
-import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.LOGGER_HOOKS;
+import static com.github.mjaroslav.mjutils.mod.lib.ModInfo.loggerHooks;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class HookContainerParser {
     }
 
     protected void parseHooks(String className) {
-        LOGGER_HOOKS.info("Parsing hooks contatiner " + className);
+        loggerHooks.info("Parsing hooks contatiner " + className);
         parseHooks(ReadClassHelper.getClassData(className));
     }
 
@@ -74,8 +74,8 @@ public class HookContainerParser {
     }
 
     private void invalidHook(String message) {
-        LOGGER_HOOKS.warn("Found invalid hook " + currentClassName + "#" + currentMethodName);
-        LOGGER_HOOKS.warn(message);
+        loggerHooks.warn("Found invalid hook " + currentClassName + "#" + currentMethodName);
+        loggerHooks.warn(message);
     }
 
     protected void visitValue(String name, Object value) {

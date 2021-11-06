@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.hook;
 
-import com.github.mjaroslav.mjutils.util.UtilsFishing;
+import com.github.mjaroslav.mjutils.util.game.UtilsFishing;
 import com.google.common.base.Predicate;
 import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
 import net.minecraft.util.WeightedRandomFishable;

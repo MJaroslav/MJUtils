@@ -47,7 +47,7 @@ public class HookLibPlugin implements IFMLLoadingPlugin {
                 Field deobfField = CoreModManager.class.getDeclaredField("deobfuscatedEnvironment");
                 deobfField.setAccessible(true);
                 obf = !deobfField.getBoolean(null);
-                ModInfo.LOGGER_HOOKS.info("Obfuscated: " + obf);
+                ModInfo.loggerHooks.info("Obfuscated: " + obf);
             } catch (Exception e) {
                 e.printStackTrace();
             }
