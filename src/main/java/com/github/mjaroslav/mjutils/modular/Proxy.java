@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public abstract class Proxy implements IGuiHandler, Modular {
+public abstract class Proxy implements IGuiHandler {
     public static EntityPlayer getSidedPlayer(MessageContext ctx) {
         if (isClient())
             return Minecraft.getMinecraft().thePlayer;

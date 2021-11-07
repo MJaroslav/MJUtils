@@ -1,0 +1,4 @@
+gui.modlist.button.disable=Disable
+gui.modlist.button.config=Configure
+gui.modlist.button.enable=Enable
+gui.modlist.restart=This feature requires game restart

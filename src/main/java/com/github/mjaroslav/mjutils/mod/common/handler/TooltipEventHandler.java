@@ -4,17 +4,17 @@ import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot.CategoryClient;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TooltipEventHandler {
     public static final TooltipEventHandler instance = new TooltipEventHandler();
-
-    private TooltipEventHandler() {
-    }
 
     // TODO: Remake this
     @SubscribeEvent

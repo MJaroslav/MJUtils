@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.modular;
 
-import cpw.mods.fml.common.Loader;
+import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -13,18 +13,19 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ModuleInfo {
+final class ModuleInfo {
     @Nonnull
-    public final String[] modDependencies;
-    public final int priority;
+    final String[] modDependencies;
+    final int priority;
     @Nonnull
-    public final ModState loadOn;
+    final ModState loadOn;
     @Nonnull
-    public final String moduleClassName;
+    final String moduleClassName;
     @Getter
-    private Modular module;
+    private Object module;
 
-    private boolean loaded;
+    private boolean loaded; // Marker for single loading
+    private boolean errored; // Marker for prevent many log messages with loading error
 
     ModuleInfo(@Nonnull Proxy proxy) {
         // Placeholders
@@ -37,38 +38,33 @@ public final class ModuleInfo {
         loaded = true;
     }
 
-    public boolean isAllRequiredModsLoaded() {
-        for (String modid : modDependencies)
-            if (!Loader.isModLoaded(modid))
-                return false;
-        return true;
+    boolean isAllRequiredModsLoaded() {
+        return UtilsMods.isModsLoaded(modDependencies);
     }
 
     private boolean canListen(@Nonnull FMLEvent event) {
-        if (!loaded) {
+        if (!loaded && !errored) {
             if ((event instanceof FMLStateEvent) && ((FMLStateEvent) event).getModState() == loadOn
                     || event instanceof FMLInterModComms.IMCEvent) {
                 try {
-                    Object instance = Class.forName(moduleClassName).newInstance();
-                    if (instance instanceof Modular) {
-                        module = (Modular) instance;
-                        loaded = true;
-                    }
+                    module = Class.forName(moduleClassName).newInstance();
+                    loaded = true;
                 } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    ModuleLoader.log.error("Can't load \"%s\" module", e, moduleClassName);
+                    errored = true;
                 }
             }
         }
         return loaded;
     }
 
-    public void listen(@Nonnull FMLEvent event) {
+    void listen(@Nonnull FMLEvent event) {
         if (canListen(event))
             try {
                 module.getClass().getMethod("listen", event.getClass()).invoke(module, event);
             } catch (NoSuchMethodException ignored) {
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                ModuleLoader.log.error("Error while loading \"%s\" module", e, moduleClassName);
             }
     }
 }

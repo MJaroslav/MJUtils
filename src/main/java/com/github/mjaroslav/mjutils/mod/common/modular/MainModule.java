@@ -2,48 +2,43 @@ package com.github.mjaroslav.mjutils.mod.common.modular;
 
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator;
 import com.github.mjaroslav.mjutils.configurator.ForgeConfigurator;
+import com.github.mjaroslav.mjutils.mod.client.gui.GuiModListReplacer;
 import com.github.mjaroslav.mjutils.mod.common.handler.FuelHandler;
+import com.github.mjaroslav.mjutils.mod.common.handler.GuiReplacerEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.ReactionEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.TooltipEventHandler;
 import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
-import com.github.mjaroslav.mjutils.modular.Modular;
 import com.github.mjaroslav.mjutils.modular.SubscribeModule;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import lombok.extern.log4j.Log4j2;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 
-@SubscribeModule(/*value = ModInfo.modId, */loadOn = ModState.INITIALIZED)
-@Log4j2
-public class MainModule implements Modular {
+@SubscribeModule(loadOn = ModState.INITIALIZED)
+public class MainModule {
     public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId, CategoryRoot.class);
 
-    @Override
     public void listen(FMLInitializationEvent event) {
         config.load();
         FMLCommonHandler.instance().bus().register(ForgeConfigurator.ConfigurationEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(ReactionEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(TooltipEventHandler.instance);
-        log.info("================");
-        log.info(Loader.instance().activeModContainer().getModId());
+        MinecraftForge.EVENT_BUS.register(GuiReplacerEventHandler.instance);
+        GuiModListReplacer.modIcons.put(ModInfo.modId, "/assets/mjutils/icon.png");
     }
 
-    @Override
     public void listen(FMLPostInitializationEvent event) {
         GameRegistry.registerFuelHandler(FuelHandler.instance);
         if (CategoryRoot.quartzTrigger)
             UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_ore, true);
     }
 
-    @Override
     public void listen(FMLInterModComms.IMCEvent event) {
         for (FMLInterModComms.IMCMessage message : event.getMessages())
             switch (message.key) {
@@ -69,6 +64,10 @@ public class MainModule implements Modular {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), false);
                     } else ModInfo.log.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
+                }
+                break;
+                case "modList.blockFromDisabling": {
+                    GuiModListReplacer.blockedMods.add(message.getSender());
                 }
                 break;
                 default:

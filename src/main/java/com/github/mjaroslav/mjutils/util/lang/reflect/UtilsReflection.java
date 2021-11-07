@@ -11,6 +11,18 @@ import java.util.Map;
 
 public class UtilsReflection {
     @Nonnull
+    public static String getSimpleClassName(@Nonnull Object cls) {
+        String className;
+        if (cls instanceof String)
+            className = (String) cls;
+        else if (cls instanceof Class<?>)
+            className = ((Class<?>) cls).getSimpleName();
+        else
+            className = cls.getClass().getSimpleName();
+        return className.contains(".") ? className.substring(className.lastIndexOf(".") + 1) : "";
+    }
+
+    @Nonnull
     public static String getPackageFromClass(@Nonnull Object cls) {
         String className;
         if (cls instanceof String)
@@ -18,7 +30,7 @@ public class UtilsReflection {
         else if (cls instanceof Class<?>)
             className = ((Class<?>) cls).getName();
         else
-            throw new IllegalArgumentException("Argument must be String class name or Class object");
+            className = cls.getClass().getName();
         return className.contains(".") ? className.substring(0, className.lastIndexOf(".")) : "";
     }
 

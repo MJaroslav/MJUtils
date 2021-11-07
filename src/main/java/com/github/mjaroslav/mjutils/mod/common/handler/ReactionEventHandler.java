@@ -4,14 +4,14 @@ import com.github.mjaroslav.mjutils.object.event.BlockReactionEvent;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import com.github.mjaroslav.mjutils.util.game.world.UtilsWorld;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReactionEventHandler {
     public static final ReactionEventHandler instance = new ReactionEventHandler();
-
-    private ReactionEventHandler() {
-    }
 
     @SubscribeEvent
     public void onBlockHarvest(HarvestDropsEvent event) {

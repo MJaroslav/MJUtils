@@ -3,19 +3,19 @@ package com.github.mjaroslav.mjutils.mod.common.handler;
 import com.github.mjaroslav.mjutils.util.game.compat.UtilsThaumcraft;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThaumEventHandler {
     public static final ThaumEventHandler instance = new ThaumEventHandler();
 
     public static void newResearchCopy(ResearchCopy copy) {
         instance.researchCopyList.add(copy);
-    }
-
-    private ThaumEventHandler() {
     }
 
     private final Set<ResearchCopy> researchCopyList = new HashSet<>();

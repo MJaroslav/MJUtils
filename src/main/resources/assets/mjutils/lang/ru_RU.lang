@@ -1,0 +1,4 @@
+gui.modlist.button.disable=Выключить
+gui.modlist.button.config=Настроить
+gui.modlist.button.enable=Включить
+gui.modlist.restart=Эта функция требует перезапуск игры
