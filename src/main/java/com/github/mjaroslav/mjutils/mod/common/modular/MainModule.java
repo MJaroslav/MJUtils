@@ -2,7 +2,6 @@ package com.github.mjaroslav.mjutils.mod.common.modular;
 
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator;
 import com.github.mjaroslav.mjutils.configurator.ForgeConfigurator;
-import com.github.mjaroslav.mjutils.mod.client.gui.GuiModListReplacer;
 import com.github.mjaroslav.mjutils.mod.common.handler.FuelHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.GuiReplacerEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.ReactionEventHandler;
@@ -11,8 +10,8 @@ import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import com.github.mjaroslav.mjutils.modular.SubscribeModule;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
+import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -20,7 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 
-@SubscribeModule(loadOn = ModState.INITIALIZED)
+@SubscribeModule(priority = -1)
 public class MainModule {
     public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId, CategoryRoot.class);
 
@@ -30,7 +29,6 @@ public class MainModule {
         MinecraftForge.EVENT_BUS.register(ReactionEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(TooltipEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(GuiReplacerEventHandler.instance);
-        GuiModListReplacer.modIcons.put(ModInfo.modId, "/assets/mjutils/icon.png");
     }
 
     public void listen(FMLPostInitializationEvent event) {
@@ -67,7 +65,7 @@ public class MainModule {
                 }
                 break;
                 case "modList.blockFromDisabling": {
-                    GuiModListReplacer.blockedMods.add(message.getSender());
+                    UtilsMods.blockedForDisableMods.add(message.getSender());
                 }
                 break;
                 default:

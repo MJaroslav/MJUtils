@@ -21,7 +21,7 @@ public class HooksFMLModContainer {
     public static void handleModStateEvent(FMLModContainer instance, FMLEvent event) {
         LoadController controller = UtilsReflection.getPrivateValueUpTo(FMLModContainer.class, instance, ModContainer.class, "controller");
         try {
-            ModuleLoader loader = UtilsMods.getOrTryCreateModuleLoader(instance);
+            ModuleLoader loader = UtilsMods.getOrTryCreateModuleLoader(instance, true);
             if (loader != null) {
                 if (event instanceof FMLConstructionEvent) {
                     if (asmRawModules == null)

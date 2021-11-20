@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.modular;
 
+import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
@@ -7,6 +8,7 @@ import com.github.mjaroslav.mjutils.util.logging.ModLogger;
 import com.github.mjaroslav.mjutils.util.logging.UtilsLogger;
 import com.github.mjaroslav.mjutils.util.logging.impl.Log4j2ModLogger;
 import cpw.mods.fml.common.LoaderState.ModState;
+import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.discovery.asm.ModAnnotation.EnumHolder;
 import cpw.mods.fml.common.event.FMLEvent;
@@ -82,6 +84,11 @@ public final class ModuleLoader {
 
     public void listen(FMLEvent event) {
         log.debug("Listen \"%s\" event for %s modules of \"%s\" mod", event, modules.size(), modId);
-        modules.forEach(module -> module.listen(event));
+        ProgressManager.ProgressBar bar = ProgressManager.push("Modules", modules.size(), true);
+        modules.forEach(module -> {
+            bar.step(UtilsReflection.getSimpleClassName(module.moduleClassName));
+            module.listen(event);
+        });
+        ProgressManager.pop(bar);
     }
 }

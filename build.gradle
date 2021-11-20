@@ -39,11 +39,13 @@ version = modprop.version
 group = modprop.group
 archivesBaseName = "${modprop.game_version}-${modprop.name}"
 
-sourceSets {
-    main {
-        output.resourcesDir = output.getClassesDirs().getSingleFile()
-    }
-}
+//sourceSets {
+//    main {
+//        output.resourcesDir = output.getClassesDirs().getSingleFile()
+//    }
+//}
+
+idea.module.inheritOutputDirs = true
 
 minecraft {
     version = "${modprop.game_version}-${modprop.forge_version}-${modprop.game_version}"
