@@ -20,11 +20,8 @@ out
 build
 .gradle
 
-# Minecraft
-eclipse
-run
-
 # Other
 logs/
 log/
 gradle.properties
+run/

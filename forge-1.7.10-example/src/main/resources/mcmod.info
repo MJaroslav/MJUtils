@@ -1,0 +1,12 @@
+[
+{
+  "modid": "mjutilsexample",
+  "name": "MJUtilsExample",
+  "description": "A example mod for MJUtils mod features.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "authorList": ["MJaroslav"],
+  "logoFile": "assets/mjutilsexample/logo.png",
+  "screenshots": ["assets/mjutilsexample/screenshot_1.png", "assets/mjutilsexample/screenshot_2.png"]
+}
+]

@@ -1,0 +1,12 @@
+[
+{
+  "modid": "mjutils",
+  "name": "MJUtils",
+  "description": "A set of tools to simplify writing mods. It contains a modular system for initialization of mods and a system of configurations by annotations.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/mjutils",
+  "authorList": ["MJaroslav"],
+  "logoFile": "assets/mjutils/logo.png"
+}
+]

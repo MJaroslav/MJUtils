@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        maven {
+            name = "github"
+            url = "https://github.com/juanmuscaria/maven/raw/master"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.4-SNAPSHOT,)'
+    }
+}
+
+repositories {
+    maven {
+        name 'ProfMobius Repo'
+        url 'http://mobiusstrip.eu/maven'
+    }
+    maven {
+        name 'ChickenBones Repo'
+        url 'https://chickenbones.net/maven/'
+    }
+    mavenCentral()
+}
+
+apply plugin: 'forge'
+
+def modprop = new Properties()
+file("mod.properties").withInputStream { modprop.load(it) }
+
+def buildprop = new Properties()
+file("build.properties").withInputStream { buildprop.load(it) }
+
+version = modprop.version
+group = modprop.group
+archivesBaseName = "${buildprop.game_version}-${modprop.name}"
+
+minecraft {
+    version = "${buildprop.game_version}-${buildprop.forge_version}-${buildprop.game_version}"
+    runDir = buildprop.run_dir
+    replace '@VERSION@', project.version
+}
+
+dependencies {
+    compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
+    compile "mcp.mobius.waila:Waila:${buildprop.waila_version}"
+    shade "blue.endless:jankson:${buildprop.jankson_version}"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+tasks.withType(Jar).each {
+    it.doFirst {
+        if (name == "jar" || name == "devJar" || name == "srcJar") {
+            manifest {
+                attributes "FMLAT": "${modprop.name}_at.cfg"
+                attributes "FMLCorePlugin": "${modprop.group}.hook.MJUtilsHookLoader"
+                attributes "FMLCorePluginContainsFMLMod": "true"
+            }
+        }
+    }
+}

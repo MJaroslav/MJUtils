@@ -1,112 +1,57 @@
-buildscript {
-	repositories {
-		mavenCentral()
-        maven {
-            name = "github"
-            url = "https://github.com/juanmuscaria/maven/raw/master"
-        }
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.4-SNAPSHOT,)'
-	}
-}
-
-repositories {
-	maven {
-        name 'ProfMobius Repo'
-        url 'http://mobiusstrip.eu/maven'
-    }
-    maven {
-        name 'ChickenBones Repo'
-        url 'https://chickenbones.net/maven/'
-    }
-    mavenCentral()
-}
-
-apply plugin: 'java'
-apply plugin: 'forge'
-apply plugin: 'idea'
-
-def modprop = new Properties()
-file("mod.properties").withInputStream { modprop.load(it) }
-
 def buildprop = new Properties()
 file("build.properties").withInputStream { buildprop.load(it) }
 
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
-version = modprop.version
-group = modprop.group
-archivesBaseName = "${modprop.game_version}-${modprop.name}"
-
-idea.module.inheritOutputDirs = true
-
-minecraft {
-    version = "${modprop.game_version}-${modprop.forge_version}-${modprop.game_version}"
-    runDir = modprop.run_dir
-    replace '@VERSION@', project.version
-}
-
-configurations {
-    shade
-
-    compile.extendsFrom(shade)
-}
-
-dependencies {
-    compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
-    compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
-    compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
-    compile "mcp.mobius.waila:Waila:${buildprop.waila_version}"
-    shade "blue.endless:jankson:${buildprop.jankson_version}"
-
-    compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
-    annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
-
-    testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
-    testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
-}
-
-processResources {
-    inputs.property 'version', project.version
-    inputs.property 'mcversion', project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-task devJar(type: Jar) {
-	classifier = 'dev'
-	from sourceSets.main.output
-}
-
-task sourcesJar(type: Jar) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-
-tasks.withType(Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    if(name == "jar" || name == "devJar" || name == "srcJar") {
-        manifest {
-            attributes "FMLAT": "${modprop.name}_at.cfg"
-            attributes "FMLCorePlugin": "${modprop.group}.hook.MJUtilsHookLoader"
-            attributes "FMLCorePluginContainsFMLMod": "true"
-        }
-        configurations.shade.each { dep ->
-            from project.zipTree(dep)
+subprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
         }
     }
-}
 
-artifacts {
-	archives devJar
-	archives sourcesJar
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+    idea.module.inheritOutputDirs = true
+
+    configurations {
+        shade
+
+        compile.extendsFrom(shade)
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+        annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+
+        testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+        testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+    }
+
+    tasks.withType(Jar).each {
+        it.doLast {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            configurations.shade.each { dep ->
+                from project.zipTree(dep)
+            }
+        }
+    }
+
+    task devJar(type: Jar) {
+        classifier = 'dev'
+        from sourceSets.main.output
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives devJar
+        archives sourcesJar
+    }
 }
 
