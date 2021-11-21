@@ -25,6 +25,7 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'forge'
+apply plugin: 'idea'
 
 def modprop = new Properties()
 file("mod.properties").withInputStream { modprop.load(it) }
@@ -38,12 +39,6 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 version = modprop.version
 group = modprop.group
 archivesBaseName = "${modprop.game_version}-${modprop.name}"
-
-//sourceSets {
-//    main {
-//        output.resourcesDir = output.getClassesDirs().getSingleFile()
-//    }
-//}
 
 idea.module.inheritOutputDirs = true
 
@@ -85,8 +80,9 @@ processResources {
         include 'mcmod.info'
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-    
-    rename '(.+_at.cfg)', 'META-INF/$1'
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
 
 task devJar(type: Jar) {
