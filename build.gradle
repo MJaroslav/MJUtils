@@ -54,10 +54,6 @@ configurations {
     compile.extendsFrom(shade)
 }
 
-test {
-    useJUnitPlatform()
-}
-
 dependencies {
     compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
     compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
