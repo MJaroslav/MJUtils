@@ -8,4 +8,5 @@ public class ModInfo {
 
     public static final String clientProxy = "com.github.mjaroslav.mjutils.example.client.ClientProxy";
     public static final String serverProxy = "com.github.mjaroslav.mjutils.example.server.ServerProxy";
+    public static final String guiFactory = "com.github.mjaroslav.mjutils.example.client.ExampleGuiFactory";
 }

@@ -10,6 +10,6 @@ public class ExampleBlocks extends BlockModule {
 
     @Override
     public String getBlocksRootPackage() {
-        return "com.github.mjaroslav.mjutils.example.block";
+        return "com.github.mjaroslav.mjutils.example.common.block";
     }
 }

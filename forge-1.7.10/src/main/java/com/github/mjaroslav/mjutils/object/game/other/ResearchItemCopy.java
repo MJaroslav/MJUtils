@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.other;
+package com.github.mjaroslav.mjutils.object.game.other;
 
 import com.github.mjaroslav.mjutils.mod.common.handler.ThaumEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.ThaumEventHandler.ResearchCopy;

@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.hook;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsFishing;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
+import gloomyfolken.hooklib.asm.Hook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.FishingHooks;
 
 import java.util.Random;
 
-import static com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
+import static gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
 import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
 
 public class HooksGetRandomFishable {

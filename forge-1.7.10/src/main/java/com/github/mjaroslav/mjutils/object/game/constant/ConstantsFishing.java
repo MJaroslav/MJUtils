@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.constant;
+package com.github.mjaroslav.mjutils.object.game.constant;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsFishing;
 import net.minecraft.init.Items;

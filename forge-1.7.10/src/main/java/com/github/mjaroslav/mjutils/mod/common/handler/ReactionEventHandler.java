@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
-import com.github.mjaroslav.mjutils.object.event.BlockReactionEvent;
+import com.github.mjaroslav.mjutils.object.game.event.BlockReactionEvent;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import com.github.mjaroslav.mjutils.util.game.world.UtilsWorld;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

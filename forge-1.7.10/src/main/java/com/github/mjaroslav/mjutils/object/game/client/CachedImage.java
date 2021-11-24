@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.client;
+package com.github.mjaroslav.mjutils.object.game.client;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.EqualsAndHashCode;

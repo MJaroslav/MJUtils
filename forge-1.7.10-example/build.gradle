@@ -1,12 +1,16 @@
 buildscript {
     repositories {
         maven {
+            name 'jitpack'
+            url 'https://jitpack.io'
+        }
+        maven {
             name = "github"
             url = "https://github.com/juanmuscaria/maven/raw/master"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.4-SNAPSHOT,)'
+        classpath 'com.github.MJaroslav:ForgeGradle:FG_1.2-patch-1-SNAPSHOT' // Temporary
     }
 }
 
@@ -18,6 +22,10 @@ repositories {
     maven {
         name 'ChickenBones Repo'
         url 'https://chickenbones.net/maven/'
+    }
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
     }
     mavenCentral()
 }
@@ -50,7 +58,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

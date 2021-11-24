@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.item;
+package com.github.mjaroslav.mjutils.object.game.item;
 
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;

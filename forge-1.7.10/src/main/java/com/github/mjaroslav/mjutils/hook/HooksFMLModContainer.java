@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.hook;
 
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
+import gloomyfolken.hooklib.asm.Hook;
 import com.github.mjaroslav.mjutils.modular.ModuleLoader;
 import com.github.mjaroslav.mjutils.modular.SubscribeModule;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;

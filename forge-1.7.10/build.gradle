@@ -1,12 +1,16 @@
 buildscript {
     repositories {
         maven {
+            name 'jitpack'
+            url 'https://jitpack.io'
+        }
+        maven {
             name = "github"
             url = "https://github.com/juanmuscaria/maven/raw/master"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.4-SNAPSHOT,)'
+        classpath 'com.github.MJaroslav:ForgeGradle:FG_1.2-patch-1-SNAPSHOT' // Temporary
     }
 }
 
@@ -18,6 +22,10 @@ repositories {
     maven {
         name 'ChickenBones Repo'
         url 'https://chickenbones.net/maven/'
+    }
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
     }
     mavenCentral()
 }
@@ -38,6 +46,8 @@ minecraft {
     version = "${buildprop.game_version}-${buildprop.forge_version}-${buildprop.game_version}"
     runDir = buildprop.run_dir
     replace '@VERSION@', project.version
+    srgExtra "PK: gloomyfolken/hooklib com/github/mjaroslav/mjutils/gloomyfolken/hooklib"
+    srgExtra "PK: blue/endless/jankson com/github/mjaroslav/mjutils/blue/endless/jankson"
 }
 
 dependencies {
@@ -46,29 +56,31 @@ dependencies {
     compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
     compile "mcp.mobius.waila:Waila:${buildprop.waila_version}"
     shade "blue.endless:jankson:${buildprop.jankson_version}"
+    shade "com.github.MJaroslav:HookLib:v0.8.1"
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    includeEmptyDirs = false
     inputs.property 'version', project.version
     inputs.property 'mcversion', project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
 
-tasks.withType(Jar).each {
-    it.doFirst {
-        if (name == "jar" || name == "devJar" || name == "srcJar") {
-            manifest {
-                attributes "FMLAT": "${modprop.name}_at.cfg"
-                attributes "FMLCorePlugin": "${modprop.group}.hook.MJUtilsHookLoader"
-                attributes "FMLCorePluginContainsFMLMod": "true"
-            }
+tasks.withType(Jar)*.doFirst {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    includeEmptyDirs = false
+    if (name == "jar" || name == "devJar" || name == "sourcesJar")
+        manifest {
+            attributes "FMLAT": "${modprop.name}_at.cfg"
+            attributes "FMLCorePlugin": "${modprop.group}.hook.MJUtilsHookLoader"
+            attributes "FMLCorePluginContainsFMLMod": "true"
         }
-    }
 }

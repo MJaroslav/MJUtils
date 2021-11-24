@@ -11,16 +11,16 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-    sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
-    idea.module.inheritOutputDirs = true
-
     configurations {
         shade
 
         compile.extendsFrom(shade)
     }
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+    idea.module.inheritOutputDirs = true
 
     dependencies {
         compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
@@ -30,13 +30,13 @@ subprojects {
         testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
     }
 
-    tasks.withType(Jar).each {
-        it.doLast {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    tasks.withType(Jar)*.doFirst {
+        includeEmptyDirs = false
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        if (name == "jar" || name == "devJar" || name == "sourcesJar")
             configurations.shade.each { dep ->
                 from project.zipTree(dep)
             }
-        }
     }
 
     task devJar(type: Jar) {
@@ -49,9 +49,15 @@ subprojects {
         from sourceSets.main.allSource
     }
 
+    task javadocJar(type: Jar, dependsOn: 'javadoc') {
+        from "${projectDir.path}/build/docs/javadoc"
+        classifier "javadoc"
+    }
+
     artifacts {
         archives devJar
         archives sourcesJar
+        archives javadocJar
     }
 }
 

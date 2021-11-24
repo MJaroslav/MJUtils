@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.constant;
+package com.github.mjaroslav.mjutils.object.game.constant;
 
 /**
  * Real time in ticks.

@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.util.game;
 
 import com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader;
-import com.github.mjaroslav.mjutils.object.item.ItemStackSet;
+import com.github.mjaroslav.mjutils.object.game.item.ItemStackSet;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
 import net.minecraft.block.Block;

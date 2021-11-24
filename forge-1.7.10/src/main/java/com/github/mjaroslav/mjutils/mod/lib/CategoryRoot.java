@@ -32,8 +32,12 @@ public class CategoryRoot {
     }
 
     // TODO: Сделать поддержку изменения параметра без необходимости рестарта.
-    @Comment("Add quartz ore to pigman trigger list.")
+    @Comment("Add quartz ore to pigman trigger list")
     @RequiresMCRestart
     @DefaultBoolean(true)
     public static boolean quartzTrigger;
+
+    @Comment("Drop all blocks on TNT explosion")
+    @DefaultBoolean(false)
+    public static boolean noLossTNTExplosion;
 }

@@ -2,11 +2,11 @@ package com.github.mjaroslav.mjutils.hook;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsFishing;
 import com.google.common.base.Predicate;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
+import gloomyfolken.hooklib.asm.Hook;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraftforge.common.FishingHooks;
 
-import static com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
+import static gloomyfolken.hooklib.asm.ReturnCondition.ALWAYS;
 import static net.minecraftforge.common.FishingHooks.FishableCategory.*;
 
 // TODO: Решить, необходимо ли это или нет

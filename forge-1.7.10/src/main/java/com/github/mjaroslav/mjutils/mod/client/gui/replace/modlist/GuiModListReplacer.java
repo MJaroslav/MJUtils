@@ -2,7 +2,7 @@ package com.github.mjaroslav.mjutils.mod.client.gui.replace.modlist;
 
 import com.github.mjaroslav.mjutils.gui.GuiScrollingPane;
 import com.github.mjaroslav.mjutils.gui.GuiScrollingPaneList;
-import com.github.mjaroslav.mjutils.object.client.CachedImage;
+import com.github.mjaroslav.mjutils.object.game.client.CachedImage;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsTextures;
@@ -128,7 +128,6 @@ public class GuiModListReplacer extends GuiScreen {
             urlModButton.visible = true;
             configModButton.visible = true;
             configModButton.enabled = UtilsGUI.isModHaveGUIConfig(selectedMod.getModId());
-            ModContainer.Disableable disableable = selectedMod.canBeDisabled();
             disableModButton.enabled = UtilsMods.canDisableMod(selectedMod.getModId());
             modInfo.setVisible(true);
         } else {

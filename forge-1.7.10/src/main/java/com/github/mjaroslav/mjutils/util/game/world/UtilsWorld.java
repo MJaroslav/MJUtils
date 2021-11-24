@@ -1,5 +1,7 @@
 package com.github.mjaroslav.mjutils.util.game.world;
 
+import com.github.mjaroslav.mjutils.object.game.world.DropChanceExplosion;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.util.AxisAlignedBB;
@@ -10,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.List;
 
 /**
- *A set of utilities for the events of the world, entities and blocks.
+ * A set of utilities for the events of the world, entities and blocks.
  */
 public class UtilsWorld {
     /**
@@ -38,6 +40,7 @@ public class UtilsWorld {
 
     /**
      * Change side with a meta and rotation calculation.
+     *
      * @param meta specified meta.
      * @param side specified side;
      * @return Changed side.
@@ -59,6 +62,7 @@ public class UtilsWorld {
 
     /**
      * Get the metadata of the rotation from the angle of view of the entity.
+     *
      * @param target player to check.
      * @return rotation metadata or 0.
      */
@@ -74,5 +78,15 @@ public class UtilsWorld {
                 return ForgeDirection.EAST.ordinal();
         }
         return 0;
+    }
+
+    public static DropChanceExplosion newExplosionWithDropChance(World world, Entity placer, double x, double y, double z, float strength, boolean flaming, boolean smoking, float dropChance) {
+        DropChanceExplosion explosion = new DropChanceExplosion(world, placer, x, y, z, strength, dropChance);
+        explosion.isFlaming = flaming;
+        explosion.isSmoking = smoking;
+        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
+        explosion.doExplosionA();
+        explosion.doExplosionB(true);
+        return explosion;
     }
 }

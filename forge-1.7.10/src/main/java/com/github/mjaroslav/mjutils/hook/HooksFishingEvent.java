@@ -1,8 +1,8 @@
 package com.github.mjaroslav.mjutils.hook;
 
-import com.github.mjaroslav.mjutils.object.event.FishingSuccessEvent;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnCondition;
+import com.github.mjaroslav.mjutils.object.game.event.FishingSuccessEvent;
+import gloomyfolken.hooklib.asm.Hook;
+import gloomyfolken.hooklib.asm.ReturnCondition;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;

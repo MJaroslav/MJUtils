@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.object.event;
+package com.github.mjaroslav.mjutils.object.game.event;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import cpw.mods.fml.common.eventhandler.Cancelable;

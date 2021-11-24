@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.hook;
 
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.Hook;
-import com.github.mjaroslav.mjutils.gloomyfolken.hooklib.asm.ReturnCondition;
+import gloomyfolken.hooklib.asm.Hook;
+import gloomyfolken.hooklib.asm.ReturnCondition;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.projectile.EntityFishHook;

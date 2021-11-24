@@ -14,11 +14,22 @@ public class CategoryRoot {
     public static class SubCategory {
         @RequiresMCRestart
         @IntRange(max = 100, min = -100)
+        @DefaultInt(0)
         @Comment("I'm a ranged int option!")
         public static int exampleInt;
 
-        @Comment("I'm a color list option!")
+        @Comment("I'm a string list option!")
+        @DefaultStringArray({"hello", "world"})
+        public static String[] exampleStrings;
+
+        @Comment("I'm a color option!")
         @ColorType
-        public static String[] exampleColors;
+        @DefaultString("yellow")
+        public static String exampleColor;
+
+        @Comment("I'm a mod id option!")
+        @ModIdType
+        @DefaultString("mjutilsexample")
+        public static String exampleModId;
     }
 }

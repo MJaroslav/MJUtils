@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.util.game;
 
-import com.github.mjaroslav.mjutils.object.constant.ConstantsTime;
+import com.github.mjaroslav.mjutils.object.game.constant.ConstantsTime;
 
 /**
  * A set of tools to translate time.
