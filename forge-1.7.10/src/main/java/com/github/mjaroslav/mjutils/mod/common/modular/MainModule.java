@@ -45,25 +45,25 @@ public class MainModule {
                 case "interactions.block_in_creative": {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setDisableBlockBreakingInCreative(message.getItemStackValue(), true);
-                    } else ModInfo.log.error("IMC@interactions.block_in_creative: value must be ItemStack.");
+                    } else ModInfo.logger.error("IMC@interactions.block_in_creative: value must be ItemStack.");
                 }
                 break;
                 case "interactions.unblock_in_creative": {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setDisableBlockBreakingInCreative(message.getItemStackValue(), false);
-                    } else ModInfo.log.error("IMC@interactions.unblock_in_creative: value must be ItemStack.");
+                    } else ModInfo.logger.error("IMC@interactions.unblock_in_creative: value must be ItemStack.");
                 }
                 break;
                 case "interactions.pigzombie_trigger_block": {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), true);
-                    } else ModInfo.log.error("IMC@interactions.pigzombie_trigger_block: value must be ItemStack.");
+                    } else ModInfo.logger.error("IMC@interactions.pigzombie_trigger_block: value must be ItemStack.");
                 }
                 break;
                 case "interactions.not_pigzombie_trigger_block": {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), false);
-                    } else ModInfo.log.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
+                    } else ModInfo.logger.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
                 }
                 break;
                 case "modList.blockFromDisabling": {
@@ -71,7 +71,7 @@ public class MainModule {
                 }
                 break;
                 default:
-                    ModInfo.log.warn(String.format("Unknown IMC message: %s", message.key));
+                    ModInfo.logger.warn(String.format("Unknown IMC message: %s", message.key));
             }
     }
 }

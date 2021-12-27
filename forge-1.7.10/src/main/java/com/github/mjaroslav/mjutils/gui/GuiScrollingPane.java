@@ -66,7 +66,8 @@ public abstract class GuiScrollingPane {
         onVisibilityChanged(visible);
     }
 
-    public void onVisibilityChanged(boolean newValue) {}
+    public void onVisibilityChanged(boolean newValue) {
+    }
 
     public boolean isVisible() {
         return visible;
@@ -102,7 +103,7 @@ public abstract class GuiScrollingPane {
     public void onMouseClicked(int x, int y, boolean isDrugged) {
     }
 
-    protected void handleInputs() {
+    protected void handleInputs(float floatTicks) {
         if (Mouse.isButtonDown(0)) {
             if (isMouseOver() || mouseLocked) {
                 mouseLocked = true;
@@ -151,7 +152,7 @@ public abstract class GuiScrollingPane {
         }
     }
 
-    public void drawBackground() {
+    public void drawBackground(float floatTicks) {
         Tessellator tess = Tessellator.instance;
         if (Minecraft.getMinecraft().theWorld != null)
             UtilsGUI.drawGradientRect(left, top, right, bottom, 0xC0101010, 0xD0101010);
@@ -171,7 +172,7 @@ public abstract class GuiScrollingPane {
         }
     }
 
-    public void drawExtra() {
+    public void drawExtra(float floatTicks) {
         Tessellator tess = Tessellator.instance;
         byte scrollBarWidth = 4;
         GL11.glEnable(GL11.GL_BLEND);
@@ -253,17 +254,17 @@ public abstract class GuiScrollingPane {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         UtilsGUI.glScissor(x, y, width, height);
 
-        handleInputs();
+        handleInputs(floatTicks);
         applyScrollLimits();
 
-        drawBackground();
+        drawBackground(floatTicks);
 
-        drawContent(y + 4 - (int) scrollPosition, floatTicks);
+        drawContent(x, y + 4 - (int) scrollPosition, floatTicks);
 
-        drawExtra();
+        drawExtra(floatTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    public abstract void drawContent(int shiftY, float floatTicks);
+    public abstract void drawContent(int beginX, int shiftY, float floatTicks);
 }

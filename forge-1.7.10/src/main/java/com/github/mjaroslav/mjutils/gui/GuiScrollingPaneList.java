@@ -41,7 +41,7 @@ public abstract class GuiScrollingPaneList extends GuiScrollingPane {
     }
 
     @Override
-    public void drawContent(int shiftY, float floatTicks) {
+    public void drawContent(int beginX, int shiftY, float floatTicks) {
         Tessellator tess = Tessellator.instance;
         for (int index = 0; index < getListSize(); ++index) {
             int offsetY = shiftY + index * entrySize;
@@ -63,10 +63,10 @@ public abstract class GuiScrollingPaneList extends GuiScrollingPane {
                     tess.draw();
                     GL11.glEnable(GL11.GL_TEXTURE_2D);
                 }
-                drawEntry(index, right - 6 - 1, offsetY, entrySize - 4, floatTicks);
+                drawEntry(index, x, right - 6 - 1, offsetY, entrySize - 4, floatTicks);
             }
         }
     }
 
-    public abstract void drawEntry(int index, int width, int offsetY, int maxY, float floatTicks);
+    public abstract void drawEntry(int index, int beginX, int width, int offsetY, int maxY, float floatTicks);
 }

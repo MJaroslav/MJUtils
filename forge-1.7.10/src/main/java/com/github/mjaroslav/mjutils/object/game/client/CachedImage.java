@@ -1,6 +1,7 @@
 package com.github.mjaroslav.mjutils.object.game.client;
 
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
+import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,6 +26,10 @@ public class CachedImage {
 
     protected boolean loaded;
 
+    public CachedImage(ResourcePath path) {
+        this(path.getPath(), path.getPath(), path.getPackId());
+    }
+
     public CachedImage(String location, String texture, String modSourceId) {
         try {
             BufferedImage image;
@@ -38,7 +43,8 @@ public class CachedImage {
                     loaded = true;
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
             loaded = false;
         }
     }

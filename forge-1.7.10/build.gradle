@@ -56,7 +56,7 @@ dependencies {
     compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
     compile "mcp.mobius.waila:Waila:${buildprop.waila_version}"
     shade "blue.endless:jankson:${buildprop.jankson_version}"
-    shade "com.github.MJaroslav:HookLib:v0.8.1"
+    shade "com.github.MJaroslav:HookLib:${buildprop.hooklib_version}"
 }
 
 processResources {

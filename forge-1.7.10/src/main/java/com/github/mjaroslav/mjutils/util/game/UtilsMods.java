@@ -109,8 +109,9 @@ public class UtilsMods {
                     JarFile jar = new JarFile(source);
                     ZipEntry entry = jar.getEntry(path);
                     return entry == null ? null : jar.getInputStream(entry);
-                } else
-                    return Files.newInputStream(Paths.get(source.toURI()).resolve(path));
+                } else {
+                    return Files.newInputStream(source.toPath().resolve(path));
+                }
             }
         } catch (NoSuchFileException ignored) {
             return null;

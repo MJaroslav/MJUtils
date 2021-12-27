@@ -16,8 +16,11 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class AnnotationConfigurator extends ForgeConfigurator {
+    public static final String[] COLOR_VALID_VALUES = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+    public static final Pattern COLOR_VALID_PATTERN = Pattern.compile("^[0-9a-f]$");
     @Nonnull
     protected final Class<?> rootCategory;
 
@@ -235,6 +238,16 @@ public class AnnotationConfigurator extends ForgeConfigurator {
         LangKey langKey = field.getDeclaredAnnotation(LangKey.class);
         if (langKey != null)
             property.setLanguageKey(langKey.value());
+        if (property.getType() == Property.Type.COLOR) {
+            property.setValidValues(COLOR_VALID_VALUES);
+            property.setValidationPattern(COLOR_VALID_PATTERN);
+        }
+        ValidPattern pattern = field.getDeclaredAnnotation(ValidPattern.class);
+        if (pattern != null)
+            property.setValidationPattern(Pattern.compile(pattern.value()));
+        ValidValues validValues = field.getDeclaredAnnotation(ValidValues.class);
+        if (validValues != null)
+            property.setValidValues(validValues.value());
         category.put(propertyName, property);
     }
 
@@ -248,6 +261,18 @@ public class AnnotationConfigurator extends ForgeConfigurator {
         if (type.equals(String.class) || type.equals(String[].class))
             return Property.Type.STRING;
         return null; // Is a subcategory.
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface ValidPattern {
+        String value();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface ValidValues {
+        String[] value();
     }
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -360,12 +385,6 @@ public class AnnotationConfigurator extends ForgeConfigurator {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface MaxArraySize {
-        int value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface ArraySize {
         int value();
     }
 }

@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 public class UtilsLogger {
     public static ModLogger getLoggerWithLevel(@Nonnull Class<? extends ModLogger> loggerClass, @Nonnull String name, @Nonnull ModLoggerLevel defaultLevel) {
-        String parsed = System.getProperty(String.format("logging.%s.level", name.toLowerCase().replace(' ', '.')), defaultLevel.name());
+        String parsed = System.getProperty(String.format("logging.%s.level", name.toLowerCase().replace(' ', '.').replace('/', '.')), defaultLevel.name());
         ModLoggerLevel level = ModLoggerLevel.getByName(parsed);
         try {
             ModLogger logger = loggerClass.getConstructor(String.class).newInstance(name);

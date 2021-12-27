@@ -1,11 +1,13 @@
 package com.github.mjaroslav.mjutils.mod.client.gui.replace.modlist;
 
-import com.github.mjaroslav.mjutils.gui.GuiScrollingPane;
+import com.github.mjaroslav.mjutils.gui.GuiContentScrollingPane;
+import com.github.mjaroslav.mjutils.gui.GuiImage;
 import com.github.mjaroslav.mjutils.gui.GuiScrollingPaneList;
-import com.github.mjaroslav.mjutils.object.game.client.CachedImage;
+import com.github.mjaroslav.mjutils.gui.GuiText;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsTextures;
+import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -24,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,11 +113,6 @@ public class GuiModListReplacer extends GuiScreen {
         super.actionPerformed(button);
     }
 
-    public int drawLine(String line, int offset, int shifty) {
-        fontRendererObj.drawString(line, offset, shifty, 0xd7edea);
-        return shifty + 10;
-    }
-
     protected void updateElementsAttributes() {
         if (selectedMod != null) {
             if (UtilsMods.getSavedModState(selectedMod.getModId()))
@@ -135,7 +131,6 @@ public class GuiModListReplacer extends GuiScreen {
             urlModButton.visible = false;
             configModButton.visible = false;
             modInfo.setVisible(false);
-            modInfo.clearCaches();
         }
     }
 
@@ -167,11 +162,11 @@ public class GuiModListReplacer extends GuiScreen {
 
     public void selectModIndex(int index) {
         selected = index;
-        if (index >= 0 && index <= mods.size())
+        if (index >= 0 && index <= mods.size()) {
             selectedMod = mods.get(selected);
-        else
+            modInfo.initContent();
+        } else
             selectedMod = null;
-        modInfo.clearCaches();
         modInfo.resetScrolling();
         updateElementsAttributes();
     }
@@ -180,144 +175,77 @@ public class GuiModListReplacer extends GuiScreen {
         return index == selected;
     }
 
-    public static class GuiModInfoPane extends GuiScrollingPane {
+    public static class GuiModInfoPane extends GuiContentScrollingPane {
         protected GuiModListReplacer parent;
 
-        protected CachedImage modLogo;
+        protected GuiImage modLogo;
 
-        protected final List<CachedImage> modScreenshots = new ArrayList<>();
+        protected final List<GuiImage> modScreenshots = new ArrayList<>();
 
         public GuiModInfoPane(GuiModListReplacer parent, int x, int y, int width, int height, float scrollStep) {
             super(parent, x, y, width, height, scrollStep);
             this.parent = parent;
+            initContent();
         }
 
-        public void clearCaches() {
+        @Override
+        protected void initContent() {
             if (modLogo != null) {
                 modLogo.delete();
                 modLogo = null;
             }
-            modScreenshots.forEach(CachedImage::delete);
+            modScreenshots.forEach(GuiImage::delete);
             modScreenshots.clear();
-        }
-
-        @Override
-        public int getContentHeight() {
+            contentList.clear();
             ModContainer mod = parent.selectedMod;
-            String desc = mod.getMetadata().description;
-            int offset = parent.modListWidth + 20;
-            int rightSide = parent.width - offset - 20;
-            return (modLogo != null ? 70 : 0) + 12 + 60 +
-                    (StringUtils.isEmpty(mod.getMetadata().credits) ? 0 : 10) +
-                    10 * (StringUtils.isEmpty(desc) ? 0 :
-                            parent.fontRendererObj.listFormattedStringToWidth(desc, rightSide).size())
-                    + 12 + 10 + 140 * modScreenshots.size();
-        }
-
-        protected void cacheImages(ModContainer mod) {
+            if (mod == null)
+                return;
             ModMetadata meta = mod.getMetadata();
-            if (modLogo == null) {
-                if (!StringUtils.isEmpty(meta.logoFile)) {
-                    modLogo = new CachedImage("modlogo", meta.logoFile, mod.getModId());
-                    if (!modLogo.isLoaded())
-                        modLogo = null;
-                }
-            }
-            if (modScreenshots.size() == 0 && meta.screenshots != null)
-                for (int i = 0; i < meta.screenshots.length; i++) {
-                    if (!StringUtils.isEmpty(meta.screenshots[i])) {
-                        CachedImage screenshot = new CachedImage("modscreenshot" + i, meta.screenshots[i], mod.getModId());
-                        if (screenshot.isLoaded())
-                            modScreenshots.add(screenshot);
+            if (!meta.autogenerated) {
+                if (modLogo == null) {
+                    if (!StringUtils.isEmpty(meta.logoFile)) {
+                        modLogo = GuiImage.builder().setImage(ResourcePath.of(mod.getModId(), meta.logoFile)).setSize(width - 6, 65).setExtraYOffset(10).build();
+                        if (!modLogo.isLoaded()) {
+                            modLogo.delete();
+                            modLogo = null;
+                        } else contentList.add(modLogo);
                     }
                 }
-        }
-
-        @Override
-        public void drawContent(int shiftY, float floatTicks) {
-            int shifty = shiftY;
-            ModContainer selectedMod = parent.selectedMod;
-            if (selectedMod != null) {
-                int offset = parent.modListWidth + 20;
-
-                GL11.glEnable(GL11.GL_BLEND);
-                if (!selectedMod.getMetadata().autogenerated) {
-                    cacheImages(selectedMod);
-                    GL11.glColor4f(1F, 1F, 1F, 1F);
-                    if (modLogo != null) {
-                        parent.mc.renderEngine.bindTexture(modLogo.getLocation());
-                        Dimension modLogoDims = modLogo.getDimensions();
-                        double scaleX = modLogoDims.width / 200.0;
-                        double scaleY = modLogoDims.height / 65.0;
-                        double scale = 1.0;
-                        if (scaleX > 1 || scaleY > 1)
-                            scale = 1.0 / Math.max(scaleX, scaleY);
-                        modLogoDims.width *= scale;
-                        modLogoDims.height *= scale;
-                        Tessellator tess = Tessellator.instance;
-                        tess.startDrawingQuads();
-                        tess.addVertexWithUV(offset, modLogoDims.height + shifty, parent.zLevel, 0, 1);
-                        tess.addVertexWithUV(offset + modLogoDims.width, modLogoDims.height + shifty, parent.zLevel, 1, 1);
-                        tess.addVertexWithUV(offset + modLogoDims.width, shifty, parent.zLevel, 1, 0);
-                        tess.addVertexWithUV(offset, shifty, parent.zLevel, 0, 0);
-
-                        tess.draw();
-
-                        shifty += 70;
+                GuiText.GuiTextBuilder text = GuiText.builder().setSplitText(true).setWidth(width - 6).setCenterString(true).setRenderer(parent.fontRendererObj);
+                contentList.add(text.set(meta.name).setColor(0xFFFFFF).setExtraYOffset(10).build());
+                text.setColor(0xD7EDEA).setExtraYOffset(0).setXOffset(10).setCenterString(false);
+                contentList.add(text.setTranslated("gui.modlist.text.version", mod.getDisplayVersion(), mod.getVersion()).build());
+                contentList.add(text.setTranslated("gui.modlist.text.state", mod.getModId(), Loader.instance().getModState(mod)).build());
+                if (!meta.credits.isEmpty())
+                    contentList.add(text.setTranslated("gui.modlist.text.credits", meta.credits).build());
+                contentList.add(text.setTranslated("gui.modlist.text.authors", mod.getMetadata().getAuthorList()).build());
+                contentList.add(text.setTranslated("gui.modlist.text.url", meta.url).build());
+                if (meta.childMods.isEmpty())
+                    text.setTranslated("gui.modlist.text.nochild");
+                else
+                    text.setTranslated("gui.modlist.text.child", meta.childMods);
+                contentList.add(text.setExtraYOffset(10).build());
+                contentList.add(text.set(meta.description).setColor(0xDDDDDD).build());
+                if (meta.screenshots != null && meta.screenshots.length > 0) {
+                    contentList.add(text.setTranslated("gui.modlist.text.screens").setCenterString(true).setColor(0xFFFFFF).build());
+                    for (int i = 0; i < meta.screenshots.length; i++) {
+                        if (!StringUtils.isEmpty(meta.screenshots[i])) {
+                            GuiImage screenshot = GuiImage.builder().setImage(ResourcePath.of(mod.getModId(), meta.screenshots[i])).setExtraYOffset(10).setSize(width - 6, 135).build();
+                            if (screenshot.isLoaded()) {
+                                modScreenshots.add(screenshot);
+                                contentList.add(screenshot);
+                            } else screenshot.delete();
+                        }
                     }
-                    parent.fontRendererObj.drawStringWithShadow(selectedMod.getMetadata().name, offset, shifty, 0xFFFFFF);
-                    shifty += 12;
-
-                    shifty = parent.drawLine(I18n.format("gui.modlist.text.version", selectedMod.getDisplayVersion(), selectedMod.getVersion()), offset, shifty);
-                    shifty = parent.drawLine(I18n.format("gui.modlist.text.state", selectedMod.getModId(), Loader.instance().getModState(selectedMod)), offset, shifty);
-                    if (!selectedMod.getMetadata().credits.isEmpty())
-                        shifty = parent.drawLine(I18n.format("gui.modlist.text.credits", selectedMod.getMetadata().credits), offset, shifty);
-                    shifty = parent.drawLine(I18n.format("gui.modlist.text.authors", selectedMod.getMetadata().getAuthorList()), offset, shifty);
-                    shifty = parent.drawLine(I18n.format("gui.modlist.text.url", selectedMod.getMetadata().url), offset, shifty);
-                    shifty = parent.drawLine(selectedMod.getMetadata().childMods.isEmpty() ? I18n.format("gui.modlist.text.nochild") : I18n.format("gui.modlist.text.child", selectedMod.getMetadata().getChildModList()), offset, shifty);
-                    int rightSide = parent.width - offset - 20;
-                    if (rightSide > 20) {
-                        parent.fontRendererObj.drawSplitString(selectedMod.getMetadata().description, offset, shifty + 10, rightSide, 0xDDDDDD);
-                        shifty += parent.fontRendererObj.listFormattedStringToWidth(selectedMod.getMetadata().description, rightSide).size() * 10;
-                        shifty += 10;
-                    }
-                    shifty += 12;
-                    parent.fontRendererObj.drawStringWithShadow(I18n.format("gui.modlist.text.screens"), offset, shifty, 0xFFFFFF);
-                    shifty += 10;
-                    for (CachedImage screenshot : modScreenshots) {
-                        parent.mc.renderEngine.bindTexture(screenshot.getLocation());
-                        Dimension modLogoDims = screenshot.getDimensions();
-                        double scaleX = modLogoDims.width / 500.0;
-                        double scaleY = modLogoDims.height / 135.0;
-                        double scale = 1.0;
-                        if (scaleX > 1 || scaleY > 1)
-                            scale = 1.0 / Math.max(scaleX, scaleY);
-                        modLogoDims.width *= scale;
-                        modLogoDims.height *= scale;
-                        Tessellator tess = Tessellator.instance;
-                        tess.startDrawingQuads();
-                        tess.addVertexWithUV(offset, modLogoDims.height + shifty, parent.zLevel, 0, 1);
-                        tess.addVertexWithUV(offset + modLogoDims.width, modLogoDims.height + shifty, parent.zLevel, 1, 1);
-                        tess.addVertexWithUV(offset + modLogoDims.width, shifty, parent.zLevel, 1, 0);
-                        tess.addVertexWithUV(offset, shifty, parent.zLevel, 0, 0);
-
-                        tess.draw();
-
-                        shifty += 140;
-                    }
-                } else {
-                    offset = (parent.modListWidth + parent.width) / 2;
-                    parent.drawCenteredString(parent.fontRendererObj, selectedMod.getName(), offset, shifty, 0xFFFFFF);
-                    shifty += 10;
-                    parent.drawCenteredString(parent.fontRendererObj, I18n.format("gui.modlist.text.versionmin", selectedMod.getVersion()), offset, shifty, 0xFFFFFF);
-                    shifty += 10;
-                    parent.drawCenteredString(parent.fontRendererObj, I18n.format("gui.modlist.text.statemin", Loader.instance().getModState(selectedMod)), offset, shifty, 0xFFFFFF);
-                    shifty += 10;
-                    parent.drawCenteredString(parent.fontRendererObj, I18n.format("gui.modlist.text.noinfo"), offset, shifty, 0xDDDDDD);
-                    shifty += 10;
-                    parent.drawCenteredString(parent.fontRendererObj, I18n.format("gui.modlist.text.askinfo"), offset, shifty, 0xDDDDDD);
                 }
-                GL11.glDisable(GL11.GL_BLEND);
+            } else {
+                GuiText.GuiTextBuilder text = GuiText.builder().setSplitText(true).setWidth(width - 6).setRenderer(parent.fontRendererObj).setCenterString(true);
+                contentList.add(text.setColor(0xFFFFFF).set(mod.getName()).build());
+                contentList.add(text.setTranslated("gui.modlist.text.versionmin", mod.getVersion()).build());
+                contentList.add(text.setTranslated("gui.modlist.text.statemin", Loader.instance().getModState(mod)).build());
+                contentList.add(text.setTranslated("gui.modlist.text.noinfo").build());
+                text.setColor(0xDDDDDD);
+                contentList.add(text.setTranslated("gui.modlist.text.askinfo").build());
             }
         }
     }
@@ -349,30 +277,30 @@ public class GuiModListReplacer extends GuiScreen {
         }
 
         @Override
-        public void drawEntry(int listIndex, int var2, int offsetY, int var4, float floatTicks) {
+        public void drawEntry(int listIndex, int beginX, int var2, int offsetY, int var4, float floatTicks) {
             ModContainer mc = mods.get(listIndex);
             Tessellator var5 = Tessellator.instance;
             boolean actual = UtilsMods.getActualModState(mc);
             boolean saved = UtilsMods.getSavedModState(mc.getModId());
             if (actual == saved) {
                 if (!actual) {
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 2, 0xFF2222);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 12, 0xFF2222);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 22, 0xFF2222);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFF2222);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xFF2222);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xFF2222);
                 } else {
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 2, 0xFFFFFF);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 12, 0xCCCCCC);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 22, 0xCCCCCC);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFFFFFF);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xCCCCCC);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xCCCCCC);
                 }
             } else {
                 if (!actual) {
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 2, 0xFFFF55);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 12, 0xFFFF55);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 22, 0xFFFF55);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFFFF55);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xFFFF55);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xFFFF55);
                 } else {
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 2, 0xFFFF55);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 12, 0xDDD605);
-                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", width - 10 - 30 - 3), x + 3 + 30 + 3, offsetY + 22, 0xDDD605);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFFFF55);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xDDD605);
+                    parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xDDD605);
                 }
             }
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -390,10 +318,10 @@ public class GuiModListReplacer extends GuiScreen {
                 if (cachedIcons.get(mc.getModId()) != null) {
                     parent.mc.renderEngine.bindTexture(cachedIcons.get(mc.getModId()));
                     var5.startDrawingQuads();
-                    var5.addVertexWithUV(x + 2, offsetY + 30, parent.zLevel, 0, 1);
-                    var5.addVertexWithUV(x + 30 + 2, offsetY + 30, parent.zLevel, 1, 1);
-                    var5.addVertexWithUV(x + 30 + 2, offsetY, parent.zLevel, 1, 0);
-                    var5.addVertexWithUV(x + 2, offsetY, parent.zLevel, 0, 0);
+                    var5.addVertexWithUV(beginX + 2, offsetY + 30, parent.zLevel, 0, 1);
+                    var5.addVertexWithUV(beginX + 30 + 2, offsetY + 30, parent.zLevel, 1, 1);
+                    var5.addVertexWithUV(beginX + 30 + 2, offsetY, parent.zLevel, 1, 0);
+                    var5.addVertexWithUV(beginX + 2, offsetY, parent.zLevel, 0, 0);
                     var5.draw();
                 }
             } catch (IOException ignored) {

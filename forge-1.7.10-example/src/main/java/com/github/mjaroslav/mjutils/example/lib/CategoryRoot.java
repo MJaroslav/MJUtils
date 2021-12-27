@@ -24,8 +24,13 @@ public class CategoryRoot {
 
         @Comment("I'm a color option!")
         @ColorType
-        @DefaultString("yellow")
+        @DefaultString("c")
         public static String exampleColor;
+
+        @Comment("I'm a color list option!")
+        @ColorType
+        @DefaultStringArray("c")
+        public static String[] exampleColors;
 
         @Comment("I'm a mod id option!")
         @ModIdType

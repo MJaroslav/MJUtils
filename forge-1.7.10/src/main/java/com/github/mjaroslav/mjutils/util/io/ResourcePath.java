@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.util.io;
 
+import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -8,26 +9,45 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
-public class ResourcePath {
+@Getter
+public final class ResourcePath {
     @Nonnull
-    private final String PATH;
+    private final String path;
 
-    public ResourcePath(@Nonnull String path) {
+    @Nonnull
+    private final String packId;
+
+    @Getter
+    private final boolean assetsPath;
+
+    private ResourcePath(@Nonnull String path) {
         String[] info = path.split(":");
+        System.out.println(Arrays.toString(info));
         if (info.length == 1)
-            PATH = path.startsWith("/") ? path : "/" + path;
+            packId = "minecraft";
         else
-            PATH = "/assets/" + info[0] + "/" + info[1];
+            packId = info[0];
+        this.path = "/assets/" + packId + "/" + info[info.length > 1 ? 1 : 0];
+        assetsPath = true;
     }
 
-    public ResourcePath(@Nonnull  ResourceLocation location) {
-        PATH = "/assets/" + location.toString().replace(":", "/");
+    private ResourcePath(@Nonnull ResourceLocation location) {
+        path = "/assets/" + location.toString().replace(":", "/");
+        packId = location.toString().split(":")[0];
+        assetsPath = true;
+    }
+
+    private ResourcePath(@Nonnull String modId, @Nonnull String fullPath) {
+        packId = modId;
+        path = fullPath;
+        assetsPath = false;
     }
 
     @Nullable
     public InputStream stream() {
-        return ResourcePath.class.getResourceAsStream(PATH);
+        return ResourcePath.class.getResourceAsStream(path);
     }
 
     @Nullable
@@ -68,12 +88,12 @@ public class ResourcePath {
 
     @Override
     public int hashCode() {
-        return PATH.hashCode();
+        return path.hashCode();
     }
 
     @Override
     public String toString() {
-        return PATH;
+        return path;
     }
 
     @Override
@@ -82,11 +102,15 @@ public class ResourcePath {
             return true;
         else if (!(obj instanceof ResourcePath))
             return false;
-        else return PATH.equals(((ResourcePath)obj).PATH);
+        else return path.equals(((ResourcePath) obj).path);
     }
 
     public static ResourcePath of(@Nonnull String path) {
         return new ResourcePath(path);
+    }
+
+    public static ResourcePath of(@Nonnull String modId, @Nonnull String fullPath) {
+        return new ResourcePath(modId, fullPath);
     }
 
     public static ResourcePath of(@Nonnull ResourceLocation location) {

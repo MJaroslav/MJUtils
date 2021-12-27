@@ -11,6 +11,14 @@ import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator.Requires
 public class CategoryRoot {
     public static final String configVersion = "0";
 
+    @Name("debug")
+    @Comment("Debug options for dev or issue hunt.")
+    public static class CategoryDebug {
+        @Comment("Draw special lines in GuiContentScrollingPane and in child elements.")
+        @DefaultBoolean(false)
+        public static boolean renderDebugLinesInScrollingPane;
+    }
+
     @Name("client")
     @Comment("Cosmetic options, not make changes on server.")
     public static class CategoryClient {
