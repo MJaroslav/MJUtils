@@ -105,7 +105,9 @@ public class UtilsMods {
             ModContainer mod = getContainer(modId);
             if (mod != null) {
                 File source = mod.getSource();
-                if (source.isFile()) {
+                if(source.toString().equals("minecraft.jar")) // Lol
+                    return UtilsMods.class.getResourceAsStream(path);
+                else if (source.isFile()) {
                     JarFile jar = new JarFile(source);
                     ZipEntry entry = jar.getEntry(path);
                     return entry == null ? null : jar.getInputStream(entry);

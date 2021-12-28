@@ -108,7 +108,7 @@ public abstract class GuiScrollingPane {
             if (isMouseOver() || mouseLocked) {
                 mouseLocked = true;
 
-                onMouseClicked(mouseX, mouseY - top + (int) scrollPosition - 4, System.currentTimeMillis() - lastClickTime < 250L);
+                onMouseClicked(mouseX, mouseY - top + (int) scrollPosition - 4, System.currentTimeMillis() - lastClickTime < 200L);
                 lastClickTime = System.currentTimeMillis();
 
                 if (initialMouseClickY == -1.0F)

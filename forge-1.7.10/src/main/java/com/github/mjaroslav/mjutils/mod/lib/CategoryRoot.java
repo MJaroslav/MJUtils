@@ -1,12 +1,11 @@
 package com.github.mjaroslav.mjutils.mod.lib;
 
-import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator;
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator.Comment;
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator.DefaultBoolean;
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator.Name;
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator.RequiresMCRestart;
 
-@Name("general")
+@Name("root")
 @Comment("Root option category, contains all options and subcategories.")
 public class CategoryRoot {
     public static final String configVersion = "0";
@@ -33,9 +32,13 @@ public class CategoryRoot {
         @Name("gui_replacements")
         @Comment("Toggles of default GUIs replacements (for new features or/and fixes)")
         public static class CategoryGuiReplacements {
-            @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc")
+            @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc in main menu mods GUI")
             @DefaultBoolean(true)
             public static boolean mainMenuModList;
+
+            @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc in pause menu mods GUI")
+            @DefaultBoolean(true)
+            public static boolean optionsModList;
         }
     }
 

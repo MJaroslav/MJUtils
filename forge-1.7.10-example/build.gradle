@@ -64,3 +64,12 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+tasks.withType(Jar)*.doFirst {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    includeEmptyDirs = false
+    if (name == "jar" || name == "devJar" || name == "sourcesJar")
+        manifest {
+            attributes "FMLAT": "${modprop.name}_at.cfg"
+        }
+}

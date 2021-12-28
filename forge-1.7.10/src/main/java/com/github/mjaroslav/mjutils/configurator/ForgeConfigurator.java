@@ -41,7 +41,7 @@ public class ForgeConfigurator extends Configurator {
             instance = new Configuration(new File(getFile()), getVersion());
         else instance.load();
         sync();
-        if(instance.hasChanged())
+        if (instance.hasChanged())
             save();
     }
 

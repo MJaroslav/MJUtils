@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.gui;
 
+import com.github.mjaroslav.mjutils.object.Pair;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public class GuiText implements ScrollingContentHeight {
+public class GuiText implements ScrollingContentElement {
     @Nonnull
     protected final FontRenderer renderer;
 
@@ -26,9 +27,16 @@ public class GuiText implements ScrollingContentHeight {
     protected final int textHeight;
     @Getter
     protected final String[] textCache;
+    @Getter
+    protected final OnMouseClickListener onMouseClickListener;
 
     @Override
-    public void drawScreen(int xBegin, int yOffset, float floatTicks) {
+    public Pair<Boolean, Pair<Integer, Integer>> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
+        return new Pair<>(false, null);
+    }
+
+    @Override
+    public void drawScreen(int xBegin, int yOffset, boolean hovered, float floatTicks) {
         for (int i = 0; i < textCache.length; i++) {
             String line = textCache[i];
             if (centerString && width > 0)
@@ -39,7 +47,7 @@ public class GuiText implements ScrollingContentHeight {
     }
 
     @Override
-    public void drawDebugLines(int xBegin, int yOffset, float floatTicks) {
+    public void drawDebugLines(int xBegin, int yOffset, boolean hovered, float floatTicks) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
         GL11.glLineWidth(2f);
@@ -92,7 +100,7 @@ public class GuiText implements ScrollingContentHeight {
 
     @Builder(setterPrefix = "set")
     protected static GuiText $build(StringBuilder builder, @Nullable FontRenderer renderer, boolean splitText, boolean centerString, boolean enableShadows,
-                                    boolean packHeight, int xOffset, int extraYOffset, int width, int height, int color, int zLevel) {
+                                    boolean packHeight, int xOffset, int extraYOffset, int width, int height, int color, int zLevel, OnMouseClickListener onMouseClickListener) {
         if (renderer == null)
             renderer = Minecraft.getMinecraft().fontRenderer;
         List<String> result = new ArrayList<>();
@@ -105,7 +113,7 @@ public class GuiText implements ScrollingContentHeight {
             result.addAll(Arrays.asList(split));
         String[] textCache = result.toArray(new String[0]);
         int textHeight = textCache.length * renderer.FONT_HEIGHT;
-        return new GuiText(renderer, splitText, centerString, enableShadows, packHeight, xOffset, extraYOffset, width, height, color, zLevel, textHeight, textCache);
+        return new GuiText(renderer, splitText, centerString, enableShadows, packHeight, xOffset, extraYOffset, width, height, color, zLevel, textHeight, textCache, onMouseClickListener);
     }
 
     @SuppressWarnings({"unused", "UnusedReturnValue"})
