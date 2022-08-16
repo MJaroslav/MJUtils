@@ -101,6 +101,7 @@ mixin {
 }
 
 dependencies {
+	compile "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
     shade "blue.endless:jankson:${buildprop.jankson_version}"
 
     compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
