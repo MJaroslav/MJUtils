@@ -20,19 +20,11 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        name 'ChickenBones Repo'
-        url 'https://chickenbones.net/maven/'
-    }
-    maven {
-        name 'ProfMobius Repo'
-        url 'https://www.mobiusstrip.eu/maven/'
-    }
     maven {
         name "Gregtech repo"
         url 'https://gregtech.overminddl1.com'
     }
+    mavenCentral()
     maven {
         name 'jitpack'
         url 'https://jitpack.io'
@@ -67,6 +59,7 @@ artifacts {
     archives sourceJar, devJar
 }
 
+// This copyed from mixin-booter-legacy plugin because idea can't do this by youself
 compileJava {
     options.compilerArgs += [
             '-Xlint:-processing',
@@ -75,6 +68,8 @@ compileJava {
             "-AreobfSrgFile=${buildDir.canonicalPath}/srgs/mcp-srg.srg"
     ]
 }
+
+// Read comment above
 idea.project.settings {
     compiler {
         javac {
@@ -101,15 +96,17 @@ mixin {
 }
 
 dependencies {
-	compile "com.github.tox1cozZ:mixin-booter-legacy:1.1.2"
     shade "blue.endless:jankson:${buildprop.jankson_version}"
 
-    compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
-    compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
-    compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
-    compile("mcp.mobius.waila:Waila:${buildprop.waila_version}:dev") {
-        transitive = false
-    }
+    // All mods versions hardcoded because it's 1.7.10, my dude
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
+    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
+    compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+    compileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
+    compileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
+    // But not for this mod, Dmytro-san
+    compile "com.github.tox1cozZ:mixin-booter-legacy:${buildprop.mixin_booter}"
 
     compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
 

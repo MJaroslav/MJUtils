@@ -105,11 +105,12 @@ public class UtilsMods {
             ModContainer mod = getContainer(modId);
             if (mod != null) {
                 File source = mod.getSource();
-                if(source.toString().equals("minecraft.jar")) // Lol
-                    return UtilsMods.class.getResourceAsStream(path);
+                String absPath = !path.startsWith("/") ? "/" + path : path;
+                if (source.toString().equals("minecraft.jar")) // Lol
+                    return UtilsMods.class.getResourceAsStream(absPath);
                 else if (source.isFile()) {
                     JarFile jar = new JarFile(source);
-                    ZipEntry entry = jar.getEntry(path);
+                    ZipEntry entry = jar.getEntry(absPath);
                     return entry == null ? null : jar.getInputStream(entry);
                 } else {
                     return Files.newInputStream(source.toPath().resolve(path));
