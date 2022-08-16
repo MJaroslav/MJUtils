@@ -1,63 +1,146 @@
+buildscript {
+    repositories {
+        maven {
+            name 'jitpack'
+            url 'https://jitpack.io'
+        }
+        maven {
+            name = "github"
+            url = "https://github.com/juanmuscaria/maven/raw/master"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.6-SNAPSHOT,)'
+    }
+}
+
+plugins {
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.6'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'ChickenBones Repo'
+        url 'https://chickenbones.net/maven/'
+    }
+    maven {
+        name 'ProfMobius Repo'
+        url 'https://www.mobiusstrip.eu/maven/'
+    }
+    maven {
+        name "Gregtech repo"
+        url 'https://gregtech.overminddl1.com'
+    }
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'forge'
+apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
 def buildprop = new Properties()
 file("build.properties").withInputStream { buildprop.load(it) }
 
-subprojects {
-    buildscript {
-        repositories {
-            mavenCentral()
+version = buildprop.version
+group = buildprop.group
+archivesBaseName = project.name
+
+task devJar(type: Jar) {
+    classifier('dev')
+    from sourceSets.main.output
+}
+
+task sourceJar(type: Jar, dependsOn:classes) {
+    classifier('sources')
+    from sourceSets.main.allJava
+}
+
+artifacts {
+    archives sourceJar, devJar
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Xlint:-processing',
+            "-AoutSrgFile=${buildDir.canonicalPath}/mixins/${mixin.mixinRefMapName.get()}.srg",
+            "-AoutRefMapFile=${buildDir.canonicalPath}/mixins/${mixin.mixinRefMapName.get()}",
+            "-AreobfSrgFile=${buildDir.canonicalPath}/srgs/mcp-srg.srg"
+    ]
+}
+idea.project.settings {
+    compiler {
+        javac {
+            javacAdditionalOptions = compileJava.options.compilerArgs.join(" ")
         }
     }
+}
 
-    apply plugin: 'java'
-    apply plugin: 'idea'
+configurations {
+    shade
 
-    configurations {
-        shade
+    compile.extendsFrom(shade)
+}
 
-        compile.extendsFrom(shade)
+minecraft {
+    version = "${buildprop.game_version}-${buildprop.forge_version}-${buildprop.game_version}"
+    runDir = buildprop.run_dir
+    replace '@VERSION@', project.version
+    srgExtra "PK: blue/endless/jankson com/github/mjaroslav/mjutils/library/blue/endless/jankson"
+}
+
+mixin {
+    mixinRefMapName = 'mixin.mjutils.refmap.json'
+}
+
+dependencies {
+    shade "blue.endless:jankson:${buildprop.jankson_version}"
+
+    compile "codechicken:CodeChickenLib:${buildprop.ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${buildprop.ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${buildprop.nei_version}:dev"
+    compile("mcp.mobius.waila:Waila:${buildprop.waila_version}:dev") {
+        transitive = false
     }
 
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-    sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+    compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
 
-    idea.module.inheritOutputDirs = true
+    compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
 
-    dependencies {
-        compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
-        annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+    testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
 
-        testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
-        testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
+}
 
-    tasks.withType(Jar)*.doFirst {
-        includeEmptyDirs = false
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        if (name == "jar" || name == "devJar" || name == "sourcesJar")
-            configurations.shade.each { dep ->
-                from project.zipTree(dep)
+tasks.withType(Jar)*.doFirst {
+    if((name == "jar" || name == "devJar" || name == "sourcesJar")) {
+        if (buildprop.coremod.toBoolean())
+            manifest {
+                // TODO: Don't forged about -Dfml.coreMods.load
+                attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}.asm.${project.name.replace(" ", "")}Plugin"
+                attributes "FMLCorePluginContainsFMLMod": "true"
             }
-    }
-
-    task devJar(type: Jar) {
-        classifier = 'dev'
-        from sourceSets.main.output
-    }
-
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: 'javadoc') {
-        from "${projectDir.path}/build/docs/javadoc"
-        classifier "javadoc"
-    }
-
-    artifacts {
-        archives devJar
-        archives sourcesJar
-        archives javadocJar
+        configurations.shade.each { dep ->
+            from project.zipTree(dep)
+        }
     }
 }
 

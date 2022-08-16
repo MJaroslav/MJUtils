@@ -1,0 +1,24 @@
+{
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "required": true,
+  "target": "@env(DEFAULT)",
+  "package": "com.github.mjaroslav.mjutils.asm.mixin",
+  "refmap": "mixin.mjutils.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AccessorEntityPigZombie",
+    "AccessorExplosion",
+    "AccessorWeightedRandomFishable",
+    "MixinEntityTNTPrimed",
+    "MixinFMLModContainer",
+    "MixinForgeHooks"
+  ],
+  "client": [
+    "MixinPlayerControllerMP"
+  ],
+  "server": [
+  ]
+}
