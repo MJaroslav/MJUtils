@@ -19,8 +19,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.nio.charset.Charset;
-
 @SubscribeModule(priority = -1)
 public class MainModule {
     public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId, CategoryRoot.class);
@@ -63,7 +61,8 @@ public class MainModule {
                 case "interactions.not_pigzombie_trigger_block": {
                     if (message.isItemStackMessage()) {
                         UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), false);
-                    } else ModInfo.logger.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
+                    } else
+                        ModInfo.logger.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
                 }
                 break;
                 case "modList.blockFromDisabling": {

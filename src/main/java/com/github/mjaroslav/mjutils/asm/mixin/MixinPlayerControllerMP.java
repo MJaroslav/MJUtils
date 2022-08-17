@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(PlayerControllerMP.class)
 public abstract class MixinPlayerControllerMP {
+    // Disabling block breaking for configurable items in creative mode
     @Redirect(method = "onPlayerDestroyBlock",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;",
                     ordinal = 2))

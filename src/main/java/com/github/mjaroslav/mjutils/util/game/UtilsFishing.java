@@ -1,13 +1,12 @@
 package com.github.mjaroslav.mjutils.util.game;
 
-import com.github.mjaroslav.mjutils.hook.MJUtilsHookLoader;
+import com.github.mjaroslav.mjutils.asm.mixin.AccessorFishingHooks;
 import com.github.mjaroslav.mjutils.asm.mixin.AccessorWeightedRandomFishable;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.block.Block;
-import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomFishable;
@@ -15,27 +14,14 @@ import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.FishingHooks.FishableCategory;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.*;
-
-import static cpw.mods.fml.relauncher.ReflectionHelper.getPrivateValue;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A set of tools to change the list of fishing catch.
  */
-@SuppressWarnings({"unchecked", "Guava"}) // TODO: Try not use guava?
+@SuppressWarnings({"Guava"}) // TODO: Try not use guava?
 public class UtilsFishing {
-    private static final Map<FishableCategory, Set<WeightedRandomFishable>> FISHABLE_MAP = new HashMap<>();
-
-    static {
-        if (MJUtilsHookLoader.config.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksFishingCache")) {
-            for (FishableCategory category : FishableCategory.values())
-                FISHABLE_MAP.put(category, new HashSet<>());
-            FISHABLE_MAP.get(FishableCategory.FISH).addAll(EntityFishHook.field_146036_f);
-            FISHABLE_MAP.get(FishableCategory.JUNK).addAll(EntityFishHook.field_146039_d);
-            FISHABLE_MAP.get(FishableCategory.TREASURE).addAll(EntityFishHook.field_146041_e);
-        }
-    }
-
     /**
      * Add new item to fishing category.
      *
@@ -43,9 +29,7 @@ public class UtilsFishing {
      * @param category fishing category for modification.
      */
     public static void add(WeightedRandomFishable fishable, FishableCategory category) {
-        if (MJUtilsHookLoader.config.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksFishingCache"))
-            FISHABLE_MAP.get(category).add(fishable);
-        else switch (category) { // Trying use original cache
+        switch (category) { // Trying use original cache
             case FISH:
                 FishingHooks.addFish(fishable);
                 break;
@@ -124,27 +108,13 @@ public class UtilsFishing {
      * @param category fishing category for modification.
      */
     public static void remove(Predicate<WeightedRandomFishable> test, FishableCategory category) {
-        if (MJUtilsHookLoader.config.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksFishingCache")) {
-            Iterator<WeightedRandomFishable> iterator;
-            if (category == null)
-                for (FishableCategory category1 : FishableCategory.values()) {
-                    iterator = FISHABLE_MAP.get(category1).iterator();
-                    while (iterator.hasNext())
-                        if (!test.apply(iterator.next()))
-                            iterator.remove();
-                }
-            else {
-                iterator = FISHABLE_MAP.get(category).iterator();
-                while (iterator.hasNext())
-                    if (!test.apply(iterator.next()))
-                        iterator.remove();
-            }
-        } else switch (category) { // Trying use original cache
+        switch (category) { // Trying use original cache
             case FISH:
                 FishingHooks.removeFish(test);
                 break;
             case JUNK:
                 FishingHooks.removeJunk(test);
+                break;
             case TREASURE:
                 FishingHooks.removeTreasure(test);
         }
@@ -156,25 +126,17 @@ public class UtilsFishing {
      * @param category specified fishing category.
      * @return Set of fishing category values.
      */
-    public static Set<WeightedRandomFishable> getCategory(FishableCategory category) {
-        if (MJUtilsHookLoader.config.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksFishingCache"))
-            return FISHABLE_MAP.get(category);
-        else {
-            // Trying use original cache
-            try {
-                switch (category) {
-                    case FISH:
-                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "fish"));
-                    case JUNK:
-                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "junk"));
-                    case TREASURE:
-                        return new HashSet<>(getPrivateValue(FishingHooks.class, null, "treasure"));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public static List<WeightedRandomFishable> getCategory(FishableCategory category) {
+        switch (category) {
+            case FISH:
+                return AccessorFishingHooks.getFish();
+            case JUNK:
+                return AccessorFishingHooks.getJunk();
+            case TREASURE:
+                return AccessorFishingHooks.getTreasure();
+            default:
+                return Collections.emptyList();
         }
-        return Collections.emptySet();
     }
 
     /**
@@ -183,10 +145,7 @@ public class UtilsFishing {
      * @param category specified category.
      */
     public static void clear(FishableCategory category) {
-        if (MJUtilsHookLoader.config.isHookEnabled("com.github.mjaroslav.mjutils.hook.HooksFishingCache"))
-            getCategory(category).clear();
-        else for (WeightedRandomFishable fishable : getCategory(category)) // Trying use original cache
-            remove(fishable, category);
+        getCategory(category).clear();
     }
 
     /**

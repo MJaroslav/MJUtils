@@ -11,8 +11,11 @@
   "mixins": [
     "AccessorEntityPigZombie",
     "AccessorExplosion",
+    "AccessorFishingHooks",
     "AccessorWeightedRandomFishable",
+    "MixinEntityFishHook",
     "MixinEntityTNTPrimed",
+    "MixinFishingHooks",
     "MixinFMLModContainer",
     "MixinForgeHooks"
   ],

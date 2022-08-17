@@ -59,6 +59,10 @@ public class FishingSuccessEvent extends Event {
      */
     public final double z;
 
+    public int exp;
+
+    public boolean incStat;
+
     /**
      * See class documentation. Bus: {@link MinecraftForge#EVENT_BUS}.
      *
@@ -71,7 +75,7 @@ public class FishingSuccessEvent extends Event {
      * @param speed      see {@link FishingSuccessEvent#speed}
      */
     public FishingSuccessEvent(EntityPlayer fisher, EntityFishHook fishHook, FishingHooks.FishableCategory category,
-                               ItemStack catchStack, float chance, int luck, int speed) {
+                               ItemStack catchStack, float chance, int luck, int speed, int exp) {
         this.fisher = fisher;
         this.fishHook = fishHook;
         this.catchStack = catchStack;
@@ -79,15 +83,12 @@ public class FishingSuccessEvent extends Event {
         this.chance = chance;
         this.luck = luck;
         this.speed = speed;
+        this.exp = exp;
         world = fishHook.worldObj;
         x = fishHook.posX;
         y = fishHook.posY;
         z = fishHook.posZ;
-    }
-
-    @Override
-    public boolean isCancelable() {
-        return true;
+        incStat = true;
     }
 
     @Override
@@ -95,5 +96,7 @@ public class FishingSuccessEvent extends Event {
         super.setCanceled(cancel);
         category = null;
         catchStack = null;
+        exp = 0;
+        incStat = false;
     }
 }

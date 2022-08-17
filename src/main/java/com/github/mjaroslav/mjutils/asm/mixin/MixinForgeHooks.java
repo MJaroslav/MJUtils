@@ -10,7 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ForgeHooks.class)
-public class MixinForgeHooks {
+public abstract class MixinForgeHooks {
+    // Disabling block breaking for configurable items in creative mode
     @Redirect(method = "onBlockBreakEvent",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;",
                     ordinal = 0))

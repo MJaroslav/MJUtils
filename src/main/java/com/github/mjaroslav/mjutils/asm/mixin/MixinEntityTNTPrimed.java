@@ -16,6 +16,7 @@ public abstract class MixinEntityTNTPrimed extends Entity {
         super(world);
     }
 
+    // Configurable no loss explosion
     @Inject(method = "explode", at = @At("HEAD"), cancellable = true)
     private void explode(CallbackInfo ci) {
         if (CategoryRoot.noLossTNTExplosion)

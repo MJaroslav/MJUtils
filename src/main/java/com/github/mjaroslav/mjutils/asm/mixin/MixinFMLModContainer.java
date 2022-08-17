@@ -24,6 +24,7 @@ public abstract class MixinFMLModContainer implements ModContainer {
     @Shadow(remap = false)
     private LoadController controller;
 
+    // Injecting module system loading
     @Inject(method = "handleModStateEvent", at = @At("HEAD"), remap = false)
     private void handleModStateEvent(FMLEvent event, CallbackInfo ci) {
         try {
