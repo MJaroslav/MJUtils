@@ -13,9 +13,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.6'
-}
 
 apply plugin: 'java'
 apply plugin: 'forge'
@@ -55,25 +52,6 @@ artifacts {
 
 java {
     withSourcesJar()
-}
-
-// This copied from mixin-booter-legacy plugin because idea can't do this by yourself
-compileJava {
-    options.compilerArgs += [
-            '-Xlint:-processing',
-            "-AoutSrgFile=${buildDir.canonicalPath}/mixins/${mixin.mixinRefMapName.get()}.srg",
-            "-AoutRefMapFile=${buildDir.canonicalPath}/mixins/${mixin.mixinRefMapName.get()}",
-            "-AreobfSrgFile=${buildDir.canonicalPath}/srgs/mcp-srg.srg"
-    ]
-}
-
-// Read comment above
-idea.project.settings {
-    compiler {
-        javac {
-            javacAdditionalOptions = compileJava.options.compilerArgs.join(" ")
-        }
-    }
 }
 
 configurations {
