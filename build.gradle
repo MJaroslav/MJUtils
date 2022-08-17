@@ -1,17 +1,15 @@
 buildscript {
     repositories {
-        maven {
-            name 'jitpack'
-            url 'https://jitpack.io'
-        }
-        maven {
-            name = "github"
-            url = "https://github.com/juanmuscaria/maven/raw/master"
-        }
         mavenCentral()
+        maven {
+            name 'forge'
+            url 'https://maven.minecraftforge.net'
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:[1.2-1.4.6-SNAPSHOT,)'
+        classpath('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+            changing = true
+        }
     }
 }
 
@@ -19,21 +17,21 @@ plugins {
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.6'
 }
 
+apply plugin: 'java'
+apply plugin: 'forge'
+apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
+
 repositories {
-    maven {
-        name "Gregtech repo"
-        url 'https://gregtech.overminddl1.com'
-    }
     mavenCentral()
     maven {
         name 'jitpack'
         url 'https://jitpack.io'
     }
+    maven {
+        name "Gregtech repo"
+        url 'https://gregtech.overminddl1.com'
+    }
 }
-
-apply plugin: 'java'
-apply plugin: 'forge'
-apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
@@ -47,19 +45,19 @@ archivesBaseName = project.name
 
 task devJar(type: Jar) {
     classifier('dev')
+    manifest { from project.tasks.jar.manifest }
     from sourceSets.main.output
 }
 
-task sourceJar(type: Jar, dependsOn:classes) {
-    classifier('sources')
-    from sourceSets.main.allJava
-}
-
 artifacts {
-    archives sourceJar, devJar
+    archives devJar
 }
 
-// This copyed from mixin-booter-legacy plugin because idea can't do this by youself
+java {
+    withSourcesJar()
+}
+
+// This copied from mixin-booter-legacy plugin because idea can't do this by yourself
 compileJava {
     options.compilerArgs += [
             '-Xlint:-processing',
@@ -81,7 +79,7 @@ idea.project.settings {
 configurations {
     shade
 
-    compile.extendsFrom(shade)
+    implementation.extendsFrom(shade)
 }
 
 minecraft {
@@ -92,21 +90,19 @@ minecraft {
 }
 
 mixin {
-    mixinRefMapName = 'mixin.mjutils.refmap.json'
+    mixinRefMapName = "mixin.${project.name.replace(" ", "").toLowerCase()}.refmap.json"
 }
 
 dependencies {
     shade "blue.endless:jankson:${buildprop.jankson_version}"
 
     // All mods versions hardcoded because it's 1.7.10, my dude
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
-    compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+    implementation "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
+    implementation "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    implementation "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
+    implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     compileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     compileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
-    // But not for this mod, Dmytro-san
-    compile "com.github.tox1cozZ:mixin-booter-legacy:${buildprop.mixin_booter}"
 
     compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
 
@@ -128,17 +124,30 @@ processResources {
     }
 }
 
-tasks.withType(Jar)*.doFirst {
-    if((name == "jar" || name == "devJar" || name == "sourcesJar")) {
-        if (buildprop.coremod.toBoolean())
-            manifest {
-                // TODO: Don't forged about -Dfml.coreMods.load
-                attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}.asm.${project.name.replace(" ", "")}Plugin"
-                attributes "FMLCorePluginContainsFMLMod": "true"
-            }
-        configurations.shade.each { dep ->
-            from project.zipTree(dep)
+jar {
+    if (buildprop.coremod.toBoolean())
+        manifest {
+            // TODO: Don't forged about -Dfml.coreMods.load
+            attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}" +
+                    ".asm.${project.name.replace(" ", "")}Plugin"
+            attributes "FMLCorePluginContainsFMLMod": "true"
         }
+    configurations.shade.each { dep ->
+        from project.zipTree(dep)
     }
 }
 
+//
+// wtf why reobf leaves empty dirs in jar after package relocation
+//
+task prepareToFuckEmptyDirs(type: Copy, dependsOn: 'reobf') {
+    from tasks.jar.archiveFile
+    into new File(buildDir, "tmp/fuckEmptyDirs/")
+}
+
+task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
+    from(zipTree(new File(buildDir, "tmp/fuckEmptyDirs/${tasks.jar.archiveName}")))
+    includeEmptyDirs = false
+}
+
+tasks.build.dependsOn(tasks.fuckEmptyDirs)
