@@ -1,10 +1,9 @@
 package com.github.mjaroslav.mjutils.util.game;
 
-import com.github.mjaroslav.mjutils.configurator.PropertiesConfigurator;
+import com.github.mjaroslav.mjutils.mod.util.ModStateManager;
 import com.github.mjaroslav.mjutils.modular.ModuleLoader;
 import com.github.mjaroslav.mjutils.modular.Proxy;
 import com.github.mjaroslav.mjutils.modular.SubscribeLoader;
-import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import cpw.mods.fml.common.*;
 import lombok.extern.log4j.Log4j2;
@@ -17,20 +16,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.*;
-import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 @Log4j2
 public class UtilsMods {
-    private static Set<String> modsWithCoreMods;
-    private static final PropertiesConfigurator fmlModStateProps;
-    public static final Set<String> blockedForDisableMods = new HashSet<>();
-
     public static String getActiveModId() {
         return Loader.instance().activeModContainer().getModId();
     }
@@ -124,51 +117,25 @@ public class UtilsMods {
         return null;
     }
 
-    public static boolean canDisableMod(String modId) {
-        if (modsWithCoreMods == null) {
-            modsWithCoreMods = new HashSet<>();
-            modsWithCoreMods.add("mcp");
-            for (ModContainer mod : Loader.instance().getActiveModList()) {
-                File source = mod.getSource();
-                try {
-                    Attributes attribs;
-                    if (source.isFile())
-                        attribs = new JarFile(source).getManifest().getMainAttributes();
-                    else
-                        attribs = new Manifest(Files.newInputStream(Paths.get(source.toURI())
-                                .resolve("META-INF/MANIFEST.MF"))).getMainAttributes();
-                    if (attribs.getValue("FMLCorePluginContainsFMLMod") != null)
-                        modsWithCoreMods.add(mod.getModId());
-                } catch (Exception ignored) {
-                }
-            }
-        }
-        return !modsWithCoreMods.contains(modId) && !blockedForDisableMods.contains(modId);
+    public static boolean canDisableMod(ModContainer mc) {
+        return ModStateManager.canChangeState(mc.getSource().toPath());
     }
-
 
     public static boolean getActualModState(ModContainer mc) {
         return Loader.instance().getModState(mc) != LoaderState.ModState.DISABLED;
     }
 
-    public static boolean getSavedModState(String modId) {
-        return Boolean.parseBoolean(fmlModStateProps.getProperties().getProperty(modId, "true"));
+    public static boolean getSavedModState(ModContainer mc) {
+        return !ModStateManager.isModDisabled(mc.getSource().toPath());
     }
 
-    public static void setSavedModState(String modId, boolean value) {
-        fmlModStateProps.getProperties().setProperty(modId, String.valueOf(value));
+    public static void setSavedModState(ModContainer mc, boolean value) {
+        ModStateManager.changeModState(mc.getSource().toPath(), value);
     }
 
-    public static boolean toggleSavedModState(String modId) {
-        boolean value = !getSavedModState(modId);
-        setSavedModState(modId, value);
-        fmlModStateProps.save();
+    public static boolean toggleSavedModState(ModContainer mc) {
+        boolean value = !getSavedModState(mc);
+        setSavedModState(mc, value);
         return value;
-    }
-
-    static {
-        fmlModStateProps = new PropertiesConfigurator("fmlModState",
-                ResourcePath.of("mjutils:configurators/fmlModState.properties"));
-        fmlModStateProps.load();
     }
 }

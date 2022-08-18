@@ -4,6 +4,7 @@ import com.github.mjaroslav.mjutils.gui.GuiContentScrollingPane;
 import com.github.mjaroslav.mjutils.gui.GuiImage;
 import com.github.mjaroslav.mjutils.gui.GuiScrollingPaneList;
 import com.github.mjaroslav.mjutils.gui.GuiText;
+import com.github.mjaroslav.mjutils.mod.util.ModStateManager;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsTextures;
@@ -15,7 +16,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -66,6 +66,7 @@ public class GuiModListReplacer extends GuiScreen {
                 continue;
             mods.add(mod);
         }
+        mods.addAll(ModStateManager.getDisabledModsContainers());
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +103,7 @@ public class GuiModListReplacer extends GuiScreen {
                     mc.displayGuiScreen(UtilsGUI.createModGUIConfig(selectedMod.getModId(), this));
                     return;
                 case 21: // Disable/Enable button
-                    if (UtilsMods.toggleSavedModState(selectedMod.getModId()))
+                    if (UtilsMods.toggleSavedModState(selectedMod))
                         disableModButton.displayString = I18n.format("gui.modlist.button.disable");
                     else
                         disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -117,7 +118,7 @@ public class GuiModListReplacer extends GuiScreen {
 
     protected void updateElementsAttributes() {
         if (selectedMod != null) {
-            if (UtilsMods.getSavedModState(selectedMod.getModId()))
+            if (UtilsMods.getSavedModState(selectedMod))
                 disableModButton.displayString = I18n.format("gui.modlist.button.disable");
             else
                 disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -126,7 +127,7 @@ public class GuiModListReplacer extends GuiScreen {
             urlModButton.visible = true;
             configModButton.visible = true;
             configModButton.enabled = UtilsGUI.isModHaveGUIConfig(selectedMod.getModId());
-            disableModButton.enabled = UtilsMods.canDisableMod(selectedMod.getModId());
+            disableModButton.enabled = UtilsMods.canDisableMod(selectedMod);
             modInfo.setVisible(true);
         } else {
             disableModButton.visible = false;
@@ -287,7 +288,7 @@ public class GuiModListReplacer extends GuiScreen {
             ModContainer mc = mods.get(listIndex);
             Tessellator var5 = Tessellator.instance;
             boolean actual = UtilsMods.getActualModState(mc);
-            boolean saved = UtilsMods.getSavedModState(mc.getModId());
+            boolean saved = UtilsMods.getSavedModState(mc);
             if (actual == saved) {
                 if (!actual) {
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFF2222);

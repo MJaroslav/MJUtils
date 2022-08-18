@@ -8,9 +8,9 @@ import com.github.mjaroslav.mjutils.mod.common.handler.ReactionEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.TooltipEventHandler;
 import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import com.github.mjaroslav.mjutils.mod.util.ModStateManager;
 import com.github.mjaroslav.mjutils.modular.SubscribeModule;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
-import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -35,6 +35,7 @@ public class MainModule {
         GameRegistry.registerFuelHandler(FuelHandler.instance);
         if (CategoryRoot.quartzTrigger)
             UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_ore, true);
+        ModStateManager.init();
     }
 
     public void listen(FMLInterModComms.IMCEvent event) {
@@ -63,10 +64,6 @@ public class MainModule {
                         UtilsInteractions.setPigmanTriggerBlock(message.getItemStackValue(), false);
                     } else
                         ModInfo.logger.error("IMC@interactions.not_pigzombie_trigger_block: value must be ItemStack.");
-                }
-                break;
-                case "modList.blockFromDisabling": {
-                    UtilsMods.blockedForDisableMods.add(message.getSender());
                 }
                 break;
                 default:

@@ -29,7 +29,7 @@ public abstract class MixinEntityFishHook extends Entity {
     @Redirect(method = "func_146034_e",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
-                    ordinal = 0), remap = false)
+                    ordinal = 0))
     public boolean injectedEntityItem(World world, Entity entity) {
         if (fishingSuccessEvent != null && !fishingSuccessEvent.isCanceled() && fishingSuccessEvent.catchStack != null)
             world.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, fishingSuccessEvent.catchStack));
@@ -40,7 +40,7 @@ public abstract class MixinEntityFishHook extends Entity {
     @Redirect(method = "func_146034_e",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
-                    ordinal = 1), remap = false)
+                    ordinal = 1))
     public boolean injectedEntityXPOrb(World world, Entity entity) {
         if (fishingSuccessEvent != null) {
             if (!fishingSuccessEvent.isCanceled() && fishingSuccessEvent.exp > 0)
@@ -55,7 +55,7 @@ public abstract class MixinEntityFishHook extends Entity {
 
     // Add stat removing and call injected event
     @Inject(method = "func_146033_f",
-            at = @At("HEAD"), cancellable = true, remap = false)
+            at = @At("HEAD"), cancellable = true)
     private void func_146033_f(CallbackInfoReturnable<ItemStack> ci) {
         float chance = worldObj.rand.nextFloat();
         int luck = EnchantmentHelper.func_151386_g(((EntityFishHook) (Object) this).field_146042_b);
