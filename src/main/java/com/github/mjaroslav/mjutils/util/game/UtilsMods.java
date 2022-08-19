@@ -1,11 +1,13 @@
 package com.github.mjaroslav.mjutils.util.game;
 
-import com.github.mjaroslav.mjutils.mod.util.ModStateManager;
 import com.github.mjaroslav.mjutils.modular.ModuleLoader;
 import com.github.mjaroslav.mjutils.modular.Proxy;
 import com.github.mjaroslav.mjutils.modular.SubscribeLoader;
 import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.FMLModContainer;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.SidedProxy;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,27 +117,5 @@ public class UtilsMods {
             log.error(String.format("Can't load resource '%s' from '%s' mod", modId, path), e);
         }
         return null;
-    }
-
-    public static boolean canDisableMod(ModContainer mc) {
-        return ModStateManager.canChangeState(mc.getSource().toPath());
-    }
-
-    public static boolean getActualModState(ModContainer mc) {
-        return Loader.instance().getModState(mc) != LoaderState.ModState.DISABLED;
-    }
-
-    public static boolean getSavedModState(ModContainer mc) {
-        return !ModStateManager.isModDisabled(mc.getSource().toPath());
-    }
-
-    public static void setSavedModState(ModContainer mc, boolean value) {
-        ModStateManager.changeModState(mc.getSource().toPath(), value);
-    }
-
-    public static boolean toggleSavedModState(ModContainer mc) {
-        boolean value = !getSavedModState(mc);
-        setSavedModState(mc, value);
-        return value;
     }
 }

@@ -15,6 +15,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.ModMetadata;
+import lombok.val;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -66,7 +67,7 @@ public class GuiModListReplacer extends GuiScreen {
                 continue;
             mods.add(mod);
         }
-        mods.addAll(ModStateManager.getDisabledModsContainers());
+        mods.addAll(ModStateManager.getDisabledMods());
     }
 
     @SuppressWarnings("unchecked")
@@ -103,7 +104,7 @@ public class GuiModListReplacer extends GuiScreen {
                     mc.displayGuiScreen(UtilsGUI.createModGUIConfig(selectedMod.getModId(), this));
                     return;
                 case 21: // Disable/Enable button
-                    if (UtilsMods.toggleSavedModState(selectedMod))
+                    if (ModStateManager.toggleModState(selectedMod).isEnabled())
                         disableModButton.displayString = I18n.format("gui.modlist.button.disable");
                     else
                         disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -118,7 +119,7 @@ public class GuiModListReplacer extends GuiScreen {
 
     protected void updateElementsAttributes() {
         if (selectedMod != null) {
-            if (UtilsMods.getSavedModState(selectedMod))
+            if (ModStateManager.isModEnabled(selectedMod))
                 disableModButton.displayString = I18n.format("gui.modlist.button.disable");
             else
                 disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -127,7 +128,7 @@ public class GuiModListReplacer extends GuiScreen {
             urlModButton.visible = true;
             configModButton.visible = true;
             configModButton.enabled = UtilsGUI.isModHaveGUIConfig(selectedMod.getModId());
-            disableModButton.enabled = UtilsMods.canDisableMod(selectedMod);
+            disableModButton.enabled = ModStateManager.canChangeState(selectedMod);
             modInfo.setVisible(true);
         } else {
             disableModButton.visible = false;
@@ -287,10 +288,9 @@ public class GuiModListReplacer extends GuiScreen {
         public void drawEntry(int listIndex, int beginX, int var2, int offsetY, int var4, float floatTicks) {
             ModContainer mc = mods.get(listIndex);
             Tessellator var5 = Tessellator.instance;
-            boolean actual = UtilsMods.getActualModState(mc);
-            boolean saved = UtilsMods.getSavedModState(mc);
-            if (actual == saved) {
-                if (!actual) {
+            val state = ModStateManager.getModState(mc);
+            if (!state.isScheduled()) {
+                if (state.isDisabled()) {
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFF2222);
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xFF2222);
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xFF2222);
@@ -300,7 +300,7 @@ public class GuiModListReplacer extends GuiScreen {
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xCCCCCC);
                 }
             } else {
-                if (!actual) {
+                if (state.isDisabled()) {
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFFFF55);
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getDisplayVersion(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 12, 0xFFFF55);
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth("DISABLED", width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 22, 0xFFFF55);
