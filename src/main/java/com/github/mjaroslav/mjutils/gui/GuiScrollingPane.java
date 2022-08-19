@@ -66,6 +66,10 @@ public abstract class GuiScrollingPane {
         onVisibilityChanged(visible);
     }
 
+    public void init() {}
+
+    public void onClose() {}
+
     public void onVisibilityChanged(boolean newValue) {
     }
 

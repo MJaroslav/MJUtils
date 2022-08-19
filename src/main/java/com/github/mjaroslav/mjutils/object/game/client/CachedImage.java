@@ -33,15 +33,13 @@ public class CachedImage {
     public CachedImage(String location, String texture, String modSourceId) {
         try {
             BufferedImage image;
-            InputStream imageStream = UtilsMods.getResourceFromModAsStream(modSourceId, texture);
-            if (imageStream != null) {
-                image = ImageIO.read(imageStream);
-                if (image != null) {
-                    dimensions = new Dimension(image.getWidth(), image.getHeight());
-                    this.texture = new DynamicTexture(image);
-                    this.location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(location, this.texture);
-                    loaded = true;
-                }
+            InputStream imageStream = UtilsMods.getResourceFromMod(UtilsMods.getContainer(modSourceId), texture, false);
+            image = ImageIO.read(imageStream);
+            if (image != null) {
+                dimensions = new Dimension(image.getWidth(), image.getHeight());
+                this.texture = new DynamicTexture(image);
+                this.location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(location, this.texture);
+                loaded = true;
             }
         } catch (IOException e) {
             e.printStackTrace();

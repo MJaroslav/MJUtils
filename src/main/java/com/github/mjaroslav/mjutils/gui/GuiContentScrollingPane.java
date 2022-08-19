@@ -16,8 +16,6 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
         super(parent, x, y, width, height, scrollStep);
     }
 
-    protected abstract void initContent();
-
     @Override
     public int getContentHeight() {
         return contentList.stream().mapToInt(ScrollingContentElement::getContentHeight).sum();

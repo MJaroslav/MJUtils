@@ -4,7 +4,6 @@ import com.github.mjaroslav.mjutils.gui.GuiContentScrollingPane;
 import com.github.mjaroslav.mjutils.gui.GuiImage;
 import com.github.mjaroslav.mjutils.gui.GuiScrollingPaneList;
 import com.github.mjaroslav.mjutils.gui.GuiText;
-import com.github.mjaroslav.mjutils.mod.util.ModStateManager;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
 import com.github.mjaroslav.mjutils.util.game.client.UtilsTextures;
@@ -29,7 +28,6 @@ import org.lwjgl.opengl.GL11;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +65,7 @@ public class GuiModListReplacer extends GuiScreen {
                 continue;
             mods.add(mod);
         }
-        mods.addAll(ModStateManager.getDisabledMods());
+        mods.addAll(UtilsMods.getDisabledMods());
     }
 
     @SuppressWarnings("unchecked")
@@ -104,7 +102,7 @@ public class GuiModListReplacer extends GuiScreen {
                     mc.displayGuiScreen(UtilsGUI.createModGUIConfig(selectedMod.getModId(), this));
                     return;
                 case 21: // Disable/Enable button
-                    if (ModStateManager.toggleModState(selectedMod).isEnabled())
+                    if (UtilsMods.toggleModState(selectedMod).isEnabled())
                         disableModButton.displayString = I18n.format("gui.modlist.button.disable");
                     else
                         disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -119,7 +117,7 @@ public class GuiModListReplacer extends GuiScreen {
 
     protected void updateElementsAttributes() {
         if (selectedMod != null) {
-            if (ModStateManager.isModEnabled(selectedMod))
+            if (UtilsMods.isModEnabled(selectedMod))
                 disableModButton.displayString = I18n.format("gui.modlist.button.disable");
             else
                 disableModButton.displayString = I18n.format("gui.modlist.button.enable");
@@ -128,7 +126,7 @@ public class GuiModListReplacer extends GuiScreen {
             urlModButton.visible = true;
             configModButton.visible = true;
             configModButton.enabled = UtilsGUI.isModHaveGUIConfig(selectedMod.getModId());
-            disableModButton.enabled = ModStateManager.canChangeState(selectedMod);
+            disableModButton.enabled = UtilsMods.canChangeState(selectedMod);
             modInfo.setVisible(true);
         } else {
             disableModButton.visible = false;
@@ -152,7 +150,7 @@ public class GuiModListReplacer extends GuiScreen {
         if (selectedMod != null) {
             int hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, disableModButton, false);
             if (hoverState == 2 && !disableModButton.enabled)
-                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.iscoremod")), mouseX, mouseY, fontRendererObj);
+                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.internal")), mouseX, mouseY, fontRendererObj);
 
             hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, configModButton, false);
             if (hoverState == 2 && !configModButton.enabled)
@@ -168,7 +166,7 @@ public class GuiModListReplacer extends GuiScreen {
         selected = index;
         if (index >= 0 && index <= mods.size()) {
             selectedMod = mods.get(selected);
-            modInfo.initContent();
+            modInfo.init();
         } else
             selectedMod = null;
         modInfo.resetScrolling();
@@ -177,6 +175,12 @@ public class GuiModListReplacer extends GuiScreen {
 
     public boolean modIndexSelected(int index) {
         return index == selected;
+    }
+
+    @Override
+    public void onGuiClosed() {
+        modInfo.onClose();
+        modList.onClose();
     }
 
     public static class GuiModInfoPane extends GuiContentScrollingPane {
@@ -189,11 +193,21 @@ public class GuiModListReplacer extends GuiScreen {
         public GuiModInfoPane(GuiModListReplacer parent, int x, int y, int width, int height, float scrollStep) {
             super(parent, x, y, width, height, scrollStep);
             this.parent = parent;
-            initContent();
+            init();
         }
 
         @Override
-        protected void initContent() {
+        public void onClose() {
+            modScreenshots.forEach(GuiImage::delete);
+            modScreenshots.clear();
+            if (modLogo != null) {
+                modLogo.delete();
+                modLogo = null;
+            }
+        }
+
+        @Override
+        public void init() {
             if (modLogo != null) {
                 modLogo.delete();
                 modLogo = null;
@@ -285,10 +299,18 @@ public class GuiModListReplacer extends GuiScreen {
         }
 
         @Override
+        public void onClose() {
+            val tm = parent.mc.getTextureManager();
+            cachedIcons.values().stream().filter(path -> path != UtilsTextures.UNKNOWN_PACK).forEach(tm::deleteTexture);
+        }
+
+        @Override
         public void drawEntry(int listIndex, int beginX, int var2, int offsetY, int var4, float floatTicks) {
             ModContainer mc = mods.get(listIndex);
+            if (mc == null)
+                return;
             Tessellator var5 = Tessellator.instance;
-            val state = ModStateManager.getModState(mc);
+            val state = UtilsMods.getModState(mc);
             if (!state.isScheduled()) {
                 if (state.isDisabled()) {
                     parent.fontRendererObj.drawString(parent.fontRendererObj.trimStringToWidth(mc.getName(), width - 10 - 30 - 3), beginX + 3 + 30 + 3, offsetY + 2, 0xFF2222);
@@ -315,12 +337,12 @@ public class GuiModListReplacer extends GuiScreen {
             try {
                 if (cachedIcons.get(mc.getModId()) == null) {
                     BufferedImage logo = null;
-                    InputStream logoResource = UtilsMods.getResourceFromModAsStream(mc.getModId(), "icon.png");
-                    if (logoResource != null)
-                        logo = ImageIO.read(logoResource);
-                    if (logo != null) {
+                    val stream = UtilsMods.getResourceFromModIgnored(mc, "icon.png", false);
+                    if (stream != null)
+                        logo = ImageIO.read(stream);
+                    if (logo != null)
                         cachedIcons.put(mc.getModId(), tm.getDynamicTextureLocation("icon_" + mc.getModId(), new DynamicTexture(logo)));
-                    } else cachedIcons.put(mc.getModId(), UtilsTextures.UNKNOWN_PACK);
+                    else cachedIcons.put(mc.getModId(), UtilsTextures.UNKNOWN_PACK);
                 }
                 if (cachedIcons.get(mc.getModId()) != null) {
                     parent.mc.renderEngine.bindTexture(cachedIcons.get(mc.getModId()));
@@ -332,7 +354,9 @@ public class GuiModListReplacer extends GuiScreen {
                     var5.draw();
                 }
             } catch (IOException ignored) {
+                ignored.printStackTrace();
             }
         }
     }
+
 }
