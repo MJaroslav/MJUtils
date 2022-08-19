@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.mod.util;
 
+import com.github.mjaroslav.mjutils.util.io.UtilsFiles;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import lombok.Getter;
@@ -7,16 +8,13 @@ import lombok.experimental.UtilityClass;
 import lombok.val;
 import lombok.var;
 import net.minecraft.client.Minecraft;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
 @UtilityClass
@@ -59,44 +57,28 @@ public class ModStateManager {
         return getModState(container).isScheduled();
     }
 
-    private void searchDisabledModsInFolder(Path path, Set<Path> disabledMods) {
-        try (val files = Files.list(path)) {
-            val result = new HashSet<Path>();
-            files.forEach(file -> {
-                if (FilenameUtils.getExtension(file.getFileName().toString()).equalsIgnoreCase("disabled"))
-                    disabledMods.add(file.normalize());
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void init() {
-        val modsDir = Minecraft.getMinecraft().mcDataDir.toPath().resolve("mods").normalize().toAbsolutePath();
-        val versionModsDir = modsDir.resolve(Loader.MC_VERSION).normalize().toAbsolutePath();
-        System.out.println(modsDir);
+        val modsDir = UtilsFiles.get(Minecraft.getMinecraft().mcDataDir, "mods");
+        val versionModsDir = modsDir.resolve(Loader.MC_VERSION);
 
-        val disabledMods = new HashSet<Path>();
-
-        searchDisabledModsInFolder(modsDir, disabledMods);
-        searchDisabledModsInFolder(versionModsDir, disabledMods);
+        val disabledMods = UtilsFiles.list(modsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
+                "disabled")).collect(Collectors.toSet());
+        disabledMods.addAll(UtilsFiles.list(versionModsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
+                "disabled")).collect(Collectors.toSet()));
 
         Loader.instance().getModList().forEach(container -> {
             if (container instanceof InjectedModContainer) {
                 val location = ((InjectedModContainer) container).wrappedContainer
                         .getClass().getProtectionDomain().getCodeSource().getLocation();
                 if (location.getProtocol().equals("jar")) {
-                    try {
-                        val file = Paths.get(((JarURLConnection) location.openConnection())
-                                .getJarFileURL().getFile()).normalize().toAbsolutePath();
+                    val file = UtilsFiles.normalizePath(location);
+                    if (file != null) {
                         containerSource.put(container, file);
                         states.put(container, file.startsWith(modsDir) ? ModState.ENABLED : ModState.INTERNAL);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
                     }
                 }
             } else if (container instanceof FMLModContainer) {
-                val location = container.getSource().toPath().normalize().toAbsolutePath();
+                val location = UtilsFiles.normalizePath(container.getSource());
                 containerSource.put(container, location);
                 states.put(container, location.startsWith(modsDir) ? ModState.ENABLED : ModState.INTERNAL);
             }
@@ -108,25 +90,13 @@ public class ModStateManager {
             ModStateManager.disabledMods.add(container);
         }));
 
-        containerSource.forEach((container, source) -> System.out.println(container.getModId() + " " + source));
-        states.forEach((container, state) -> System.out.println(container.getModId() + " " + state));
-
         Runtime.getRuntime().addShutdownHook(new Thread(() -> states.forEach((container, state) -> {
             if (state.isScheduled()) {
                 val path = containerSource.get(container);
                 if (state.isEnabled())
-                    try {
-                        Files.move(path, path.getParent().resolve(FilenameUtils.removeExtension(
-                                path.getFileName().toString())));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    UtilsFiles.changeExtension(path, "jar");
                 else
-                    try {
-                        Files.move(path, path.getParent().resolve(path.getFileName() + ".disabled"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    UtilsFiles.changeExtension(path, "disabled");
             }
         })));
     }
