@@ -94,14 +94,14 @@ public class ModStateManager {
             if (state.isScheduled()) {
                 val path = containerSource.get(container);
                 if (state.isEnabled())
-                    UtilsFiles.changeExtension(path, "jar");
+                    UtilsFiles.replaceExtension(path, "jar");
                 else
-                    UtilsFiles.changeExtension(path, "disabled");
+                    UtilsFiles.replaceExtension(path, "disabled");
             }
         })));
     }
 
-    private List<DisabledModContainer> loadDisabledMods(@NotNull Path path) {
+    private @NotNull List<DisabledModContainer> loadDisabledMods(@NotNull Path path) {
         val result = new ArrayList<DisabledModContainer>();
         try (val zip = new ZipFile(path.toFile())) {
             val entry = zip.getEntry("mcmod.info");

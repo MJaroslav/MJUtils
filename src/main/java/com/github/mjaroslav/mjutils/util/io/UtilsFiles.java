@@ -43,14 +43,27 @@ public class UtilsFiles {
         } else return null;
     }
 
+    /**
+     * Wrapper for {@link FilenameUtils#removeExtension(String)} that use {@link Path} as filename.
+     *
+     * @see FilenameUtils#removeExtension(String)
+     */
     public @NotNull String removeExtension(@NotNull Path file) {
         return FilenameUtils.removeExtension(file.getFileName().toString());
     }
 
-    public @NotNull String changeExtension(@NotNull Path file, @NotNull String newExtension) {
+    /**
+     * Replaces file extension.
+     *
+     * @param file         file for extension replacing.
+     * @param newExtension new file extension.
+     * @return old extension or null on error when replacing.
+     */
+    public @Nullable String replaceExtension(@NotNull Path file, @NotNull String newExtension) {
         val ext = getExtension(file);
         val to = get(file.getParent(), removeExtension(file) + "." + newExtension);
-        move(file, to);
+        if (move(file, to) == null)
+            return null;
         return ext;
     }
 
@@ -132,8 +145,8 @@ public class UtilsFiles {
     }
 
     /**
-     * Wrapper for {@link Files#move(Path, Path, CopyOption...)} that use {@link UtilsFiles#normalizePath(Object)}
-     * for arguments with {@link Path} type.
+     * Wrapper for {@link UtilsFiles#move(Path, Path, CopyOption...)} that use
+     * {@link UtilsFiles#normalizePath(Object)} for arguments with {@link Path} type.
      *
      * @see Files#move(Path, Path, CopyOption...)
      */
@@ -142,6 +155,11 @@ public class UtilsFiles {
         return move(normalizePath(from), normalizePath(to), options);
     }
 
+    /**
+     * Wrapper for {@link Files#move(Path, Path, CopyOption...)} that wrap return null on exception.
+     *
+     * @see Files#move(Path, Path, CopyOption...)
+     */
     @Contract("null, _, _ -> null; _, null, _ -> null")
     public @Nullable Path move(@Nullable Path from, @Nullable Path to, @NotNull CopyOption... options) {
         if (from != null && to != null)
