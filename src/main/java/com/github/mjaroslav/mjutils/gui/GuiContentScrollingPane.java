@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.gui;
 
-import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
+import com.github.mjaroslav.mjutils.mod.lib.General.Debug;
 import com.github.mjaroslav.mjutils.object.Pair;
 import lombok.val;
 import net.minecraft.client.gui.GuiScreen;
@@ -56,7 +56,7 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
             val contentHovered = content.isHovered(this, beginX, shiftY, mouseX, mouseY);
             boolean hovered = isPaneHovered(mouseX, mouseY) && contentHovered.getA();
             content.drawScreen(beginX, y, hovered, floatTicks);
-            if (CategoryRoot.CategoryDebug.renderDebugLinesInScrollingPane)
+            if (Debug.renderDebugLinesInScrollingPane)
                 content.drawDebugLines(beginX, y, hovered, floatTicks);
             y += content.getContentHeight();
         }

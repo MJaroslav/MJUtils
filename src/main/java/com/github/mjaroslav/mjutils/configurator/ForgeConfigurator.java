@@ -5,63 +5,66 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.var;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ForgeConfigurator extends Configurator {
-    @Getter
-    protected Configuration instance;
+@Getter
+public abstract class ForgeConfigurator extends Configurator {
+    protected final @NotNull Configuration instance;
+    protected @Nullable String version;
+    protected final @NotNull String modId;
 
-    @Nullable
-    @Getter
-    protected String version;
+    @Getter(AccessLevel.NONE)
+    protected boolean lazyInitDone;
 
-    @Getter
-    @Nonnull
-    protected final String modId;
-
-    public ForgeConfigurator(@Nonnull String fileName, @Nonnull String modId, @Nullable String version) {
+    public ForgeConfigurator(@NotNull String fileName, @NotNull String modId, @Nullable String version) {
         super(fileName, "cfg");
         this.modId = modId;
         this.version = version;
+        instance = new Configuration(getFile().toFile(), getVersion());
+        save();
         ConfigurationEventHandler.instance.addConfig(this);
     }
 
-    public ForgeConfigurator(@Nonnull String fileName, @Nonnull String modId) {
+    public abstract void init(@NotNull Configuration instance);
+
+    public ForgeConfigurator(@NotNull String fileName, @NotNull String modId) {
         this(fileName, modId, null);
     }
 
     @Override
     public void load() {
-        if (instance == null)
-            instance = new Configuration(new File(getFile()), getVersion());
-        else instance.load();
-        sync();
-        if (instance.hasChanged())
-            save();
+        instance.load();
+        if (!lazyInitDone) {
+            init(instance);
+            lazyInitDone = true;
+        }
+        save();
+    }
+
+    public void onConfigSaved() {
     }
 
     @Override
     public void save() {
-        instance.save();
-    }
-
-    @Override
-    public void sync() {
+        if (instance.hasChanged())
+            instance.save();
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ConfigurationEventHandler {
         public static final ConfigurationEventHandler instance = new ConfigurationEventHandler();
 
-        private final ArrayList<ForgeConfigurator> list = new ArrayList<>();
+        private final List<ForgeConfigurator> list = new ArrayList<>();
 
-        private void addConfig(ForgeConfigurator newConfig) {
-            for (ForgeConfigurator config : list)
+        private void addConfig(@NotNull ForgeConfigurator newConfig) {
+            for (var config : list)
                 if (config.modId.equals(newConfig.modId) && config.getFile().equals(newConfig.getFile()))
                     return;
             list.add(newConfig);
@@ -69,9 +72,9 @@ public class ForgeConfigurator extends Configurator {
 
         @SubscribeEvent
         public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-            for (ForgeConfigurator config : list)
-                if (event.modID.equals(config.modId) && event.configID.equals(config.getFile())) {
-                    config.sync();
+            for (var config : list)
+                if (config.modId.equals(event.modID) && StringUtils.equals(config.getFile().toString(), event.configID)) {
+                    config.onConfigSaved();
                     config.save();
                     break;
                 }

@@ -6,7 +6,7 @@ import com.github.mjaroslav.mjutils.mod.common.handler.FuelHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.GuiReplacerEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.ReactionEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.TooltipEventHandler;
-import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
+import com.github.mjaroslav.mjutils.mod.lib.General;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import com.github.mjaroslav.mjutils.modular.SubscribeModule;
 import com.github.mjaroslav.mjutils.util.game.UtilsInteractions;
@@ -21,7 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @SubscribeModule(priority = -1)
 public class MainModule {
-    public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId, CategoryRoot.class);
+    public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId, General.class);
 
     public void listen(FMLInitializationEvent event) {
         config.load();
@@ -33,7 +33,7 @@ public class MainModule {
 
     public void listen(FMLPostInitializationEvent event) {
         GameRegistry.registerFuelHandler(FuelHandler.instance);
-        if (CategoryRoot.quartzTrigger)
+        if (General.quartzTrigger)
             UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_ore, true);
         UtilsMods.init();
     }

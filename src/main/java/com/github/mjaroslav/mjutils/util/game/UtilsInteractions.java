@@ -1,6 +1,6 @@
 package com.github.mjaroslav.mjutils.util.game;
 
-import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot.CategoryCreative.CategoryBlockBreaking;
+import com.github.mjaroslav.mjutils.mod.lib.General.Creative.BlockBreaking;
 import com.github.mjaroslav.mjutils.object.game.item.ItemStackSet;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
@@ -79,17 +79,17 @@ public class UtilsInteractions {
         if (!UtilsItemStack.isNotEmpty(stack))
             return false;
         val item = stack.getItem();
-        if (CategoryBlockBreaking.swords && item instanceof ItemSword)
+        if (BlockBreaking.swords && item instanceof ItemSword)
             return true;
-        if (CategoryBlockBreaking.tools && item instanceof ItemTool)
+        if (BlockBreaking.tools && item instanceof ItemTool)
             return true;
-        if (CategoryBlockBreaking.axes && item instanceof ItemAxe)
+        if (BlockBreaking.axes && item instanceof ItemAxe)
             return true;
-        if (CategoryBlockBreaking.pickaxes && item instanceof ItemPickaxe)
+        if (BlockBreaking.pickaxes && item instanceof ItemPickaxe)
             return true;
-        if (CategoryBlockBreaking.shovels && item instanceof ItemSpade)
+        if (BlockBreaking.shovels && item instanceof ItemSpade)
             return true;
-        if (!CategoryBlockBreaking.extraItems)
+        if (!BlockBreaking.extraItems)
             return false;
         return DISABLED_FOR_BREAKING_IN_CREATIVE.contains(stack);
     }

@@ -1,6 +1,5 @@
 package com.github.mjaroslav.mjutils.modular;
 
-import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
 import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;

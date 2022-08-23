@@ -1,98 +1,96 @@
 package com.github.mjaroslav.mjutils.configurator;
 
+import com.github.mjaroslav.mjutils.configurator.annotations.*;
 import cpw.mods.fml.client.config.IConfigElement;
-import net.minecraftforge.common.config.ConfigCategory;
+import lombok.val;
+import lombok.var;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class AnnotationConfigurator extends ForgeConfigurator {
     public static final String[] COLOR_VALID_VALUES = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
     public static final Pattern COLOR_VALID_PATTERN = Pattern.compile("^[0-9a-f]$");
-    @Nonnull
-    protected final Class<?> rootCategory;
 
-    private boolean versionParsed;
+    protected final @NotNull Class<?> rootCategory;
+    protected final @NotNull Map<Field, Object> defaults = new HashMap<>();
 
-    public AnnotationConfigurator(@Nonnull String fileName, @Nonnull String modId, @Nonnull Class<?> rootCategory) {
+    public AnnotationConfigurator(@NotNull String fileName, @NotNull String modId,
+                                  @NotNull Class<?> rootCategory) {
         super(fileName, modId);
         this.rootCategory = rootCategory;
     }
 
-    @Nullable
-    @Override
-    public String getVersion() {
-        if (!versionParsed) {
-            try {
-                int mods;
-                for (Field field : rootCategory.getFields()) {
-                    mods = field.getModifiers();
-                    if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods)
-                            && field.getName().equals("configVersion") && field.getType().equals(String.class)) {
-                        version = (String) field.get(null);
-                        break;
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            versionParsed = true;
-        }
-        return super.getVersion();
+    @SuppressWarnings("rawtypes")
+    public List<IConfigElement> getElementList() {
+        return new ConfigElement<>(instance.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements();
     }
 
     @Override
-    public void sync() {
+    public void init(@NotNull Configuration instance) {
+        if (rootCategory.isAnnotationPresent(Version.class))
+            version = rootCategory.getAnnotation(Version.class).value();
         try {
-            parseClass(getInstance(), rootCategory, null);
+            parseClass(instance, rootCategory, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    public List<IConfigElement> categoryToElementList(String category) {
-        return new ConfigElement<>(instance.getCategory(category)).getChildElements();
+    @Override
+    public void onConfigSaved() {
+        try {
+            parseClass(instance, rootCategory, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static String formatName(String name) {
-        if (Character.isUpperCase(name.charAt(0)))
-            name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
-        return name.replaceAll("[A-Z]", "_$0").toLowerCase();
+    protected @NotNull String formatName(@NotNull String name) {
+        name = name.replace("Category", "").replaceAll("[A-Z]", "_$0").toLowerCase();
+        if (name.startsWith("_"))
+            name = name.substring(1);
+        return name;
     }
 
-    public static void parseClass(@Nonnull Configuration instance, @Nonnull Class<?> categoryClass, @Nullable String parentCategoryName) throws Exception {
-        String categoryName = !StringUtils.isNotBlank(parentCategoryName) ? "root"
+    protected void parseClass(@NotNull Configuration instance, @NotNull Class<?> categoryClass,
+                              @Nullable String parentCategoryName) throws Exception {
+        if (categoryClass.isAnnotationPresent(Ignore.class))
+            return;
+        var categoryName = !StringUtils.isNotBlank(parentCategoryName) ? Configuration.CATEGORY_GENERAL
                 : String.format("%s.%s", parentCategoryName, formatName(categoryClass.getSimpleName()));
-        Name name = categoryClass.getDeclaredAnnotation(Name.class);
+        val name = categoryClass.getAnnotation(Name.class);
         if (name != null)
-            categoryName = !StringUtils.isNotBlank(parentCategoryName) ? "root"
+            categoryName = !StringUtils.isNotBlank(parentCategoryName) ? Configuration.CATEGORY_GENERAL
                     : String.format("%s.%s", parentCategoryName, name.value());
-        Comment comment = categoryClass.getDeclaredAnnotation(Comment.class);
+        val comment = categoryClass.getAnnotation(Comment.class);
         if (comment != null)
             instance.setCategoryComment(categoryName, comment.value());
-        LangKey langKey = categoryClass.getDeclaredAnnotation(LangKey.class);
+        val langKey = categoryClass.getAnnotation(LangKey.class);
         if (langKey != null)
             instance.setCategoryLanguageKey(categoryName, langKey.value());
-        if (categoryClass.isAnnotationPresent(RequiresMCRestart.class))
-            instance.setCategoryRequiresMcRestart(categoryName, true);
-        if (categoryClass.isAnnotationPresent(RequiresWorldRestart.class))
-            instance.setCategoryRequiresWorldRestart(categoryName, true);
+        else
+            instance.setCategoryLanguageKey(categoryName, "config.category." + getModId() + ":" + categoryName + ".name");
+        val restart = categoryClass.getAnnotation(Restart.class);
+        if (restart != null) {
+            if (restart.value() == Restart.Value.GAME || restart.value() == Restart.Value.BOTH)
+                instance.setCategoryRequiresMcRestart(categoryName, true);
+            if (restart.value() == Restart.Value.WORLD || restart.value() == Restart.Value.BOTH)
+                instance.setCategoryRequiresWorldRestart(categoryName, true);
+        }
         int mods;
         Property.Type type;
-        for (Field field : categoryClass.getDeclaredFields()) {
+        for (var field : categoryClass.getDeclaredFields()) {
             mods = field.getModifiers();
             if (Modifier.isPublic(mods) && Modifier.isStatic(mods)) {
                 type = parseType(field.getType());
@@ -100,72 +98,88 @@ public class AnnotationConfigurator extends ForgeConfigurator {
                     parseField(instance, field, categoryName, type, field.getType().isArray());
             }
         }
-        for (Class<?> clazz : categoryClass.getDeclaredClasses()) {
+        for (var clazz : categoryClass.getClasses()) {
             mods = clazz.getModifiers();
             if (Modifier.isStatic(mods) && Modifier.isPublic(mods))
                 parseClass(instance, clazz, categoryName);
         }
     }
 
-    public static void parseField(Configuration instance, Field field, String categoryName, Property.Type parsedType,
-                                  boolean isArray) throws Exception {
-        String propertyName = formatName(field.getName());
-        Name name = field.getDeclaredAnnotation(Name.class);
+    protected void parseField(@NotNull Configuration instance, @NotNull Field field, @NotNull String categoryName,
+                              @NotNull Property.Type parsedType,
+                              boolean isArray) throws Exception {
+        var propertyName = formatName(field.getName());
+        val name = field.getAnnotation(Name.class);
         if (name != null)
             propertyName = name.value();
-        String propertyComment = "";
-        Comment comment = field.getDeclaredAnnotation(Comment.class);
+        var propertyComment = "Description not provided";
+        val comment = field.getAnnotation(Comment.class);
         if (comment != null)
             propertyComment = comment.value();
-        ConfigCategory category = instance.getCategory(categoryName);
-        if (parsedType == Property.Type.STRING) {
-            ColorType colorType = field.getDeclaredAnnotation(ColorType.class);
-            if (colorType != null)
+        val category = instance.getCategory(categoryName);
+        if (parsedType == Property.Type.STRING)
+            if (field.isAnnotationPresent(Values.Color.class))
                 parsedType = Property.Type.COLOR;
-            ModIdType modIdType = field.getDeclaredAnnotation(ModIdType.class);
-            if (modIdType != null)
+            else if (field.isAnnotationPresent(Values.Mod.class))
                 parsedType = Property.Type.MOD_ID;
-        }
+        //val defaults = field.getAnnotation(Default.class);
         Property property;
         switch (parsedType) {
             case INTEGER: {
-                if (!(field.isAnnotationPresent(DefaultInt.class) || field.isAnnotationPresent(DefaultIntArray.class)))
-                    return;
                 if (isArray) {
-                    int[] defaultValue = field.getDeclaredAnnotation(DefaultIntArray.class).value();
+                    val defaultValue = (int[]) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.I() : new int[0];
                     property = instance.get(categoryName, propertyName, defaultValue, propertyComment);
                     field.set(null, property.getIntList());
                 } else {
-                    int defaultValue = field.getDeclaredAnnotation(DefaultInt.class).value();
+                    val defaultValue = (int) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.i() : 0;
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
                     field.set(null, property.getInt());
                 }
-                boolean hasRange = false;
-                IntRange intRange = field.getDeclaredAnnotation(IntRange.class);
-                if (intRange != null) {
-                    property.setMaxValue(intRange.max());
-                    property.setMinValue(intRange.min());
-                    hasRange = true;
+                var hasRange = false;
+                var unlimMin = true;
+                var unlimMax = true;
+                val range = field.getAnnotation(Range.class);
+                if (range != null) {
+                    if (range.max() != Double.MAX_VALUE && range.max() != Integer.MAX_VALUE) {
+                        property.setMaxValue((int) range.max());
+                        unlimMax = false;
+                    }
+                    if (range.min() != Double.MIN_VALUE && range.min() != Integer.MIN_VALUE) {
+                        property.setMinValue((int) range.min());
+                        unlimMin = false;
+                    }
+                    hasRange = !unlimMax || !unlimMin;
                 }
                 if (StringUtils.isNotBlank(property.comment))
-                    if (hasRange)
-                        property.comment += " [range: " + property.getMinValue() + " ~ " + property.getMaxValue()
-                                + ", default: " + property.getDefault() + "]";
-                    else
+                    if (hasRange) {
+                        var rangeComment = new StringBuilder(" [range:");
+                        if (!unlimMin)
+                            rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
+                        if (!unlimMax)
+                            rangeComment.append(" <= ").append(property.getMaxValue());
+                        rangeComment.append(", default: ").append(property.getDefault()).append("]");
+                        property.comment += rangeComment.toString();
+                    } else
                         property.comment += " [default: " + property.getDefault() + "]";
             }
             break;
             case BOOLEAN: {
-                if (!(field.isAnnotationPresent(DefaultBoolean.class) || field.isAnnotationPresent(DefaultBooleanArray.class)))
-                    return;
                 if (isArray) {
-                    boolean[] defaultValue = field.getDeclaredAnnotation(DefaultBooleanArray.class).value();
+                    val defaultValue = (boolean[]) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.B() : new boolean[0];
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
                     field.set(null, property.getBooleanList());
                 } else {
-                    boolean defaultValue = field.getDeclaredAnnotation(DefaultBoolean.class).value();
+                    val defaultValue = (boolean) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null && defaults.b();
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
                     field.set(null, property.getBoolean());
@@ -175,44 +189,61 @@ public class AnnotationConfigurator extends ForgeConfigurator {
             }
             break;
             case DOUBLE: {
-                if (!(field.isAnnotationPresent(DefaultDouble.class) || field.isAnnotationPresent(DefaultDoubleArray.class)))
-                    return;
                 if (isArray) {
-                    double[] defaultValue = field.getDeclaredAnnotation(DefaultDoubleArray.class).value();
+                    val defaultValue = (double[]) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.D() : new double[0];
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
                     field.set(null, property.getDoubleList());
                 } else {
-                    double defaultValue = field.getDeclaredAnnotation(DefaultDouble.class).value();
+                    val defaultValue = (double) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.d() : 0;
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment);
                     field.set(null, defaultValue);
                 }
-                boolean hasRange = false;
-                DoubleRange doubleRange = field.getDeclaredAnnotation(DoubleRange.class);
-                if (doubleRange != null) {
-                    property.setMaxValue(doubleRange.max());
-                    property.setMinValue(doubleRange.min());
-                    hasRange = true;
+                var hasRange = false;
+                var unlimMin = true;
+                var unlimMax = true;
+                val range = field.getAnnotation(Range.class);
+                if (range != null) {
+                    if (range.max() != Double.MAX_VALUE) {
+                        property.setMaxValue(range.max());
+                        unlimMax = false;
+                    }
+                    if (range.min() != Double.MIN_VALUE) {
+                        property.setMinValue(range.min());
+                        unlimMin = false;
+                    }
+                    hasRange = !unlimMax || !unlimMin;
                 }
                 if (StringUtils.isNotBlank(property.comment))
-                    if (hasRange)
-                        property.comment += " [range: " + property.getMinValue() + " ~ " + property.getMaxValue()
-                                + ", default: " + property.getDefault() + "]";
-                    else
+                    if (hasRange) {
+                        var rangeComment = new StringBuilder(" [range:");
+                        if (!unlimMin)
+                            rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
+                        if (!unlimMax)
+                            rangeComment.append(" <= ").append(property.getMaxValue());
+                        rangeComment.append(", default: ").append(property.getDefault()).append("]");
+                        property.comment += rangeComment.toString();
+                    } else
                         property.comment += " [default: " + property.getDefault() + "]";
             }
             break;
             default: {
-                if (!(field.isAnnotationPresent(DefaultString.class) || field.isAnnotationPresent(DefaultStringArray.class)))
-                    return;
                 if (isArray) {
-                    String[] defaultValue = field.getDeclaredAnnotation(DefaultStringArray.class).value();
+                    val defaultValue = (String[]) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.S() : new String[0];
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment, parsedType);
                     field.set(null, property.getStringList());
                 } else {
-                    String defaultValue = field.getDeclaredAnnotation(DefaultString.class).value();
+                    val defaultValue = (String) defaults.getOrDefault(field, field.get(null));
+                    defaults.putIfAbsent(field, defaultValue);
+                    //val defaultValue = defaults != null ? defaults.s() : "";
                     property = instance.get(categoryName, propertyName, defaultValue,
                             propertyComment, parsedType);
                     field.set(null, property.getString());
@@ -222,36 +253,42 @@ public class AnnotationConfigurator extends ForgeConfigurator {
             }
             break;
         }
-        RequiresWorldRestart requiresWorldRestart = field.getDeclaredAnnotation(RequiresWorldRestart.class);
-        if (requiresWorldRestart != null)
-            property.setRequiresWorldRestart(true);
-        RequiresMCRestart requiresMCRestart = field.getDeclaredAnnotation(RequiresMCRestart.class);
-        if (requiresMCRestart != null)
-            property.setRequiresMcRestart(true);
+        val restart = field.getAnnotation(Restart.class);
+        if (restart != null) {
+            if (restart.value() == Restart.Value.GAME || restart.value() == Restart.Value.BOTH)
+                property.setRequiresMcRestart(true);
+            if (restart.value() == Restart.Value.WORLD || restart.value() == Restart.Value.BOTH)
+                property.setRequiresWorldRestart(true);
+        }
         if (isArray) {
-            if (field.isAnnotationPresent(FixArraySize.class))
-                property.setIsListLengthFixed(true);
-            MaxArraySize maxArraySize = field.getDeclaredAnnotation(MaxArraySize.class);
-            if (maxArraySize != null)
-                property.setMaxListLength(maxArraySize.value());
+            val size = field.getAnnotation(ArraySize.class);
+            if (size != null) {
+                if (size.fixed())
+                    property.setIsListLengthFixed(true);
+                if (size.value() > 0)
+                    property.setMaxListLength(size.value());
+
+            }
         }
         LangKey langKey = field.getDeclaredAnnotation(LangKey.class);
         if (langKey != null)
             property.setLanguageKey(langKey.value());
+        else
+            property.setLanguageKey("config.property." + getModId() + ":" + categoryName + "." + propertyName + ".name");
         if (property.getType() == Property.Type.COLOR) {
             property.setValidValues(COLOR_VALID_VALUES);
             property.setValidationPattern(COLOR_VALID_PATTERN);
         }
-        ValidPattern pattern = field.getDeclaredAnnotation(ValidPattern.class);
+        val pattern = field.getAnnotation(com.github.mjaroslav.mjutils.configurator.annotations.Pattern.class);
         if (pattern != null)
             property.setValidationPattern(Pattern.compile(pattern.value()));
-        ValidValues validValues = field.getDeclaredAnnotation(ValidValues.class);
-        if (validValues != null)
-            property.setValidValues(validValues.value());
+        val values = field.getAnnotation(Values.class);
+        if (values != null)
+            property.setValidValues(values.value());
         category.put(propertyName, property);
     }
 
-    private static Property.Type parseType(Class<?> type) {
+    protected @Nullable Property.Type parseType(@NotNull Class<?> type) {
         if (type.equals(int.class) || type.equals(int[].class))
             return Property.Type.INTEGER;
         if (type.equals(boolean.class) || type.equals(boolean[].class))
@@ -263,128 +300,128 @@ public class AnnotationConfigurator extends ForgeConfigurator {
         return null; // Is a subcategory.
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    public @interface ValidPattern {
-        String value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    public @interface ValidValues {
-        String[] value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    public @interface Name {
-        String value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    public @interface Comment {
-        String value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    public @interface LangKey {
-        String value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    public @interface RequiresMCRestart {
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.TYPE})
-    public @interface RequiresWorldRestart {
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface ModIdType {
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface ColorType {
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultString {
-        String value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultBoolean {
-        boolean value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultDouble {
-        double value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultInt {
-        int value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultStringArray {
-        String[] value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultBooleanArray {
-        boolean[] value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultDoubleArray {
-        double[] value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DefaultIntArray {
-        int[] value();
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface IntRange {
-        int min() default Integer.MIN_VALUE;
-
-        int max() default Integer.MAX_VALUE;
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface DoubleRange {
-        double min() default Double.MIN_VALUE;
-
-        double max() default Double.MAX_VALUE;
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface FixArraySize {
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface MaxArraySize {
-        int value();
-    }
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.TYPE)
+//    public @interface ValidPattern {
+//        String value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.TYPE)
+//    public @interface ValidValues {
+//        String[] value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target({ElementType.FIELD, ElementType.TYPE})
+//    public @interface Name {
+//        String value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target({ElementType.FIELD, ElementType.TYPE})
+//    public @interface Comment {
+//        String value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target({ElementType.FIELD, ElementType.TYPE})
+//    public @interface LangKey {
+//        String value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target({ElementType.FIELD, ElementType.TYPE})
+//    public @interface RequiresMCRestart {
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target({ElementType.FIELD, ElementType.TYPE})
+//    public @interface RequiresWorldRestart {
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface ModIdType {
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface ColorType {
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultString {
+//        String value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultBoolean {
+//        boolean value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultDouble {
+//        double value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultInt {
+//        int value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultStringArray {
+//        String[] value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultBooleanArray {
+//        boolean[] value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultDoubleArray {
+//        double[] value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DefaultIntArray {
+//        int[] value();
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface IntRange {
+//        int min() default Integer.MIN_VALUE;
+//
+//        int max() default Integer.MAX_VALUE;
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface DoubleRange {
+//        double min() default Double.MIN_VALUE;
+//
+//        double max() default Double.MAX_VALUE;
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface FixArraySize {
+//    }
+//
+//    @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.FIELD)
+//    public @interface MaxArraySize {
+//        int value();
+//    }
 }

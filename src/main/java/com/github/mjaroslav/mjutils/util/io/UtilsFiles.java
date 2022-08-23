@@ -18,6 +18,7 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.stream.Stream;
 
 /**
@@ -34,7 +35,7 @@ public class UtilsFiles {
      * @see Paths#get(String, String...)
      * @see UtilsFiles#normalizePath(Object)
      */
-    public @UnknownNullability Path get(@NotNull Object value, @NotNull String... childs) {
+    public @UnknownNullability Path get(@NotNull Object value, @NotNull String @NotNull ... childs) {
         var result = normalizePath(value);
         if (result != null) {
             for (var child : childs)
@@ -96,7 +97,7 @@ public class UtilsFiles {
      * @see FilenameUtils#isExtension(String, String[])
      */
     @Contract("null, _ -> false")
-    public boolean isExtension(@Nullable Path path, @NotNull String... extensions) {
+    public boolean isExtension(@Nullable Path path, @NotNull String @NotNull ... extensions) {
         if (path == null)
             return false;
         val ext = getExtension(path);
@@ -148,26 +149,51 @@ public class UtilsFiles {
      * Wrapper for {@link UtilsFiles#move(Path, Path, CopyOption...)} that use
      * {@link UtilsFiles#normalizePath(Object)} for arguments with {@link Path} type.
      *
+     * @see UtilsFiles#move(Path, Path, CopyOption...)
      * @see Files#move(Path, Path, CopyOption...)
      */
     @Contract("null, _, _ -> null; _, null, _ -> null")
-    public @Nullable Path move(@Nullable Object from, @Nullable Object to, @NotNull CopyOption... options) {
+    public @Nullable Path move(@Nullable Object from, @Nullable Object to, @NotNull CopyOption @NotNull ... options) {
         return move(normalizePath(from), normalizePath(to), options);
     }
 
     /**
-     * Wrapper for {@link Files#move(Path, Path, CopyOption...)} that wrap return null on exception.
+     * Wrapper for {@link Files#move(Path, Path, CopyOption...)} that return null on exception.
      *
      * @see Files#move(Path, Path, CopyOption...)
      */
     @Contract("null, _, _ -> null; _, null, _ -> null")
-    public @Nullable Path move(@Nullable Path from, @Nullable Path to, @NotNull CopyOption... options) {
+    public @Nullable Path move(@Nullable Path from, @Nullable Path to, @NotNull CopyOption @NotNull ... options) {
         if (from != null && to != null)
             try {
                 return Files.move(from, to, options);
-            } catch (IOException e) {
-                return null;
+            } catch (IOException ignored) {
             }
-        else return null;
+        return null;
+    }
+
+    /**
+     * Wrapper for {@link UtilsFiles#createDirectories(Path, FileAttribute[])} that use
+     * {@link UtilsFiles#normalizePath(Object)} for arguments with {@link Path} type.
+     *
+     * @see UtilsFiles#createDirectories(Path, FileAttribute[])
+     * @see Files#createDirectories(Path, FileAttribute[])
+     */
+    public @Nullable Path createDirectories(@Nullable Object file, @NotNull FileAttribute<?> @NotNull ... attrs) {
+        return createDirectories(normalizePath(file), attrs);
+    }
+
+    /**
+     * Wrapper for {@link Files#createDirectories(Path, FileAttribute[])} that return null on exception.
+     *
+     * @see Files#createDirectories(Path, FileAttribute[])
+     */
+    public @Nullable Path createDirectories(@Nullable Path file, @NotNull FileAttribute<?> @NotNull ... attrs) {
+        if (file != null)
+            try {
+                return Files.createDirectories(file, attrs);
+            } catch (IOException ignored) {
+            }
+        return null;
     }
 }

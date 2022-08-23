@@ -1,7 +1,7 @@
 package com.github.mjaroslav.mjutils.mod.common.handler;
 
 import com.github.mjaroslav.mjutils.mod.client.gui.replace.modlist.GuiModListReplacer;
-import com.github.mjaroslav.mjutils.mod.lib.CategoryRoot;
+import com.github.mjaroslav.mjutils.mod.lib.General.Client.GuiReplacements;
 import cpw.mods.fml.client.GuiIngameModOptions;
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -17,8 +17,8 @@ public class GuiReplacerEventHandler {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if (event.gui instanceof GuiModList &&
-                CategoryRoot.CategoryClient.CategoryGuiReplacements.mainMenuModList ||
-                event.gui instanceof GuiIngameModOptions && CategoryRoot.CategoryClient.CategoryGuiReplacements.optionsModList)
+                GuiReplacements.mainMenuModList ||
+                event.gui instanceof GuiIngameModOptions && GuiReplacements.optionsModList)
             event.gui = new GuiModListReplacer(Minecraft.getMinecraft().currentScreen);
     }
 }

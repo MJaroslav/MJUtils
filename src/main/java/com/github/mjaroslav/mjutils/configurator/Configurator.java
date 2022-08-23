@@ -1,26 +1,24 @@
 package com.github.mjaroslav.mjutils.configurator;
 
+import cpw.mods.fml.common.Loader;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import java.nio.file.Path;
 
-@RequiredArgsConstructor
 @Getter
 public abstract class Configurator {
-    @Nonnull
-    protected final String fileName;
-    @Nonnull
-    protected final String fileExt;
+    protected final @NotNull String fileName;
+    protected final @NotNull String fileExt;
+    protected final @NotNull Path file;
 
-    @Nonnull
-    public String getFile() {
-        return String.format("./config/%s.%s", fileName, fileExt);
+    public Configurator(@NotNull String fileName, @NotNull String fileExt) {
+        this.fileName = fileName;
+        this.fileExt = fileExt;
+        file = Loader.instance().getConfigDir().toPath().resolve(fileName + "." + fileExt);
     }
 
     public abstract void load();
 
     public abstract void save();
-
-    public abstract void sync();
 }

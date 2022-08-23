@@ -1,117 +1,94 @@
 package com.github.mjaroslav.mjutils.configurator;
 
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
+import com.github.mjaroslav.mjutils.util.io.UtilsFiles;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.val;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Collections;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class PropertiesConfigurator extends Configurator {
-    @Nonnull
-    protected final ResourcePath defaultPath;
+    protected @NotNull ResourcePath defaultPath;
+    protected @Nullable String comments;
 
-    @Nonnull
-    @Getter
-    protected Properties properties = new Properties();
+    protected final @NotNull Properties properties = new Properties();
+    protected final @NotNull Properties defaultProperties = new Properties();
 
-    @Nonnull
-    protected Properties defaultProperties = new Properties();
-
-    public PropertiesConfigurator(@Nonnull String fileName, @Nonnull ResourcePath defaultPath) {
+    public PropertiesConfigurator(@NotNull String fileName, @NotNull ResourcePath defaultPath,
+                                  @Nullable String comments) {
         super(fileName, "properties");
         this.defaultPath = defaultPath;
+        this.comments = comments;
         loadDefaultProperties();
     }
 
-    @Nullable
-    public String getLocalVersion() {
+    public @Nullable String getLocalVersion() {
         return properties.getProperty("config_version", null);
     }
 
-    @Nullable
-    public String getActualVersion() {
+    public @Nullable String getActualVersion() {
         return defaultProperties.getProperty("config_version", null);
-    }
-
-    public void setProperties(@Nonnull Properties properties) {
-        this.properties = properties;
-        sync();
     }
 
     @Override
     public void load() {
-        Path path = Paths.get(getFile());
+        val path = getFile();
         if (!Files.isRegularFile(path))
             restoreDefault();
-        else {
+        else if (UtilsFiles.createDirectories(path.getParent()) != null)
             try {
-                properties.load(Files.newInputStream(path));
+                properties.load(Files.newBufferedReader(path, StandardCharsets.UTF_8));
                 if (!StringUtils.equals(getLocalVersion(), getActualVersion())) {
-                    Path pathForRename = Paths.get(getFile() + ".old");
-                    Files.move(path, pathForRename, StandardCopyOption.REPLACE_EXISTING);
+                    UtilsFiles.move(path, path + ".old", StandardCopyOption.REPLACE_EXISTING);
                     restoreDefault();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        sync();
     }
 
     @Override
     public void save() {
         try {
-            Path path = Paths.get(getFile());
-            Files.createDirectories(path.getParent());
-            properties.store(Files.newBufferedWriter(path), null);
+            val path = getFile();
+            if (UtilsFiles.createDirectories(path.getParent()) != null)
+                properties.store(Files.newBufferedWriter(path, StandardCharsets.UTF_8), comments);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void sync() {
-    }
-
-    private void loadDefaultProperties() {
-        defaultProperties.clear();
-        InputStream io = defaultPath.stream();
-        if (io != null) {
+    protected void loadDefaultProperties() {
+        val reader = defaultPath.bufferedReader(StandardCharsets.UTF_8);
+        if (reader != null)
             try {
-                defaultProperties.load(io);
+                defaultProperties.load(reader);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 
     public void restoreDefault() {
-        properties = defaultProperties;
-        sync();
-        try {
-            Files.createDirectories(Paths.get(getFile()).getParent());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String result = "";
-        BufferedReader reader = defaultPath.bufferedReader();
+        properties.clear();
+        val path = getFile();
+        val reader = defaultPath.bufferedReader(StandardCharsets.UTF_8);
         if (reader != null)
-            result = reader.lines().collect(Collectors.joining("\n"));
-        try {
-            Files.write(Paths.get(getFile()), Collections.singleton(result));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                IOUtils.copy(reader, Files.newBufferedWriter(path, StandardCharsets.UTF_8));
+                load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }
