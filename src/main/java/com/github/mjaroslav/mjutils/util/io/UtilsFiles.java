@@ -2,7 +2,6 @@ package com.github.mjaroslav.mjutils.util.io;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
-import lombok.var;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -118,14 +117,13 @@ public class UtilsFiles {
      */
     @Contract("null -> null")
     public @UnknownNullability Path normalizePath(@Nullable Object source) {
-        if (source instanceof String)
-            return Paths.get((String) source).normalize().toAbsolutePath();
-        else if (source instanceof File)
-            return ((File) source).toPath().normalize().toAbsolutePath();
-        else if (source instanceof Path)
-            return ((Path) source).normalize().toAbsolutePath();
-        else if (source instanceof URL) {
-            val url = (URL) source;
+        if (source instanceof String string)
+            return Paths.get(string).normalize().toAbsolutePath();
+        else if (source instanceof File file)
+            return file.toPath().normalize().toAbsolutePath();
+        else if (source instanceof Path path)
+            return path.normalize().toAbsolutePath();
+        else if (source instanceof URL url) {
             switch (url.getProtocol()) {
                 case "jar": {
                     try {
@@ -140,8 +138,8 @@ public class UtilsFiles {
                 default: // switch used for new possible required protocols 
                     return null;
             }
-        } else if (source instanceof URI)
-            return Paths.get((URI) source).normalize().toAbsolutePath();
+        } else if (source instanceof URI uri)
+            return Paths.get(uri).normalize().toAbsolutePath();
         else return null;
     }
 

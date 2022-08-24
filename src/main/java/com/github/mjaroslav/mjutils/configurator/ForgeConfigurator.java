@@ -5,7 +5,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.var;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;

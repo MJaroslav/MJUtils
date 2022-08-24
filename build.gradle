@@ -30,8 +30,8 @@ repositories {
     }
 }
 
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+//[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+//sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 def buildprop = new Properties()
 file("build.properties").withInputStream { buildprop.load(it) }
@@ -52,6 +52,15 @@ artifacts {
 
 java {
     withSourcesJar()
+}
+
+configure([tasks.compileJava]) {
+    sourceCompatibility = 16 // for the IDE support
+    options.release = 8
+
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
 }
 
 configurations {
@@ -89,7 +98,8 @@ dependencies {
 
     testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
-
+	
+	annotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
 }
 
 processResources {

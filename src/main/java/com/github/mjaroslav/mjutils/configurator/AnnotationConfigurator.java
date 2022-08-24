@@ -3,7 +3,6 @@ package com.github.mjaroslav.mjutils.configurator;
 import com.github.mjaroslav.mjutils.configurator.annotations.*;
 import cpw.mods.fml.client.config.IConfigElement;
 import lombok.val;
-import lombok.var;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -125,7 +124,7 @@ public class AnnotationConfigurator extends ForgeConfigurator {
         //val defaults = field.getAnnotation(Default.class);
         Property property;
         switch (parsedType) {
-            case INTEGER: {
+            case INTEGER -> {
                 if (isArray) {
                     val defaultValue = (int[]) defaults.getOrDefault(field, field.get(null));
                     defaults.putIfAbsent(field, defaultValue);
@@ -167,8 +166,7 @@ public class AnnotationConfigurator extends ForgeConfigurator {
                     } else
                         property.comment += " [default: " + property.getDefault() + "]";
             }
-            break;
-            case BOOLEAN: {
+            case BOOLEAN -> {
                 if (isArray) {
                     val defaultValue = (boolean[]) defaults.getOrDefault(field, field.get(null));
                     defaults.putIfAbsent(field, defaultValue);
@@ -187,8 +185,7 @@ public class AnnotationConfigurator extends ForgeConfigurator {
                 if (StringUtils.isNotBlank(property.comment))
                     property.comment += " [default: " + property.getDefault() + "]";
             }
-            break;
-            case DOUBLE: {
+            case DOUBLE -> {
                 if (isArray) {
                     val defaultValue = (double[]) defaults.getOrDefault(field, field.get(null));
                     defaults.putIfAbsent(field, defaultValue);
@@ -231,8 +228,7 @@ public class AnnotationConfigurator extends ForgeConfigurator {
                     } else
                         property.comment += " [default: " + property.getDefault() + "]";
             }
-            break;
-            default: {
+            default -> {
                 if (isArray) {
                     val defaultValue = (String[]) defaults.getOrDefault(field, field.get(null));
                     defaults.putIfAbsent(field, defaultValue);
@@ -251,7 +247,6 @@ public class AnnotationConfigurator extends ForgeConfigurator {
                 if (StringUtils.isNotBlank(property.comment))
                     property.comment += " [default: " + property.getDefault() + "]";
             }
-            break;
         }
         val restart = field.getAnnotation(Restart.class);
         if (restart != null) {

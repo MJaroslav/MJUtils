@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import lombok.var;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
@@ -298,31 +297,21 @@ public class UtilsMods {
         }
 
         public ModState change(boolean enable) {
-            switch (this) {
-                case DISABLED_SCHEDULED:
-                case ENABLED:
-                    return enable ? ENABLED : DISABLED_SCHEDULED;
-                case ENABLED_SCHEDULED:
-                case DISABLED:
-                    return enable ? ENABLED_SCHEDULED : DISABLED;
-                default:
-                    return INTERNAL;
-            }
+            return switch (this) {
+                case DISABLED_SCHEDULED, ENABLED -> enable ? ENABLED : DISABLED_SCHEDULED;
+                case ENABLED_SCHEDULED, DISABLED -> enable ? ENABLED_SCHEDULED : DISABLED;
+                default -> INTERNAL;
+            };
         }
 
         public ModState toggle() {
-            switch (this) {
-                case ENABLED:
-                    return DISABLED_SCHEDULED;
-                case DISABLED:
-                    return ENABLED_SCHEDULED;
-                case ENABLED_SCHEDULED:
-                    return DISABLED;
-                case DISABLED_SCHEDULED:
-                    return ENABLED;
-                default:
-                    return INTERNAL;
-            }
+            return switch (this) {
+                case ENABLED -> DISABLED_SCHEDULED;
+                case DISABLED -> ENABLED_SCHEDULED;
+                case ENABLED_SCHEDULED -> DISABLED;
+                case DISABLED_SCHEDULED -> ENABLED;
+                default -> INTERNAL;
+            };
         }
     }
 }
