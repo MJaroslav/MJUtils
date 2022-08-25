@@ -12,12 +12,15 @@
     "AccessorEntityPigZombie",
     "AccessorExplosion",
     "AccessorFishingHooks",
+    "AccessorFMLModContainer",
     "AccessorWeightedRandomFishable",
+    "MixinEnchantment",
     "MixinEntityFishHook",
     "MixinEntityTNTPrimed",
     "MixinFishingHooks",
     "MixinFMLModContainer",
-    "MixinForgeHooks"
+    "MixinForgeHooks",
+    "MixinPotion"
   ],
   "client": [
     "MixinPlayerControllerMP"

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityFishHook.class)
 public abstract class MixinEntityFishHook extends Entity {
-    public MixinEntityFishHook(World world) {
+    private MixinEntityFishHook(World world) {
         super(world);
     }
 
@@ -30,7 +30,7 @@ public abstract class MixinEntityFishHook extends Entity {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
                     ordinal = 0))
-    public boolean injectedEntityItem(World world, Entity entity) {
+    private boolean injectedEntityItem(World world, Entity entity) {
         if (fishingSuccessEvent != null && !fishingSuccessEvent.isCanceled() && fishingSuccessEvent.catchStack != null)
             world.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, fishingSuccessEvent.catchStack));
         return false;
@@ -41,7 +41,7 @@ public abstract class MixinEntityFishHook extends Entity {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
                     ordinal = 1))
-    public boolean injectedEntityXPOrb(World world, Entity entity) {
+    private boolean injectedEntityXPOrb(World world, Entity entity) {
         if (fishingSuccessEvent != null) {
             if (!fishingSuccessEvent.isCanceled() && fishingSuccessEvent.exp > 0)
                 world.spawnEntityInWorld(new EntityXPOrb(worldObj, fishingSuccessEvent.fisher.posX,

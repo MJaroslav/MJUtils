@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityTNTPrimed.class)
 public abstract class MixinEntityTNTPrimed extends Entity {
-    public MixinEntityTNTPrimed(World world) {
+    private MixinEntityTNTPrimed(World world) {
         super(world);
     }
 

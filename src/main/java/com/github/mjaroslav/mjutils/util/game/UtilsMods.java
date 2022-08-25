@@ -33,6 +33,10 @@ import java.util.zip.ZipFile;
 @Log4j2
 @UtilityClass
 public class UtilsMods {
+    public @NotNull ModContainer getActiveMod() {
+        return Loader.instance().activeModContainer();
+    }
+
     public @NotNull String getActiveModId() {
         return Loader.instance().activeModContainer().getModId();
     }

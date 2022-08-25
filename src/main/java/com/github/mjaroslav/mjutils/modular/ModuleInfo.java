@@ -1,6 +1,8 @@
 package com.github.mjaroslav.mjutils.modular;
 
+import com.github.mjaroslav.mjutils.asm.mixin.AccessorFMLModContainer;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
+import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -8,26 +10,23 @@ import cpw.mods.fml.common.event.FMLStateEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 final class ModuleInfo {
-    @Nonnull
-    final String[] modDependencies;
+    final @NotNull String[] modDependencies;
     final int priority;
-    @Nonnull
-    final ModState loadOn;
-    @Nonnull
-    final String moduleClassName;
+    final @NotNull ModState loadOn;
+    final @NotNull String moduleClassName;
     @Getter
     private Object module;
 
     private boolean loaded; // Marker for single loading
     private boolean errored; // Marker for prevent many log messages with loading error
 
-    ModuleInfo(@Nonnull Proxy proxy) {
+    ModuleInfo(@NotNull Proxy proxy) {
         // Placeholders
         modDependencies = new String[0]; // Just placeholder for Nonnull, proxy must have no dependencies
         priority = Integer.MAX_VALUE; // Proxy must be last in load queue
@@ -42,7 +41,7 @@ final class ModuleInfo {
         return UtilsMods.isModsLoaded(modDependencies);
     }
 
-    private boolean canListen(@Nonnull FMLEvent event) {
+    private boolean canListen(@NotNull FMLEvent event) {
         if (!loaded && !errored) {
             if ((event instanceof FMLStateEvent) && ((FMLStateEvent) event).getModState() == loadOn
                     || event instanceof FMLInterModComms.IMCEvent) {
@@ -58,13 +57,16 @@ final class ModuleInfo {
         return loaded;
     }
 
-    void listen(@Nonnull FMLEvent event) {
+    void listen(@NotNull FMLModContainer container, @NotNull FMLEvent event) {
         if (canListen(event))
             try {
                 module.getClass().getMethod("listen", event.getClass()).invoke(module, event);
             } catch (NoSuchMethodException ignored) {
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                ModuleLoader.log.error("Error while loading \"%s\" module", e, moduleClassName);
+            } catch (InvocationTargetException e) {
+                ((AccessorFMLModContainer) container).getController().errorOccurred(container, e.getCause());
+            } catch (IllegalAccessException e) {
+                ModuleLoader.log.warn("Can't load event %s from %s module, listeners should be non-static public",
+                        moduleClassName);
             }
     }
 }

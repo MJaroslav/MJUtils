@@ -6,6 +6,7 @@ import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import com.github.mjaroslav.mjutils.util.logging.ModLogger;
 import com.github.mjaroslav.mjutils.util.logging.UtilsLogger;
 import com.github.mjaroslav.mjutils.util.logging.impl.Log4j2ModLogger;
+import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
@@ -14,45 +15,44 @@ import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public final class ModuleLoader {
     public static final ModLogger log = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, ModInfo.name + "/modules");
 
-    @Nonnull
-    public final String modId;
-    @Nonnull
-    public final Object modInstance;
+    public final @NotNull String modId;
+
+    public final @NotNull Object modInstance;
+
     @Getter
-    @Nonnull
-    private String moduleRootPackage;
+    private @NotNull String moduleRootPackage;
 
     private final List<ModuleInfo> modules = new ArrayList<>();
 
     private int foundModulesCount;
 
-    public void checkForModule(@Nonnull ASMData asmParsedAnnotation) {
-        Map<String, Object> annotationInfo = asmParsedAnnotation.getAnnotationInfo();
+    public void checkForModule(@NotNull ASMData asmParsedAnnotation) {
+        val annotationInfo = asmParsedAnnotation.getAnnotationInfo();
         if (asmParsedAnnotation.getClassName().startsWith(moduleRootPackage) ||
                 StringUtils.equals(modId, (String) annotationInfo.get("value"))) {
-            String[] modDependencies = new String[0];
+            var modDependencies = new String[0];
             if (annotationInfo.containsKey("modDependencies"))
                 //noinspection unchecked
                 modDependencies = ((List<String>) annotationInfo.get("modDependencies")).toArray(modDependencies);
-            int priority = (int) annotationInfo.getOrDefault("priority", 0);
-            ModState loadOn = ModState.CONSTRUCTED;
+            val priority = (int) annotationInfo.getOrDefault("priority", 0);
+            var loadOn = ModState.CONSTRUCTED;
             if (annotationInfo.containsKey("loadOn"))
                 loadOn = ModState.valueOf(ReflectionHelper.getPrivateValue(EnumHolder.class,
                         (EnumHolder) annotationInfo.get("loadOn"), "value"));
-            ModuleInfo info = new ModuleInfo(modDependencies, priority, loadOn, asmParsedAnnotation.getClassName());
+            val info = new ModuleInfo(modDependencies, priority, loadOn, asmParsedAnnotation.getClassName());
             if (info.isAllRequiredModsLoaded()) {
                 modules.add(info);
                 log.debug("Found module \"%s\" for mod \"%s\"", UtilsReflection.getSimpleClassName(info.moduleClassName), modId);
@@ -64,7 +64,7 @@ public final class ModuleLoader {
     }
 
     public void tryFindAndAddProxy() {
-        Proxy proxy = UtilsMods.getProxyModuleFromMod(modInstance);
+        val proxy = UtilsMods.getProxyModuleFromMod(modInstance);
         if (proxy != null) {
             modules.add(new ModuleInfo(proxy));
             foundModulesCount++;
@@ -81,12 +81,13 @@ public final class ModuleLoader {
                         .collect(Collectors.toList()));
     }
 
-    public void listen(FMLEvent event) {
+    @SuppressWarnings("deprecation")
+    public void listen(@NotNull FMLModContainer container, @NotNull FMLEvent event) {
         log.debug("Listen \"%s\" event for %s modules of \"%s\" mod", event, modules.size(), modId);
         ProgressManager.ProgressBar bar = ProgressManager.push("Modules", modules.size(), true);
         modules.forEach(module -> {
             bar.step(UtilsReflection.getSimpleClassName(module.moduleClassName));
-            module.listen(event);
+            module.listen(container, event);
         });
         ProgressManager.pop(bar);
     }
