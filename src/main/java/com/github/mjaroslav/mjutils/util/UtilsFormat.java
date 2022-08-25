@@ -9,8 +9,12 @@ import java.util.Arrays;
 
 @UtilityClass
 public class UtilsFormat {
+    public boolean isMask(int test, int mask) {
+        return (test & mask) == mask;
+    }
+
     public int @NotNull [] unpackColorIntToIntArray(int packedColor, @NotNull ColorFormat inFormat,
-                                                 @NotNull ColorFormat outFormat) {
+                                                    @NotNull ColorFormat outFormat) {
         val result = new int[4];
         result[outFormat.aArrayPos] = packedColor >> inFormat.aBytePos & 255;
         result[outFormat.rArrayPos] = packedColor >> inFormat.rBytePos & 255;

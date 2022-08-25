@@ -91,15 +91,26 @@ dependencies {
     compileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     compileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
 
+    testCompileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
+    testCompileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
+
     compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
+    testCompileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
 
     compileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
 
     testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
-	
+
 	annotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
+    testAnnotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
+
+    testImplementation "junit:junit:${buildprop.junit_version}"
+}
+
+test {
+    useJUnit()
 }
 
 processResources {

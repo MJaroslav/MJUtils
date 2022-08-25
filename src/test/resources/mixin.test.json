@@ -1,0 +1,18 @@
+{
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "required": true,
+  "target": "@env(DEFAULT)",
+  "package": "com.github.mjaroslav.mjutils.test.asm.mixin",
+  "refmap": "mixin.test.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AccessorBlocks"
+  ],
+  "client": [
+  ],
+  "server": [
+  ]
+}

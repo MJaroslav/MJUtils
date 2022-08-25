@@ -3,13 +3,12 @@ package com.github.mjaroslav.mjutils.util.game;
 import com.github.mjaroslav.mjutils.mod.lib.General.Creative.BlockBreaking;
 import com.github.mjaroslav.mjutils.object.game.item.ItemStackSet;
 import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
-import com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.CompareParameter;
+import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,15 +21,19 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 /**
  * The utilities for interactions that carry
  * any changes in the behavior of the player
  * or mobs.
  */
+@UtilityClass
 public class UtilsInteractions {
-    private static final ItemStackSet DISABLED_FOR_BREAKING_IN_CREATIVE = new ItemStackSet(CompareParameter.ITEM, CompareParameter.WILDCARD_META);
-    private static final ItemStackSet PIGMAN_TRIGGER_BLOCKS = new ItemStackSet(CompareParameter.ITEM, CompareParameter.WILDCARD_META);
+    private final ItemStackSet DISABLED_FOR_BREAKING_IN_CREATIVE = new ItemStackSet(UtilsItemStack.ITEM | UtilsItemStack.META);
+    private final ItemStackSet PIGMAN_TRIGGER_BLOCKS = new ItemStackSet(UtilsItemStack.ITEM | UtilsItemStack.META);
 
     /**
      * To prohibit the breaking of blocks by
@@ -39,7 +42,7 @@ public class UtilsInteractions {
      * @param item  specified item. Metadata will be ignored.
      * @param value true to disable block breaking.
      */
-    public static void setDisabledForBlockBreakingInCreative(Item item, boolean value) {
+    public void setDisabledForBlockBreakingInCreative(@NotNull Item item, boolean value) {
         setDisabledForBlockBreakingInCreative(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), value);
     }
 
@@ -50,7 +53,7 @@ public class UtilsInteractions {
      * @param block specified block. Metadata will be ignored.
      * @param value true to disable block breaking.
      */
-    public static void setDisabledForBlockBreakingInCreative(Block block, boolean value) {
+    public void setDisabledForBlockBreakingInCreative(@NotNull Block block, boolean value) {
         setDisabledForBlockBreakingInCreative(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), value);
     }
 
@@ -61,7 +64,7 @@ public class UtilsInteractions {
      * @param stack specified ItemStack.
      * @param value true to disable block breaking.
      */
-    public static void setDisabledForBlockBreakingInCreative(ItemStack stack, boolean value) {
+    public void setDisabledForBlockBreakingInCreative(@NotNull ItemStack stack, boolean value) {
         DISABLED_FOR_BREAKING_IN_CREATIVE.add(stack);
         DISABLED_FOR_BREAKING_IN_CREATIVE.remove(stack);
     }
@@ -75,8 +78,8 @@ public class UtilsInteractions {
      * @param stack ItemStack to test.
      * @return True if stack can't break blocks.
      */
-    public static boolean isBlockBreakingDisabledInCreative(ItemStack stack) {
-        if (!UtilsItemStack.isNotEmpty(stack))
+    public boolean isBlockBreakingDisabledInCreative(@Nullable ItemStack stack) {
+        if (UtilsItemStack.isEmpty(stack))
             return false;
         val item = stack.getItem();
         if (BlockBreaking.swords && item instanceof ItemSword)
@@ -105,7 +108,7 @@ public class UtilsInteractions {
      *              attack player when specified
      *              block is destroyed.
      */
-    public static void setPigmanTriggerBlock(ItemStack stack, boolean value) {
+    public void setPigmanTriggerBlock(@NotNull ItemStack stack, boolean value) {
         if (value)
             PIGMAN_TRIGGER_BLOCKS.add(stack);
         else PIGMAN_TRIGGER_BLOCKS.remove(stack);
@@ -120,7 +123,7 @@ public class UtilsInteractions {
      *              attack player when specified
      *              block is destroyed.
      */
-    public static void setPigmanTriggerBlock(Block block, boolean value) {
+    public void setPigmanTriggerBlock(@NotNull Block block, boolean value) {
         setPigmanTriggerBlock(block, OreDictionary.WILDCARD_VALUE, value);
     }
 
@@ -136,7 +139,7 @@ public class UtilsInteractions {
      *              attack player when specified
      *              block is destroyed.
      */
-    public static void setPigmanTriggerBlock(Block block, int meta, boolean value) {
+    public void setPigmanTriggerBlock(@NotNull Block block, int meta, boolean value) {
         setPigmanTriggerBlock(new ItemStack(block, 1, meta), value);
     }
 
@@ -148,7 +151,7 @@ public class UtilsInteractions {
      * @param meta  specified metadata.
      * @return True if pigman should attach player.
      */
-    public static boolean blockIsPigmanTrigger(Block block, int meta) {
+    public boolean blockIsPigmanTrigger(@NotNull Block block, int meta) {
         return PIGMAN_TRIGGER_BLOCKS.contains(new ItemStack(block, 1, meta));
     }
 
@@ -160,35 +163,34 @@ public class UtilsInteractions {
      * @param player - attacker.
      * @author Azanor
      */
-    public static void multiPurposeAttack(Entity target, EntityPlayer player) {
+    // TODO: Чё это такое...
+    public void multiPurposeAttack(@NotNull Entity target, @NotNull EntityPlayer player) {
         if (MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, target)))
             return;
         if (!target.canAttackWithItem() || target.hitByEntity(player))
             return;
-        float damage = (float) player.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
-        int knockback = 0;
-        float magicDamage = 0.0F;
-        if (target instanceof EntityLivingBase) {
-            magicDamage = EnchantmentHelper.getEnchantmentModifierLiving(player, (EntityLivingBase) target);
-            knockback += EnchantmentHelper.getKnockbackModifier(player, (EntityLivingBase) target);
+        var damage = (float) player.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        var knockback = 0;
+        var magicDamage = 0.0F;
+        if (target instanceof EntityLivingBase living) {
+            magicDamage = EnchantmentHelper.getEnchantmentModifierLiving(player, living);
+            knockback += EnchantmentHelper.getKnockbackModifier(player, living);
         }
-        if (player.isSprinting()) {
+        if (player.isSprinting())
             ++knockback;
-        }
-        if ((damage <= 0.0F) && (magicDamage <= 0.0F))
+        if (damage <= 0.0F && magicDamage <= 0.0F)
             return;
-        boolean isCritical = isCriticalDamage(target, player);
-        if ((isCritical) && (damage > 0.0F)) {
+        val isCritical = isCriticalDamage(target, player);
+        if (isCritical && damage > 0.0F)
             damage *= 1.5F;
-        }
         damage += magicDamage;
-        boolean isFired = false;
-        int fire = EnchantmentHelper.getFireAspectModifier(player);
+        var isFired = false;
+        val fire = EnchantmentHelper.getFireAspectModifier(player);
         if (fire > 0 && canFireEntity(target)) {
             isFired = true;
             target.setFire(1);
         }
-        boolean attackDone = target.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
+        val attackDone = target.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if (attackDone) {
             if (knockback > 0) {
                 target.addVelocity(-MathHelper.sin(player.rotationYaw * 3.141593F / 180.0F) * knockback * 0.5F, 0.1D,
@@ -197,41 +199,33 @@ public class UtilsInteractions {
                 player.motionZ *= 0.6D;
                 player.setSprinting(false);
             }
-            if (isCritical) {
+            if (isCritical)
                 player.onCriticalHit(target);
-            }
-            if (magicDamage > 0.0F) {
+            if (magicDamage > 0.0F)
                 player.onEnchantmentCritical(target);
-            }
-            if (damage >= 18.0F) {
+            if (damage >= 18.0F)
                 player.triggerAchievement(AchievementList.overkill);
-            }
             player.setLastAttacker(target);
-            if (target instanceof EntityLivingBase) {
-                EnchantmentHelper.func_151384_a((EntityLivingBase) target, player);
+            if (target instanceof EntityLivingBase living) {
+                EnchantmentHelper.func_151384_a(living, player);
             }
         }
-        ItemStack eqItem = player.getCurrentEquippedItem();
+        val eqItem = player.getCurrentEquippedItem();
         Object targetObj = target;
-        if (target instanceof EntityDragonPart) {
-            IEntityMultiPart mpEntity = ((EntityDragonPart) target).entityDragonObj;
-            if (mpEntity instanceof EntityLivingBase) {
-                targetObj = mpEntity;
-            }
-        }
-        if (eqItem != null && targetObj instanceof EntityLivingBase) {
-            eqItem.hitEntity((EntityLivingBase) targetObj, player);
-            if (eqItem.stackSize <= 0) {
+        if (target instanceof EntityDragonPart part)
+            if (part.entityDragonObj instanceof EntityLivingBase)
+                targetObj = part.entityDragonObj;
+        if (eqItem != null && targetObj instanceof EntityLivingBase living) {
+            eqItem.hitEntity(living, player);
+            if (eqItem.stackSize <= 0)
                 player.destroyCurrentEquippedItem();
-            }
         }
         if (target instanceof EntityLivingBase) {
             player.addStat(StatList.damageDealtStat, Math.round(damage * 10.0F));
-            if ((fire > 0) && (attackDone)) {
+            if (fire > 0 && attackDone)
                 target.setFire(fire * 4);
-            } else if (isFired) {
+            else if (isFired)
                 target.extinguish();
-            }
         }
         player.addExhaustion(0.3F);
     }
@@ -241,10 +235,10 @@ public class UtilsInteractions {
      *
      * @param target - target entity.
      * @param player - attacker.
-     * @return True if attack is critical.
+     * @return True when attack is critical.
      * @author Azanor
      */
-    public static boolean isCriticalDamage(Entity target, EntityPlayer player) {
+    public boolean isCriticalDamage(@Nullable Entity target, @NotNull EntityPlayer player) {
         return player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater()
                 && !player.isPotionActive(Potion.blindness) && player.ridingEntity == null
                 && target instanceof EntityLivingBase;
@@ -254,10 +248,10 @@ public class UtilsInteractions {
      * Can fire entity.
      *
      * @param target - target entity.
-     * @return True if can fire target.
+     * @return True if it can fire target.
      * @author Azanor
      */
-    public static boolean canFireEntity(Entity target) {
+    public boolean canFireEntity(@Nullable Entity target) {
         return target instanceof EntityLivingBase && !target.isBurning();
     }
 }
