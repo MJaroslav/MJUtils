@@ -17,6 +17,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'forge'
 apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
+apply from: 'https://raw.githubusercontent.com/MJaroslav/MCInGameTester/master/gradle/configurations/v1.gradle'
 
 repositories {
     mavenCentral()
@@ -29,9 +30,6 @@ repositories {
         url 'https://gregtech.overminddl1.com'
     }
 }
-
-//[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-//sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 def buildprop = new Properties()
 file("build.properties").withInputStream { buildprop.load(it) }
@@ -54,7 +52,7 @@ java {
     withSourcesJar()
 }
 
-configure([tasks.compileJava]) {
+configure([tasks.compileJava, tasks.compileTestJava, tasks.compileApiJava]) {
     sourceCompatibility = 16 // for the IDE support
     options.release = 8
 
