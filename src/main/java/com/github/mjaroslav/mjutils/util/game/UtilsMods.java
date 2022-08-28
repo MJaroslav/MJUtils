@@ -6,12 +6,12 @@ import com.github.mjaroslav.mjutils.modular.SubscribeLoader;
 import com.github.mjaroslav.mjutils.util.io.UtilsFiles;
 import com.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import cpw.mods.fml.common.*;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import net.minecraft.client.Minecraft;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,8 +58,8 @@ public class UtilsMods {
         return (Proxy) getProxyObjectFromMod(modInstance);
     }
 
-    @Nullable
-    public static Object getProxyObjectFromMod(@NotNull Object modInstance) {
+
+    public @Nullable Object getProxyObjectFromMod(@NotNull Object modInstance) {
         int mods;
         for (Field field : modInstance.getClass().getFields()) {
             mods = field.getModifiers();
@@ -75,16 +75,16 @@ public class UtilsMods {
         return null;
     }
 
-    private static final Map<ModContainer, ModuleLoader> loaders = new HashMap<>();
+    private final Map<ModContainer, ModuleLoader> loaders = new HashMap<>();
 
-    @Nullable
-    public static ModuleLoader getActiveLoader() {
+
+    public @Nullable ModuleLoader getActiveLoader() {
         ModContainer mc = Loader.instance().activeModContainer();
         return mc instanceof FMLModContainer ? getOrTryCreateModuleLoader(mc, false) : null;
     }
 
-    @Nullable
-    public static ModuleLoader getOrTryCreateModuleLoader(@NotNull ModContainer container, boolean create) {
+
+    public @Nullable ModuleLoader getOrTryCreateModuleLoader(@NotNull ModContainer container, boolean create) {
         if (loaders.containsKey(container))
             return loaders.get(container);
         else if (create) {
@@ -196,8 +196,12 @@ public class UtilsMods {
         return getModState(container).isScheduled();
     }
 
+    public @NotNull File getMinecraftDir() {
+        return (File) FMLInjectionData.data()[6];
+    }
+
     public void init() {
-        val modsDir = UtilsFiles.get(Minecraft.getMinecraft().mcDataDir, "mods");
+        val modsDir = UtilsFiles.get(getMinecraftDir(), "mods");
         val versionModsDir = modsDir.resolve(Loader.MC_VERSION);
 
         val disabledMods = UtilsFiles.list(modsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
@@ -269,7 +273,7 @@ public class UtilsMods {
         return result;
     }
 
-    public static class DisabledModContainer extends DummyModContainer {
+    public class DisabledModContainer extends DummyModContainer {
         private final Path source;
 
         public DisabledModContainer(ModMetadata modMetadata, Path source) {

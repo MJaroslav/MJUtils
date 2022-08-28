@@ -16,6 +16,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'forge'
+apply plugin: 'maven-publish'
 apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
 apply from: 'https://raw.githubusercontent.com/MJaroslav/MCInGameTester/master/gradle/configurations/v1.gradle'
 
@@ -148,3 +149,15 @@ task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
 }
 
 tasks.build.dependsOn(tasks.fuckEmptyDirs)
+
+tasks.test.dependsOn(tasks.testClient, tasks.testServer)
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact jar
+			artifact devJar
+			artifact sourcesJar
+		}
+	}
+}

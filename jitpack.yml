@@ -1,5 +1,5 @@
 jdk:
   - openjdk8
 install:
-  - ./gradlew clean build install --rerun-tasks
+  - ./gradlew clean build publishToMavenLocal
 
