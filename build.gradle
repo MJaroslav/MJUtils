@@ -150,8 +150,6 @@ task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
 
 tasks.build.dependsOn(tasks.fuckEmptyDirs)
 
-tasks.test.dependsOn(tasks.testClient, tasks.testServer)
-
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
