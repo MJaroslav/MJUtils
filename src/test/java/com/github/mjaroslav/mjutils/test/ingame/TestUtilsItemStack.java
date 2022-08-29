@@ -37,8 +37,7 @@ public class TestUtilsItemStack {
         val actualNull = requireNonNullStackOrElse(testStackNull, expectedElse);
         val actualItemNull = requireNonNullStackOrElse(testStackItemNull, expectedElse);
         val actualSizeZero = requireNonNullStackOrElse(testStackSizeZero, expectedElse);
-        // Fail for test actions
-        Assert.assertFalse("Normal stack", isEquals(expected, actual));
+        Assert.assertTrue("Normal stack", isEquals(expected, actual));
         Assert.assertTrue("Null stack", isEquals(expectedElse, actualNull));
         Assert.assertTrue("Item null stack", isEquals(expectedElse, actualItemNull));
         Assert.assertTrue("Zero size stack", isEquals(expectedElse, actualSizeZero));
