@@ -35,9 +35,12 @@ public final class ModuleLoader {
     @Getter
     private @NotNull String moduleRootPackage;
 
+    @Getter
     private final List<ModuleInfo> modules = new ArrayList<>();
-
+    @Getter
     private int foundModulesCount;
+    @Getter
+    private int activatedModulesCount;
 
     public void checkForModule(@NotNull ASMData asmParsedAnnotation) {
         val annotationInfo = asmParsedAnnotation.getAnnotationInfo();
@@ -76,7 +79,8 @@ public final class ModuleLoader {
         log.debug("Sorting modules for \"%s\" mod: %s", modId, modules.stream().map(module ->
                 UtilsReflection.getSimpleClassName(module.moduleClassName)).collect(Collectors.toList()));
         modules.sort(Comparator.comparingInt(module -> module.priority));
-        log.info("Activated %s\\%s of found modules for \"%s\" mod: %s", modules.size(), foundModulesCount, modId,
+        activatedModulesCount = modules.size();
+        log.info("Activated %s\\%s of found modules for \"%s\" mod: %s", activatedModulesCount, foundModulesCount, modId,
                 modules.stream().map(module -> UtilsReflection.getSimpleClassName(module.moduleClassName))
                         .collect(Collectors.toList()));
     }

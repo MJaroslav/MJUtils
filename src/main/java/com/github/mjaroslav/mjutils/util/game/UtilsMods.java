@@ -94,7 +94,13 @@ public class UtilsMods {
                     String packageName = field.getAnnotation(SubscribeLoader.class).value();
                     if (packageName.isEmpty())
                         packageName = UtilsReflection.getPackageFromClass(modInstance);
+                    val isStatic = Modifier.isStatic(field.getModifiers());
                     ModuleLoader loader = new ModuleLoader(container.getModId(), modInstance, packageName);
+                    try {
+                        field.set(isStatic ? null : modInstance, loader);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e); // TODO: Add something for warning or else.
+                    }
                     loaders.put(container, loader);
                     return loader;
                 }

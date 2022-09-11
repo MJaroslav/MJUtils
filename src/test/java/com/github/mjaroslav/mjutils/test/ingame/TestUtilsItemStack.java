@@ -1,16 +1,16 @@
 package com.github.mjaroslav.mjutils.test.ingame;
 
+import com.github.mjaroslav.mcingametester.api.Assert;
 import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
-import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import lombok.val;
-import org.junit.Assert;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import static com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.*;
+import static com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.isEquals;
+import static com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.requireNonNullStackOrElse;
 
 @Common
 public class TestUtilsItemStack {
@@ -37,9 +37,9 @@ public class TestUtilsItemStack {
         val actualNull = requireNonNullStackOrElse(testStackNull, expectedElse);
         val actualItemNull = requireNonNullStackOrElse(testStackItemNull, expectedElse);
         val actualSizeZero = requireNonNullStackOrElse(testStackSizeZero, expectedElse);
-        Assert.assertTrue("Normal stack", isEquals(expected, actual));
-        Assert.assertTrue("Null stack", isEquals(expectedElse, actualNull));
-        Assert.assertTrue("Item null stack", isEquals(expectedElse, actualItemNull));
-        Assert.assertTrue("Zero size stack", isEquals(expectedElse, actualSizeZero));
+        Assert.isTrue(isEquals(expected, actual), "Normal stack");
+        Assert.isTrue(isEquals(expectedElse, actualNull), "Null stack");
+        Assert.isTrue(isEquals(expectedElse, actualItemNull), "Item null stack");
+        Assert.isTrue(isEquals(expectedElse, actualSizeZero), "Zero size stack");
     }
 }

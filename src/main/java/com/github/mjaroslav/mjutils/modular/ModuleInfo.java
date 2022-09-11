@@ -15,15 +15,16 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class ModuleInfo {
-    final @NotNull String[] modDependencies;
-    final int priority;
-    final @NotNull ModState loadOn;
-    final @NotNull String moduleClassName;
+public final class ModuleInfo {
+    public final @NotNull String[] modDependencies;
+    public final int priority;
+    public final @NotNull ModState loadOn;
+    public final @NotNull String moduleClassName;
     @Getter
     private Object module;
-
+    @Getter
     private boolean loaded; // Marker for single loading
+    @Getter
     private boolean errored; // Marker for prevent many log messages with loading error
 
     ModuleInfo(@NotNull Proxy proxy) {
@@ -32,12 +33,11 @@ final class ModuleInfo {
         priority = Integer.MAX_VALUE; // Proxy must be last in load queue
         loadOn = ModState.CONSTRUCTED; // It's real hardcoded state for proxy
         moduleClassName = proxy.getClass().getName(); // Just placeholder for Nonnull, module loading never been called in ths case
-
         module = proxy;
         loaded = true;
     }
 
-    boolean isAllRequiredModsLoaded() {
+    public boolean isAllRequiredModsLoaded() {
         return UtilsMods.isModsLoaded(modDependencies);
     }
 
@@ -57,7 +57,7 @@ final class ModuleInfo {
         return loaded;
     }
 
-    void listen(@NotNull FMLModContainer container, @NotNull FMLEvent event) {
+    public void listen(@NotNull FMLModContainer container, @NotNull FMLEvent event) {
         if (canListen(event))
             try {
                 module.getClass().getMethod("listen", event.getClass()).invoke(module, event);
