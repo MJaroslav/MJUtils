@@ -45,7 +45,7 @@ public class UtilsFormat {
     public double @NotNull [] unpackColorIntToDoubleArray(int packedColor, @NotNull ColorFormat inFormat,
                                                           @NotNull ColorFormat outFormat) {
         return Arrays.stream(unpackColorIntToIntArray(packedColor, inFormat, outFormat))
-                .mapToDouble(i -> i / 255D).toArray();
+            .mapToDouble(i -> i / 255D).toArray();
     }
 
     public float @NotNull [] unpackColorIntToFloatArray(int packedColor) {

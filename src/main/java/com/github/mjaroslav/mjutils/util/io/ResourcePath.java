@@ -2,9 +2,10 @@ package com.github.mjaroslav.mjutils.util.io;
 
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,16 +14,16 @@ import java.util.Arrays;
 
 @Getter
 public final class ResourcePath {
-    @Nonnull
+    @NotNull
     private final String path;
 
-    @Nonnull
+    @NotNull
     private final String packId;
 
     @Getter
     private final boolean assetsPath;
 
-    private ResourcePath(@Nonnull String path) {
+    private ResourcePath(@NotNull String path) {
         String[] info = path.split(":");
         System.out.println(Arrays.toString(info));
         if (info.length == 1)
@@ -33,13 +34,13 @@ public final class ResourcePath {
         assetsPath = true;
     }
 
-    private ResourcePath(@Nonnull ResourceLocation location) {
+    private ResourcePath(@NotNull ResourceLocation location) {
         path = "/assets/" + location.toString().replace(":", "/");
         packId = location.toString().split(":")[0];
         assetsPath = true;
     }
 
-    private ResourcePath(@Nonnull String modId, @Nonnull String fullPath) {
+    private ResourcePath(@NotNull String modId, @NotNull String fullPath) {
         packId = modId;
         path = fullPath;
         assetsPath = false;
@@ -105,15 +106,18 @@ public final class ResourcePath {
         else return path.equals(((ResourcePath) obj).path);
     }
 
-    public static ResourcePath of(@Nonnull String path) {
+    @Contract("_ -> new")
+    public static @NotNull ResourcePath of(@NotNull String path) {
         return new ResourcePath(path);
     }
 
-    public static ResourcePath of(@Nonnull String modId, @Nonnull String fullPath) {
+    @Contract(value = "_, _ -> new", pure = true)
+    public static @NotNull ResourcePath of(@NotNull String modId, @NotNull String fullPath) {
         return new ResourcePath(modId, fullPath);
     }
 
-    public static ResourcePath of(@Nonnull ResourceLocation location) {
+    @Contract("_ -> new")
+    public static @NotNull ResourcePath of(@NotNull ResourceLocation location) {
         return new ResourcePath(location);
     }
 }

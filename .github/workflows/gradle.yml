@@ -1,10 +1,6 @@
-name: Java CI with Gradle
+name: Run gradle tests
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 permissions:
   contents: read
@@ -13,14 +9,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 8
-      uses: actions/setup-java@v3
-      with:
-        java-version: '8'
-        distribution: 'temurin'
-    - name: Run all tests headless
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: ./gradlew test testClient testServer
-
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run all tests headless
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: ./gradlew test
+        env:
+          MCIGT_HAS_DISPLAY: true
