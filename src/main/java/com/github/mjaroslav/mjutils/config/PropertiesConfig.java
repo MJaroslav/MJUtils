@@ -11,11 +11,19 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 public class PropertiesConfig extends Config {
+    private static final Comparator<Entry<Object, Object>> propertyKeyComparator = (a, b) -> {
+        if (a.getKey() instanceof String keyA && b.getKey() instanceof String keyB)
+            return keyA.compareTo(keyB);
+        return 0; // Impossible, fuck Properties
+    };
+
     @Getter
     protected @NotNull Path @NotNull [] files;
     @Getter
@@ -175,27 +183,38 @@ public class PropertiesConfig extends Config {
 
     @Override
     protected void loadFile(@NotNull Path file) {
-        loadProperties();
-    }
-
-    @Override
-    protected void saveFile(@NotNull Path file) {
-        saveProperties();
-    }
-
-    protected void loadProperties() {
         try {
             val lines = Files.readAllLines(file, StandardCharsets.UTF_8);
-            val line = String.join("\n", lines);
+            val line = String.join(System.lineSeparator(), lines);
             comments.clear();
             StringBuilder comment = new StringBuilder();
             var i = 0;
             while (i < lines.size()) {
-                if (lines.get(i).startsWith("#")) comment.append(lines.get(i)).append(System.lineSeparator());
-                else if (StringUtils.isNotBlank(lines.get(i))) {
-                    val key = lines.get(i).split("=")[0];
-                    if (StringUtils.isNotBlank(comment.toString())) comments.put(key, comment.toString().trim());
-                    comment = new StringBuilder();
+                val current = lines.get(i);
+                if (current.startsWith("#") || current.startsWith("!"))
+                    comment.append(current.replaceFirst("^#", "").replaceFirst("^ ", "")).append(System.lineSeparator());
+                else if (StringUtils.isNotBlank(current)) {
+                    var precedingBackslash = false;
+                    var separatorPosition = 0;
+                    char character;
+                    var hasSeparator = false;
+                    while (separatorPosition < current.length()) {
+                        character = current.charAt(separatorPosition);
+                        if ((character == '=' || character == ':') && !precedingBackslash) {
+                            hasSeparator = true;
+                            break;
+                        }
+                        if (character == '\\') precedingBackslash = !precedingBackslash;
+                        else precedingBackslash = false;
+                        separatorPosition++;
+                    }
+                    if (hasSeparator) {
+                        val key = current.substring(0, separatorPosition);
+                        if (StringUtils.isNotBlank(comment.toString())) {
+                            comments.put(key, comment.toString().trim());
+                            comment = new StringBuilder();
+                        }
+                    } // Ignore other lines
                 }
                 i++;
             }
@@ -206,20 +225,19 @@ public class PropertiesConfig extends Config {
         }
     }
 
-    protected void saveProperties() {
+    @Override
+    protected void saveFile(@NotNull Path file) {
         try {
             val builder = new StringBuilder();
-            values.forEach((rawKey, value) -> {
-                val key = (String) rawKey;
+            values.entrySet().stream().sorted(propertyKeyComparator).forEach(entry -> {
+                val key = (String) entry.getKey();
                 if (comments.get(key) != null) {
-                    for (var comment : comments.get(key).split("\\r?\\n"))
-                        if (comment.startsWith("#")) builder.append(comment).append(System.lineSeparator());
-                        else builder.append("# ").append(comment).append(System.lineSeparator());
+                    // New lines written by other devs, and they usually use just \n
+                    for (var comment : comments.get(key).split("(\\r?\\n)|(" + System.lineSeparator() + ")"))
+                        builder.append("# ").append(comment).append(System.lineSeparator());
                 }
-                builder.append(key).append('=').append(value).append(System.lineSeparator());
+                builder.append(key).append('=').append(entry.getValue()).append(System.lineSeparator());
             });
-            // WTF I have 8 lang level but this shit warn anyway
-            //noinspection ReadWriteStringCanBeUsed
             Files.write(file, builder.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);

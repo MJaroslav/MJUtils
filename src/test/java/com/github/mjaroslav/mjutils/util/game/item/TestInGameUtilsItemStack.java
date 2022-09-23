@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.test.ingame;
+package com.github.mjaroslav.mjutils.util.game.item;
 
 import com.github.mjaroslav.mcingametester.api.Assert;
 import com.github.mjaroslav.mcingametester.api.BeforeClass;
@@ -13,7 +13,7 @@ import static com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.isEqual
 import static com.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.requireNonNullStackOrElse;
 
 @Common
-public class TestUtilsItemStack {
+public class TestInGameUtilsItemStack {
     private static ItemStack testStackStick;
     private static ItemStack testStackDiamond;
     private static ItemStack testStackNull;

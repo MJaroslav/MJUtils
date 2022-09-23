@@ -27,7 +27,7 @@ public class CachedImage {
     protected boolean loaded;
 
     public CachedImage(ResourcePath path) {
-        this(path.getPath(), path.getPath(), path.getPackId());
+        this(path.getPath(), path.getPath(), path.getNamespace());
     }
 
     public CachedImage(String location, String texture, String modSourceId) {

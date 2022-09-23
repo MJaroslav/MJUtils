@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.test.unit;
+package com.github.mjaroslav.mjutils.util;
 
 import lombok.val;
 import org.junit.Assert;

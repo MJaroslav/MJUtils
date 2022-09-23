@@ -1,14 +1,16 @@
 package com.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mjutils.util.game.UtilsMods;
+import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public abstract class Config {
@@ -63,8 +65,17 @@ public abstract class Config {
     }
 
     public String toString() {
-        val builder = new StringBuilder().append("Config(type=").append(this.type).append(", files=[");
-        for (var file : getFiles()) builder.append(file);
-        return builder.append("])").toString();
+        return "Config(type=" + type + ", files=[" +
+            Arrays.stream(getFiles()).map(Path::toString).collect(Collectors.joining(", ")) + "]";
+    }
+
+    public static @NotNull ResourcePath resolveDefaultFileResourcePath(@NotNull String modId, @NotNull Path path) {
+        return ResourcePath.of(modId, "defaults/" + path.normalize().toAbsolutePath().toString()
+            .replace(UtilsMods.getMinecraftDir().toPath().normalize()
+            .toAbsolutePath().toString(), ""));
+    }
+
+    public static @NotNull ResourcePath resolveDefaultFileResourcePath(@NotNull Path path) {
+        return resolveDefaultFileResourcePath(UtilsMods.getActiveModId(), path);
     }
 }

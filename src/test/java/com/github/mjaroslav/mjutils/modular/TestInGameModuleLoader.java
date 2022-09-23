@@ -1,4 +1,4 @@
-package com.github.mjaroslav.mjutils.test.ingame;
+package com.github.mjaroslav.mjutils.modular;
 
 import com.github.mjaroslav.mcingametester.api.Assert;
 import com.github.mjaroslav.mcingametester.api.BeforeClass;
@@ -6,12 +6,10 @@ import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
 import com.github.mjaroslav.mjutils.mod.MJUtils;
 import com.github.mjaroslav.mjutils.mod.common.modular.MainModule;
-import com.github.mjaroslav.mjutils.modular.ModuleLoader;
-import com.github.mjaroslav.mjutils.modular.Proxy;
 import cpw.mods.fml.common.LoaderState;
 
 @Common(when = LoaderState.CONSTRUCTING)
-public class TestModuleLoader {
+public class TestInGameModuleLoader {
     static ModuleLoader loader;
     static Proxy proxy;
     static MJUtils instance;
