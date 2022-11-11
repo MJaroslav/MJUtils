@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 public class PropertiesConfig extends Config {
+    public static final String VERSION_KEY = "version";
     private static final Comparator<Entry<Object, Object>> propertyKeyComparator = (a, b) -> {
         if (a.getKey() instanceof String keyA && b.getKey() instanceof String keyB)
             return keyA.compareTo(keyB);
@@ -24,11 +27,16 @@ public class PropertiesConfig extends Config {
     };
 
     protected final Map<String, String> comments = new HashMap<>();
-
-    public final Properties values = new Properties();
+    protected final Properties values = new Properties();
+    protected @Nullable Object defaultValues;
 
     public PropertiesConfig(@NotNull Path file) {
-        super("properties", file);
+        this(file, null, null);
+    }
+
+    public PropertiesConfig(@NotNull Path file, @Nullable String version, @Nullable Object defaultValues) {
+        super(file, version);
+        this.defaultValues = defaultValues;
     }
 
     public @Nullable String getComment(@NotNull String key) {
@@ -175,65 +183,74 @@ public class PropertiesConfig extends Config {
     }
 
     @Override
-    protected void loadFile(@NotNull Path file) {
-        try {
-            val lines = Files.readAllLines(file, StandardCharsets.UTF_8);
-            val line = String.join(System.lineSeparator(), lines);
-            comments.clear();
-            var comment = new StringBuilder();
-            var i = 0;
-            while (i < lines.size()) {
-                val current = lines.get(i);
-                if (current.startsWith("#") || current.startsWith("!"))
-                    comment.append(current.replaceFirst("^#", "").replaceFirst("^ ", "")).append(System.lineSeparator());
-                else if (StringUtils.isNotBlank(current)) {
-                    var precedingBackslash = false;
-                    var separatorPosition = 0;
-                    char character;
-                    var hasSeparator = false;
-                    while (separatorPosition < current.length()) {
-                        character = current.charAt(separatorPosition);
-                        if ((character == '=' || character == ':') && !precedingBackslash) {
-                            hasSeparator = true;
-                            break;
-                        }
-                        if (character == '\\') precedingBackslash = !precedingBackslash;
-                        else precedingBackslash = false;
-                        separatorPosition++;
+    protected void loadFile() throws IOException {
+        val lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+        val line = String.join(System.lineSeparator(), lines);
+        comments.clear();
+        var comment = new StringBuilder();
+        var i = 0;
+        while (i < lines.size()) {
+            val current = lines.get(i);
+            if (current.startsWith("#") || current.startsWith("!"))
+                comment.append(current.replaceFirst("^#", "").replaceFirst("^ ", "")).append(System.lineSeparator());
+            else if (StringUtils.isNotBlank(current)) {
+                var precedingBackslash = false;
+                var separatorPosition = 0;
+                char character;
+                var hasSeparator = false;
+                while (separatorPosition < current.length()) {
+                    character = current.charAt(separatorPosition);
+                    if ((character == '=' || character == ':') && !precedingBackslash) {
+                        hasSeparator = true;
+                        break;
                     }
-                    if (hasSeparator) {
-                        val key = current.substring(0, separatorPosition);
-                        if (StringUtils.isNotBlank(comment.toString())) {
-                            comments.put(key, comment.toString().trim());
-                            comment = new StringBuilder();
-                        }
-                    } // Ignore other lines
+                    if (character == '\\') precedingBackslash = !precedingBackslash;
+                    else precedingBackslash = false;
+                    separatorPosition++;
                 }
-                i++;
+                if (hasSeparator) {
+                    val key = current.substring(0, separatorPosition);
+                    if (StringUtils.isNotBlank(comment.toString())) {
+                        comments.put(key, comment.toString().trim());
+                        comment = new StringBuilder();
+                    }
+                } // Ignore other lines
             }
-            values.clear(); // Resetting
-            values.load(new StringReader(line));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            i++;
         }
+        values.clear(); // Resetting
+        values.load(new StringReader(line));
     }
 
     @Override
-    protected void saveFile(@NotNull Path file) {
-        try {
-            val builder = new StringBuilder();
-            values.entrySet().stream().sorted(propertyKeyComparator).forEach(entry -> {
-                val key = (String) entry.getKey();
-                if (comments.get(key) != null) {
-                    // New lines written by other devs, and they usually use just \n
-                    for (var comment : comments.get(key).split("(\\r?\\n)|(" + System.lineSeparator() + ")"))
-                        builder.append("# ").append(comment).append(System.lineSeparator());
-                }
-                builder.append(key).append('=').append(entry.getValue()).append(System.lineSeparator());
-            });
-            Files.write(file, builder.toString().getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected void saveFile() throws IOException {
+        val builder = new StringBuilder();
+        values.entrySet().stream().sorted(propertyKeyComparator).forEach(entry -> {
+            val key = (String) entry.getKey();
+            if (comments.get(key) != null) {
+                // New lines written by other devs, and they usually use just \n
+                for (var comment : comments.get(key).split("(\\r?\\n)|(" + System.lineSeparator() + ")"))
+                    builder.append("# ").append(comment).append(System.lineSeparator());
+            }
+            builder.append(key).append('=').append(entry.getValue()).append(System.lineSeparator());
+        });
+        Files.write(file, builder.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    protected void setDefault() throws IOException {
+        if (defaultValues instanceof ResourcePath path) {
+            Files.copy(path.stream(), getFile(), StandardCopyOption.REPLACE_EXISTING);
+            loadFile();
+        } else if (defaultValues instanceof Properties properties) {
+            values.clear();
+            values.putAll(properties);
+        } else throw new IllegalStateException("Not supported defaultValues format: " + defaultValues);
+        saveFile();
+    }
+
+    @Override
+    protected @Nullable String getLoadedVersion() {
+        return values.getProperty(VERSION_KEY);
     }
 }

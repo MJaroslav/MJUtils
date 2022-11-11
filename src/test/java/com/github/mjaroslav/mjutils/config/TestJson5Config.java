@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public class TestJsonConfig {
+public class TestJson5Config {
     private static final ResourcePath resourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestJson5Config.json5");
     private static final Path path = Paths.get("TestJson5Config.json5");
     private static final Json5Config config = new Json5Config(path);
@@ -70,6 +70,28 @@ public class TestJsonConfig {
         val actual = new Json5Config(path);
         actual.load();
         Assert.assertEquals("Saved value not equals", config.getValue(), actual.getValue());
+    }
+
+    @Test
+    public void test$setDefault() throws IOException {
+        val config = new Json5Config(path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
+        config.setDefault();
+        val root = new JsonObject();
+        root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
+        root.put("default_value", JsonPrimitive.of("value"));
+        Assert.assertEquals("JsonObjects not equals", root, config.getValue());
+    }
+
+    @Test
+    public void test$version() throws IOException {
+        config.setValue(createPattern());
+        config.save();
+        val config = new Json5Config(path, "1", ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
+        config.load();
+        val root = new JsonObject();
+        root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
+        root.put("default_value", JsonPrimitive.of("value"));
+        Assert.assertEquals("JsonObjects not equals", root, config.getValue());
     }
 
     private @NotNull JsonObject createPattern() {
