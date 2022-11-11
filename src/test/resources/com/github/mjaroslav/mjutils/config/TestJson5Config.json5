@@ -1,0 +1,13 @@
+{
+    // Test comment
+    integer: 1,
+    string: 'string value',
+    double: 10.5,
+    inner: {
+        array: [
+            1,
+            2,
+            3
+        ]
+    }
+}

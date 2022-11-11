@@ -1,6 +1,5 @@
 package com.github.mjaroslav.mjutils.config;
 
-import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,18 +23,12 @@ public class PropertiesConfig extends Config {
         return 0; // Impossible, fuck Properties
     };
 
-    @Getter
-    protected @NotNull Path @NotNull [] files;
-    @Getter
-    protected @NotNull Path file;
     protected final Map<String, String> comments = new HashMap<>();
 
     public final Properties values = new Properties();
 
     public PropertiesConfig(@NotNull Path file) {
-        super("properties");
-        files = new Path[]{file};
-        this.file = file;
+        super("properties", file);
     }
 
     public @Nullable String getComment(@NotNull String key) {
@@ -187,7 +180,7 @@ public class PropertiesConfig extends Config {
             val lines = Files.readAllLines(file, StandardCharsets.UTF_8);
             val line = String.join(System.lineSeparator(), lines);
             comments.clear();
-            StringBuilder comment = new StringBuilder();
+            var comment = new StringBuilder();
             var i = 0;
             while (i < lines.size()) {
                 val current = lines.get(i);
