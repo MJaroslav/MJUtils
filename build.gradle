@@ -153,9 +153,7 @@ tasks.build.dependsOn(tasks.fuckEmptyDirs)
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact jar
-			artifact devJar
-			artifact sourcesJar
+			from components.java
 		}
 	}
 }

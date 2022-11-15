@@ -1,6 +1,7 @@
 package io.github.mjaroslav.mjutils.modular;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,5 +26,5 @@ public @interface SubscribeLoader {
      *
      * @return Package in java format or empty string for default value.
      */
-    @Nonnull String value() default "";
+    @NotNull String value() default "";
 }

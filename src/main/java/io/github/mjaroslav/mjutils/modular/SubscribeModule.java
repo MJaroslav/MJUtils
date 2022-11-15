@@ -2,8 +2,8 @@ package io.github.mjaroslav.mjutils.modular;
 
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,7 +26,7 @@ public @interface SubscribeModule {
      *
      * @return Mod id or empty string for default value.
      */
-    @Nonnull String value() default "";
+    @NotNull String value() default "";
 
     /**
      * List of required mods ids for this module.
@@ -34,7 +34,7 @@ public @interface SubscribeModule {
      *
      * @return Array of mods IDs or empty array if this option not needed.
      */
-    @Nonnull String[] modDependencies() default {};
+    @NotNull String @NotNull [] modDependencies() default {};
 
     /**
      * Module loading priority, loading working from smallest to largest.
@@ -55,5 +55,5 @@ public @interface SubscribeModule {
      *
      * @return Any state which possible at loading or {@link ModState#CONSTRUCTED CONSTRUCTED} as default.
      */
-    @Nonnull ModState loadOn() default ModState.CONSTRUCTED;
+    @NotNull ModState loadOn() default ModState.CONSTRUCTED;
 }

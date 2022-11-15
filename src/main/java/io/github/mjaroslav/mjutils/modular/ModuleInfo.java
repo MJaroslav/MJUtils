@@ -1,12 +1,13 @@
 package io.github.mjaroslav.mjutils.modular;
 
-import io.github.mjaroslav.mjutils.asm.mixin.AccessorFMLModContainer;
-import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLStateEvent;
+import io.github.mjaroslav.mjutils.asm.mixin.AccessorFMLModContainer;
+import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +15,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ModuleInfo {
-    public final @NotNull String[] modDependencies;
-    public final int priority;
-    public final @NotNull ModState loadOn;
-    public final @NotNull String moduleClassName;
-    @Getter
+    private final @NotNull String[] modDependencies;
+    private final int priority;
+    private final @NotNull ModState loadOn;
+    private final @NotNull String moduleClassName;
     private Object module;
-    @Getter
     private boolean loaded; // Marker for single loading
-    @Getter
-    private boolean errored; // Marker for prevent many log messages with loading error
+    private boolean error; // Marker for prevent many log messages with loading error
 
     ModuleInfo(@NotNull Proxy proxy) {
         // Placeholders
@@ -42,18 +41,16 @@ public final class ModuleInfo {
     }
 
     private boolean canListen(@NotNull FMLEvent event) {
-        if (!loaded && !errored) {
-            if ((event instanceof FMLStateEvent) && ((FMLStateEvent) event).getModState() == loadOn
-                    || event instanceof FMLInterModComms.IMCEvent) {
+        if (!loaded && !error)
+            if (event instanceof FMLStateEvent stateEvent && stateEvent.getModState() == loadOn
+                || event instanceof FMLInterModComms.IMCEvent)
                 try {
-                    module = Class.forName(moduleClassName).newInstance();
+                    module = Class.forName(moduleClassName).getConstructor().newInstance();
                     loaded = true;
-                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                    ModuleLoader.log.error("Can't load \"%s\" module", e, moduleClassName);
-                    errored = true;
+                } catch (Exception e) {
+                    ModInfo.loggerModules.error("Can't load \"%s\" module", e, moduleClassName);
+                    error = true;
                 }
-            }
-        }
         return loaded;
     }
 
@@ -62,11 +59,12 @@ public final class ModuleInfo {
             try {
                 module.getClass().getMethod("listen", event.getClass()).invoke(module, event);
             } catch (NoSuchMethodException ignored) {
+                ModInfo.loggerModules.debug("Listener for %s in %s not found", event.getEventType(), container);
             } catch (InvocationTargetException e) {
                 ((AccessorFMLModContainer) container).getController().errorOccurred(container, e.getCause());
             } catch (IllegalAccessException e) {
-                ModuleLoader.log.warn("Can't load event %s from %s module, listeners should be non-static public",
-                        moduleClassName);
+                ModInfo.loggerModules.warn("Can't load event %s from %s module, listeners should be non-static public",
+                    moduleClassName);
             }
     }
 }
