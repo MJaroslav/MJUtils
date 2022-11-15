@@ -8,10 +8,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.*;
+
 /**
  * Set for ItemStacks.
  */
 public class ItemStackSet extends DelegatingSet<ItemStack> {
+    public ItemStackSet() {
+        this(ITEM | COUNT | META | NBT);
+    }
+
     public ItemStackSet(int params) {
         super((stack, obj) -> {
             ItemStack secondStack = null;
