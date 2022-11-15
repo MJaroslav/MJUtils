@@ -72,7 +72,7 @@ minecraft {
     version = "${buildprop.game_version}-${buildprop.forge_version}-${buildprop.game_version}"
     runDir = buildprop.run_dir
     replace '@VERSION@', project.version
-    srgExtra "PK: blue/endless/jankson com/github/mjaroslav/mjutils/library/blue/endless/jankson"
+    srgExtra "PK: blue/endless/jankson io/github/mjaroslav/mjutils/library/blue/endless/jankson"
 }
 
 mixin {
