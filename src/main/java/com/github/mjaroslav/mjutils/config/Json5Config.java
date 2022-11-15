@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -31,11 +30,20 @@ public class Json5Config extends Config {
     protected @Nullable Object defaultValue;
 
     public Json5Config(@NotNull Path file) {
-        this(file, null, null);
+        this(null, file, null, null);
+    }
+
+    public Json5Config(@Nullable String modId, @NotNull Path file) {
+        this(modId, file, null, null);
     }
 
     public Json5Config(@NotNull Path file, @Nullable String version, @Nullable Object defaultValue) {
-        super(file, version);
+        this(null, file, version, defaultValue);
+    }
+
+
+    public Json5Config(@Nullable String modId, @NotNull Path file, @Nullable String version, @Nullable Object defaultValue) {
+        super(modId, file, version);
         this.defaultValue = defaultValue;
         jankson = buildJankson();
     }

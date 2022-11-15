@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -31,11 +32,19 @@ public class PropertiesConfig extends Config {
     protected @Nullable Object defaultValues;
 
     public PropertiesConfig(@NotNull Path file) {
-        this(file, null, null);
+        this(null, file, null, null);
+    }
+
+    public PropertiesConfig(@Nullable String modId, @NotNull Path file) {
+        this(modId, file, null, null);
     }
 
     public PropertiesConfig(@NotNull Path file, @Nullable String version, @Nullable Object defaultValues) {
-        super(file, version);
+        this(null, file, version, defaultValues);
+    }
+
+    public PropertiesConfig(@Nullable String modId, @NotNull Path file, @Nullable String version, @Nullable Object defaultValues) {
+        super(StringUtils.isEmpty(modId) ? UtilsMods.getActiveModId() : modId, file, version);
         this.defaultValues = defaultValues;
     }
 

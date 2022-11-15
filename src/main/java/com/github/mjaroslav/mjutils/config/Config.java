@@ -3,7 +3,7 @@ package com.github.mjaroslav.mjutils.config;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,12 +13,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@RequiredArgsConstructor
 public abstract class Config {
     protected final Set<ConfigCallback> loadCallbacks = new HashSet<>();
     protected final Set<ConfigCallback> saveCallbacks = new HashSet<>();
+    protected final @NotNull String modId;
     protected final @NotNull Path file;
     protected final @Nullable String version;
+
+    public Config(@Nullable String modId, @NotNull Path file, @Nullable String version) {
+        this.modId = StringUtils.isEmpty(modId) ? UtilsMods.getActiveModId() : modId;
+        this.file = file;
+        this.version = version;
+    }
 
     public boolean registerLoadCallback(@NotNull ConfigCallback callback) {
         return loadCallbacks.add(callback);

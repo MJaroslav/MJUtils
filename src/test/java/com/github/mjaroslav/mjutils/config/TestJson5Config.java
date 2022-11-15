@@ -24,7 +24,7 @@ import java.util.Objects;
 public class TestJson5Config {
     private static final ResourcePath resourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestJson5Config.json5");
     private static final Path path = Paths.get("TestJson5Config.json5");
-    private static final Json5Config config = new Json5Config(path);
+    private static final Json5Config config = new Json5Config("test", path);
 
     @Before
     public void before() throws IOException {
@@ -83,7 +83,7 @@ public class TestJson5Config {
     }
 
     @Test
-    public void test$version() throws IOException {
+    public void test$version() {
         config.setValue(createPattern());
         config.save();
         val config = new Json5Config(path, "1", ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));

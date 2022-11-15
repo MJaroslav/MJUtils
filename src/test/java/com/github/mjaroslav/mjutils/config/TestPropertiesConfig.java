@@ -22,7 +22,7 @@ public class TestPropertiesConfig {
     private static final ResourcePath resourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestPropertiesConfig.properties");
     private static final ResourcePath expectedResourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestPropertiesConfigExpected.properties");
     private static final Path path = Paths.get("TestPropertiesConfig.properties");
-    private static final PropertiesConfig config = new PropertiesConfig(path);
+    private static final PropertiesConfig config = new PropertiesConfig("test", path);
 
     @Before
     public void before() throws IOException {
