@@ -21,12 +21,15 @@ import static org.junit.Assert.*;
 public class TestPropertiesConfig {
     private static final ResourcePath resourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestPropertiesConfig.properties");
     private static final ResourcePath expectedResourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestPropertiesConfigExpected.properties");
+    private static final ResourcePath defaultPath = ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties");
     private static final Path path = Paths.get("TestPropertiesConfig.properties");
-    private static final PropertiesConfig config = new PropertiesConfig("test", path);
+
+    private PropertiesConfig config;
 
     @Before
     public void before() throws IOException {
         Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
+        config = new PropertiesConfig("test", path);
         config.load();
     }
 
@@ -137,13 +140,11 @@ public class TestPropertiesConfig {
         config.setValue("set.string", "String value", "Test comment");
         assertEquals("Set string value comment", "Test comment", config.getComment("set.string"));
         assertEquals("Set string value", "String value", config.getString("set.string"));
-
         config.setValue("set.double.array", new Object[]{5.1d, -6.123d, 0.0d}, "Test multiline\nComment");
         assertArrayEquals("Set double array value comment", new String[]{"Test multiline", "Comment"},
             Objects.requireNonNull(config.getComment("set.double.array")).split(System.lineSeparator()));
         assertArrayEquals("Set double array value", new double[]{5.1d, -6.123d, 0.0d},
             config.getDoubleArray("set.double.array"), 0d);
-
         config.setValue("set.double.array.one", new Object[]{-5.5d});
         assertNull("Set one element double array value comment", config.getComment("set.double.array.one"));
         assertArrayEquals("Set one element double array value", new double[]{-5.5d},
@@ -172,7 +173,8 @@ public class TestPropertiesConfig {
 
     @Test
     public void test$setDefault() throws IOException {
-        val config = new PropertiesConfig("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
+        val config = new PropertiesConfig("test", path, null, defaultPath);
+        config.setValue("default.value", "bad_value");
         config.setDefault();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");
@@ -184,7 +186,7 @@ public class TestPropertiesConfig {
     public void test$version() throws IOException {
         config.setValue("version", "2");
         config.save();
-        val config = new PropertiesConfig("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
+        val config = new PropertiesConfig("test", path, null, defaultPath);
         config.setDefault();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");

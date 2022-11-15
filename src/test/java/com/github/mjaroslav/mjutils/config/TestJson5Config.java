@@ -22,13 +22,16 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class TestJson5Config {
-    private static final ResourcePath resourcePath = ResourcePath.full("com/github/mjaroslav/mjutils/config/TestJson5Config.json5");
+    private static final ResourcePath resourcePath = ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5Config.json5");
+    private static final ResourcePath defaultPath = ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5");
     private static final Path path = Paths.get("TestJson5Config.json5");
-    private static final Json5Config config = new Json5Config("test", path);
+
+    private Json5Config config;
 
     @Before
     public void before() throws IOException {
         Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
+        config = new Json5Config("test", path);
         config.load();
     }
 
@@ -39,27 +42,33 @@ public class TestJson5Config {
 
     @Test
     public void test$value() {
-        val pattern = createPattern();
-        Assert.assertEquals("JsonObjects not equals", pattern, config.getValue());
+        val expected = createMock();
+        var actual = config.getValue();
+        Assert.assertEquals("JsonObjects not equals", expected, actual);
         config.getValue().put("integer", JsonPrimitive.of(-1L));
-        Assert.assertNotEquals("JsonObjects are equals", pattern, config.getValue());
-        pattern.put("integer", JsonPrimitive.of(-1L));
-        Assert.assertEquals("JsonObjects not equals", pattern, config.getValue());
+        actual = config.getValue();
+        Assert.assertNotEquals("JsonObjects are equals", expected, actual);
+        expected.put("integer", JsonPrimitive.of(-1L));
+        Assert.assertEquals("JsonObjects not equals", expected, actual);
     }
 
     @Test
     public void test$get() {
-        Assert.assertEquals("Generics not equals", new TestGeneric(), config.get(TestGeneric.class));
+        val expected = new GenericMock();
+        val actual = config.get(GenericMock.class);
+        Assert.assertEquals("Generics not equals", expected, actual);
     }
 
     @Test
     public void test$set() {
-        val pattern = new TestGeneric();
-        Assert.assertEquals("Generics not equals", pattern, config.get(TestGeneric.class));
+        val expected = new GenericMock();
+        var actual = config.get(GenericMock.class);
+        Assert.assertEquals("Generics not equals", expected, actual);
         config.getValue().put("integer", JsonPrimitive.of(-1L));
-        Assert.assertNotEquals("Generics are equals", pattern, config.get(TestGeneric.class));
-        pattern.integer = -1;
-        Assert.assertEquals("Generics not equals", pattern, config.get(TestGeneric.class));
+        actual = config.get(GenericMock.class);
+        Assert.assertNotEquals("Generics are equals", expected, actual);
+        expected.integer = -1;
+        Assert.assertEquals("Generics not equals", expected, actual);
     }
 
     @Test
@@ -67,34 +76,38 @@ public class TestJson5Config {
         Files.deleteIfExists(path);
         config.save();
         Assert.assertTrue("File not created", Files.isRegularFile(path));
-        val actual = new Json5Config("test", path);
-        actual.load();
-        Assert.assertEquals("Saved value not equals", config.getValue(), actual.getValue());
+        val expected = config.getValue();
+        val configForLoad = new Json5Config("test", path);
+        configForLoad.load();
+        val actual = configForLoad.getValue();
+        Assert.assertEquals("Saved value not equals", expected, actual);
     }
 
     @Test
     public void test$setDefault() throws Exception {
-        val config = new Json5Config("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
+        val config = new Json5Config("test", path, null, defaultPath);
         config.setDefault();
-        val root = new JsonObject();
-        root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
-        root.put("default_value", JsonPrimitive.of("value"));
-        Assert.assertEquals("JsonObjects not equals", root, config.getValue());
+        val actual = config.getValue();
+        val expected = new JsonObject();
+        expected.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
+        expected.put("default_value", JsonPrimitive.of("value"));
+        Assert.assertEquals("JsonObjects not equals", expected, actual);
     }
 
     @Test
     public void test$version() {
-        config.setValue(createPattern());
+        config.setValue(createMock());
         config.save();
-        val config = new Json5Config("test", path, "1", ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
-        config.load();
-        val root = new JsonObject();
-        root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
-        root.put("default_value", JsonPrimitive.of("value"));
-        Assert.assertEquals("JsonObjects not equals", root, config.getValue());
+        val configForLoad = new Json5Config("test", path, "1", defaultPath);
+        configForLoad.load();
+        val actual = configForLoad.getValue();
+        val expected = new JsonObject();
+        expected.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
+        expected.put("default_value", JsonPrimitive.of("value"));
+        Assert.assertEquals("JsonObjects not equals", expected, actual);
     }
 
-    private @NotNull JsonObject createPattern() {
+    private @NotNull JsonObject createMock() {
         val root = new JsonObject();
         root.put("integer", JsonPrimitive.of(1L), "Test comment");
         root.put("string", JsonPrimitive.of("string value"));
@@ -111,17 +124,17 @@ public class TestJson5Config {
 
     @ToString
     @EqualsAndHashCode
-    private static class TestGeneric {
+    private static class GenericMock {
         @Comment("Test comment")
         int integer = 1;
         String string = "string value";
         @SerializedName("double")
         double doubleValue = 10.5;
-        TestGenericInner inner = new TestGenericInner();
+        GenericInnerMock inner = new GenericInnerMock();
 
         @ToString
         @EqualsAndHashCode
-        private static class TestGenericInner {
+        private static class GenericInnerMock {
             int[] array = new int[]{1, 2, 3};
         }
     }
