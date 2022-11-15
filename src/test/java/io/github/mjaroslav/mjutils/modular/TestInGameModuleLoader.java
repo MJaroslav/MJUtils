@@ -33,7 +33,7 @@ public class TestInGameModuleLoader {
 
     @Test
     void test$modInstance() {
-        Assert.isTrue(instance == loader.modInstance, "Different mod instances");
+        Assert.isTrue(instance == loader.getModInstance(), "Different mod instances");
     }
 
     @Test
@@ -41,7 +41,7 @@ public class TestInGameModuleLoader {
         // Expected modules: MainModule, Proxy and not activated ThaumcraftModule
         Assert.isEquals(loader.getActivatedModulesCount(), 2, "Found non expected modules");
         Assert.isEquals(loader.getFoundModulesCount(), 3, "Thaumcraft module not found");
-        Assert.isEquals(loader.getModules().get(0).moduleClassName, MainModule.class.getName(),
+        Assert.isEquals(loader.getModules().get(0).getModuleClassName(), MainModule.class.getName(),
                 "Non expected module activated");
         Assert.isEquals(loader.getModules().get(1).getModule(), proxy, "Loaded different proxy module");
     }
