@@ -38,7 +38,7 @@ public class MainModule {
     }
 
     public void listen(@NotNull FMLPostInitializationEvent event) {
-        GameRegistry.registerFuelHandler(FuelHandler.instance);
+        GameRegistry.registerFuelHandler(FuelHandler.INSTANCE);
         UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_block, General.quartzTrigger);
         UtilsMods.init();
     }
