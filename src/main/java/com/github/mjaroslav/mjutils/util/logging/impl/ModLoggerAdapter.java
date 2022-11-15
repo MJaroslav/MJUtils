@@ -2,41 +2,21 @@ package com.github.mjaroslav.mjutils.util.logging.impl;
 
 import com.github.mjaroslav.mjutils.util.logging.ModLogger;
 import com.github.mjaroslav.mjutils.util.logging.ModLoggerLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+@Getter
+@RequiredArgsConstructor
 public abstract class ModLoggerAdapter implements ModLogger {
-    @Nonnull
-    protected final String NAME;
-
-    @Nonnull
-    protected ModLoggerLevel level;
-
-    public ModLoggerAdapter(@Nonnull String name) {
-        NAME = name;
-        level = ModLoggerLevel.INFO;
-    }
-
-    @Nonnull
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Nonnull
-    @Override
-    public ModLoggerLevel getLevel() {
-        return level;
-    }
+    protected final @NotNull String name;
+    @Setter
+    protected @NotNull ModLoggerLevel level = ModLoggerLevel.INFO;
 
     @Override
-    public void setLevel(@Nonnull ModLoggerLevel level) {
-        this.level = level;
-    }
-
-    @Override
-    public void log(@Nonnull ModLoggerLevel level, @Nullable String text, @Nullable Object... args) {
+    public void log(@NotNull ModLoggerLevel level, @Nullable String text, @Nullable Object... args) {
         log(level, text, null, args);
     }
 
@@ -47,8 +27,7 @@ public abstract class ModLoggerAdapter implements ModLogger {
 
     @Override
     public void error(@Nullable String text, @Nullable Throwable e, @Nullable Object... args) {
-        if (ModLoggerLevel.ERROR.compareTo(getLevel()) > -1)
-            log(ModLoggerLevel.ERROR, text, e, args);
+        if (ModLoggerLevel.ERROR.compareTo(getLevel()) > -1) log(ModLoggerLevel.ERROR, text, e, args);
     }
 
     @Override
@@ -58,8 +37,7 @@ public abstract class ModLoggerAdapter implements ModLogger {
 
     @Override
     public void warn(@Nullable String text, @Nullable Throwable e, @Nullable Object... args) {
-        if (ModLoggerLevel.WARN.compareTo(getLevel()) > -1)
-            log(ModLoggerLevel.WARN, text, e, args);
+        if (ModLoggerLevel.WARN.compareTo(getLevel()) > -1) log(ModLoggerLevel.WARN, text, e, args);
     }
 
     @Override
@@ -69,8 +47,7 @@ public abstract class ModLoggerAdapter implements ModLogger {
 
     @Override
     public void info(@Nullable String text, @Nullable Throwable e, @Nullable Object... args) {
-        if (ModLoggerLevel.INFO.compareTo(getLevel()) > -1)
-            log(ModLoggerLevel.INFO, text, e, args);
+        if (ModLoggerLevel.INFO.compareTo(getLevel()) > -1) log(ModLoggerLevel.INFO, text, e, args);
     }
 
     @Override
@@ -80,7 +57,6 @@ public abstract class ModLoggerAdapter implements ModLogger {
 
     @Override
     public void debug(@Nullable String text, @Nullable Throwable e, @Nullable Object... args) {
-        if (ModLoggerLevel.DEBUG.compareTo(getLevel()) > -1)
-            log(ModLoggerLevel.DEBUG, text, e, args);
+        if (ModLoggerLevel.DEBUG.compareTo(getLevel()) > -1) log(ModLoggerLevel.DEBUG, text, e, args);
     }
 }

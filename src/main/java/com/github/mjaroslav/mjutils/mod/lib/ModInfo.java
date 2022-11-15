@@ -15,6 +15,6 @@ public class ModInfo {
     public static final String serverProxy = "com.github.mjaroslav.mjutils.mod.server.ServerProxy";
 
     public static final ModLogger logger = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, name + "/mod");
-    public static final ModLogger loggerHooks = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, name + "/hooks", ModLoggerLevel.OFF);
+    public static final ModLogger loggerLibrary = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, name + "/library");
     public static final ModLogger loggerModules = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, name + "/modules", ModLoggerLevel.ERROR);
 }

@@ -87,7 +87,10 @@ public class ForgeConfig extends Config {
         @SubscribeEvent
         public void onConfigChangedEvent(@NotNull ConfigChangedEvent.OnConfigChangedEvent event) {
             val config = CONFIGURATIONS.get(event.configID);
-            if (config != null) config.sync();
+            if (config != null) {
+                config.sync();
+                if (config.properties.hasChanged()) config.saveFile();
+            }
         }
     }
 }

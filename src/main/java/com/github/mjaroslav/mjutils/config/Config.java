@@ -1,13 +1,14 @@
 package com.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import com.github.mjaroslav.mjutils.util.game.UtilsMods;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,8 @@ public abstract class Config {
     protected final @NotNull String modId;
     protected final @NotNull Path file;
     protected final @Nullable String version;
+    @Setter
+    protected boolean shouldFailOnError = false;
 
     public Config(@Nullable String modId, @NotNull Path file, @Nullable String version) {
         this.modId = StringUtils.isEmpty(modId) ? UtilsMods.getActiveModId() : modId;
@@ -50,8 +53,10 @@ public abstract class Config {
                 saveFile();
             }
             loadCallbacks.forEach(ConfigCallback::call);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            if (isShouldFailOnError())
+                throw new RuntimeException(e);
+            else ModInfo.loggerLibrary.error("Configuration %s can't be loaded", e, getFile());
         }
     }
 
@@ -59,16 +64,18 @@ public abstract class Config {
         try {
             saveFile();
             saveCallbacks.forEach(ConfigCallback::call);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            if (isShouldFailOnError())
+                throw new IllegalStateException(e);
+            else ModInfo.loggerLibrary.error("Configuration %s can't be saved", e, getFile());
         }
     }
 
-    protected abstract void setDefault() throws IOException;
+    protected abstract void setDefault() throws Exception;
 
-    protected abstract void loadFile() throws IOException;
+    protected abstract void loadFile() throws Exception;
 
-    protected abstract void saveFile() throws IOException;
+    protected abstract void saveFile() throws Exception;
 
     protected abstract @Nullable String getLoadedVersion();
 

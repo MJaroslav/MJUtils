@@ -1,5 +1,6 @@
 package com.github.mjaroslav.mjutils.mod.common.modular;
 
+import com.github.mjaroslav.mjutils.config.ForgeConfig.ForgeConfigEventHandler;
 import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator;
 import com.github.mjaroslav.mjutils.configurator.ForgeConfigurator;
 import com.github.mjaroslav.mjutils.mod.common.handler.FuelHandler;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 @SubscribeModule(priority = -1)
 public class MainModule {
     public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId,
-            General.class) {
+        General.class) {
         // TODO: May be make by functional interface?
         @Override
         public void onConfigSaved() {
@@ -34,6 +35,7 @@ public class MainModule {
 
     public void listen(@NotNull FMLInitializationEvent event) {
         config.load();
+        FMLCommonHandler.instance().bus().register(ForgeConfigEventHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(ForgeConfigurator.ConfigurationEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(ReactionEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(TooltipEventHandler.instance);

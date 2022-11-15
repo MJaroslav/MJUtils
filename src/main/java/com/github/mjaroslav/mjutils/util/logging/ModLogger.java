@@ -1,20 +1,19 @@
 package com.github.mjaroslav.mjutils.util.logging;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ModLogger {
-    @Nonnull
-    String getName();
+    @NotNull String getName();
 
-    @Nonnull
-    ModLoggerLevel getLevel();
+    @NotNull ModLoggerLevel getLevel();
 
-    void setLevel(@Nonnull ModLoggerLevel level);
+    void setLevel(@NotNull ModLoggerLevel level);
 
-    void log(@Nonnull ModLoggerLevel level, @Nullable String text, @Nullable Object... args);
+    void log(@NotNull ModLoggerLevel level, @Nullable String text, @Nullable Object... args);
 
-    void log(@Nonnull ModLoggerLevel level, @Nullable String text, @Nullable Throwable e, @Nullable Object... args);
+    void log(@NotNull ModLoggerLevel level, @Nullable String text, @Nullable Throwable e, @Nullable Object... args);
 
     void error(@Nullable String text, @Nullable Object... args);
 

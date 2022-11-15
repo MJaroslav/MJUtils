@@ -254,7 +254,7 @@ public class PropertiesConfig extends Config {
         } else if (defaultValues instanceof Properties properties) {
             values.clear();
             values.putAll(properties);
-        } else throw new IllegalStateException("Not supported defaultValues format: " + defaultValues);
+        } else throw new IllegalStateException("Unsupported defaultValues format: " + defaultValues);
         saveFile();
     }
 

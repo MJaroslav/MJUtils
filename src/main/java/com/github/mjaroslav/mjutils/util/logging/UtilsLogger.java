@@ -1,13 +1,18 @@
 package com.github.mjaroslav.mjutils.util.logging;
 
-import javax.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
+@UtilityClass
 public class UtilsLogger {
-    public static ModLogger getLoggerWithLevel(@Nonnull Class<? extends ModLogger> loggerClass, @Nonnull String name, @Nonnull ModLoggerLevel defaultLevel) {
-        String parsed = System.getProperty(String.format("logging.%s.level", name.toLowerCase().replace(' ', '.').replace('/', '.')), defaultLevel.name());
-        ModLoggerLevel level = ModLoggerLevel.getByName(parsed);
+    public @NotNull <T extends ModLogger> T getLoggerWithLevel(@NotNull Class<T> loggerClass, @NotNull String name,
+                                                               @NotNull ModLoggerLevel defaultLevel) {
+        val parsed = System.getProperty(String.format("logging.%s.level", name.toLowerCase().replace(' ', '.')
+            .replace('/', '.')), defaultLevel.name());
+        val level = ModLoggerLevel.getByName(parsed);
         try {
-            ModLogger logger = loggerClass.getConstructor(String.class).newInstance(name);
+            val logger = loggerClass.getConstructor(String.class).newInstance(name);
             logger.setLevel(level);
             return logger;
         } catch (Exception e) {
@@ -16,7 +21,7 @@ public class UtilsLogger {
         }
     }
 
-    public static ModLogger getLoggerWithLevel(@Nonnull Class<? extends ModLogger> loggerClass, @Nonnull String name) {
+    public @NotNull <T extends ModLogger> T getLoggerWithLevel(@NotNull Class<T> loggerClass, @NotNull String name) {
         return getLoggerWithLevel(loggerClass, name, ModLoggerLevel.INFO);
     }
 }

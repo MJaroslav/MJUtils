@@ -67,14 +67,14 @@ public class TestJson5Config {
         Files.deleteIfExists(path);
         config.save();
         Assert.assertTrue("File not created", Files.isRegularFile(path));
-        val actual = new Json5Config(path);
+        val actual = new Json5Config("test", path);
         actual.load();
         Assert.assertEquals("Saved value not equals", config.getValue(), actual.getValue());
     }
 
     @Test
-    public void test$setDefault() throws IOException {
-        val config = new Json5Config(path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
+    public void test$setDefault() throws Exception {
+        val config = new Json5Config("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
         config.setDefault();
         val root = new JsonObject();
         root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));
@@ -86,7 +86,7 @@ public class TestJson5Config {
     public void test$version() {
         config.setValue(createPattern());
         config.save();
-        val config = new Json5Config(path, "1", ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
+        val config = new Json5Config("test", path, "1", ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5"));
         config.load();
         val root = new JsonObject();
         root.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));

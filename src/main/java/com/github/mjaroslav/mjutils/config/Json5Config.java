@@ -4,7 +4,6 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.JsonPrimitive;
-import blue.endless.jankson.api.SyntaxError;
 import com.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,13 +63,8 @@ public class Json5Config extends Config {
     }
 
     @Override
-    protected void loadFile() throws IOException {
-        try {
-            value = jankson.load(file.toFile());
-        } catch (SyntaxError e) {
-            // TODO: Wrap it normally
-            throw new RuntimeException(e);
-        }
+    protected void loadFile() throws Exception {
+        value = jankson.load(file.toFile());
     }
 
     @Override
@@ -80,7 +74,7 @@ public class Json5Config extends Config {
     }
 
     @Override
-    protected void setDefault() throws IOException {
+    protected void setDefault() throws Exception {
         if (defaultValue instanceof ResourcePath path) {
             Files.copy(path.stream(), getFile(), StandardCopyOption.REPLACE_EXISTING);
             loadFile();

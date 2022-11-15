@@ -172,7 +172,7 @@ public class TestPropertiesConfig {
 
     @Test
     public void test$setDefault() throws IOException {
-        val config = new PropertiesConfig(path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
+        val config = new PropertiesConfig("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
         config.setDefault();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");
@@ -184,7 +184,7 @@ public class TestPropertiesConfig {
     public void test$version() throws IOException {
         config.setValue("version", "2");
         config.save();
-        val config = new PropertiesConfig(path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
+        val config = new PropertiesConfig("test", path, null, ResourcePath.full("/com/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties"));
         config.setDefault();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");
