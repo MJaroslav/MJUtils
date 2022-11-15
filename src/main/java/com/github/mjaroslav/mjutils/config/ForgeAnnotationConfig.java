@@ -41,15 +41,13 @@ public class ForgeAnnotationConfig extends ForgeConfig {
                                  @NotNull Class<?> rootCategoryClass) {
         super(modId, file, version);
         this.rootCategoryClass = rootCategoryClass;
-    }
-
-    @Override
-    protected void sync() {
-        try {
-            parseClass(this, rootCategoryClass, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        registerSyncCallback(() -> {
+            try {
+                parseClass(this, rootCategoryClass, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static @NotNull String formatName(@NotNull String name) {

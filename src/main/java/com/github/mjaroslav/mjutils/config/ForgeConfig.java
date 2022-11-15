@@ -14,11 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ForgeConfig extends Config {
+    protected final Set<ConfigCallback> syncCallbacks = new HashSet<>();
     protected final Configuration properties;
 
     public ForgeConfig(@NotNull Path file) {
@@ -41,7 +40,16 @@ public class ForgeConfig extends Config {
         ForgeConfigEventHandler.INSTANCE.addConfig(this);
     }
 
-    protected void sync() {
+    public boolean registerSyncCallback(@NotNull ConfigCallback callback) {
+        return syncCallbacks.add(callback);
+    }
+
+    public boolean unregisterSyncCallback(@NotNull ConfigCallback callback) {
+        return syncCallbacks.remove(callback);
+    }
+
+    public final void sync() {
+        syncCallbacks.forEach(ConfigCallback::call);
     }
 
     @Override

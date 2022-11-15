@@ -1,8 +1,7 @@
 package com.github.mjaroslav.mjutils.mod.common.modular;
 
+import com.github.mjaroslav.mjutils.config.ForgeAnnotationConfig;
 import com.github.mjaroslav.mjutils.config.ForgeConfig.ForgeConfigEventHandler;
-import com.github.mjaroslav.mjutils.configurator.AnnotationConfigurator;
-import com.github.mjaroslav.mjutils.configurator.ForgeConfigurator;
 import com.github.mjaroslav.mjutils.mod.common.handler.FuelHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.GuiReplacerEventHandler;
 import com.github.mjaroslav.mjutils.mod.common.handler.ReactionEventHandler;
@@ -21,22 +20,18 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Paths;
+
 @SubscribeModule(priority = -1)
 public class MainModule {
-    public static final AnnotationConfigurator config = new AnnotationConfigurator(ModInfo.modId, ModInfo.modId,
-        General.class) {
-        // TODO: May be make by functional interface?
-        @Override
-        public void onConfigSaved() {
-            super.onConfigSaved();
-            UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_block, General.quartzTrigger);
-        }
-    };
+    public static final ForgeAnnotationConfig config = new ForgeAnnotationConfig(ModInfo.modId,
+        Paths.get("config", ModInfo.modId + ".cfg"), "0", General.class);
 
     public void listen(@NotNull FMLInitializationEvent event) {
+        config.registerSyncCallback(() -> UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_block,
+            General.quartzTrigger));
         config.load();
         FMLCommonHandler.instance().bus().register(ForgeConfigEventHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(ForgeConfigurator.ConfigurationEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(ReactionEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(TooltipEventHandler.instance);
         MinecraftForge.EVENT_BUS.register(GuiReplacerEventHandler.instance);

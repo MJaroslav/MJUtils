@@ -1,13 +1,10 @@
 package com.github.mjaroslav.mjutils.mod.lib;
 
 
-import com.github.mjaroslav.mjutils.configurator.annotations.Comment;
-import com.github.mjaroslav.mjutils.configurator.annotations.Default;
-import com.github.mjaroslav.mjutils.configurator.annotations.Restart;
-import com.github.mjaroslav.mjutils.configurator.annotations.Version;
+import com.github.mjaroslav.mjutils.config.annotations.Comment;
+import com.github.mjaroslav.mjutils.config.annotations.Restart;
 
 @Comment("Root option category, contains all options and subcategories.")
-@Version("0")
 public class General {
     @Comment("Debug options for dev or issue hunt.")
     public static class Debug {
@@ -18,7 +15,6 @@ public class General {
     @Comment("Cosmetic options, not make changes on server.")
     public static class Client {
         @Comment("Show ore dict names in tooltip (in advanced tooltip mode).")
-        @Default(b = true)
         public static boolean showOreDictNames = true;
 
         @Comment("Show ore dict names always.")
@@ -27,11 +23,9 @@ public class General {
         @Comment("Toggles of default GUIs replacements (for new features or/and fixes)")
         public static class GuiReplacements {
             @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc in main menu mods GUI")
-            @Default(b = true)
             public static boolean mainMenuModList = true;
 
             @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc in pause menu mods GUI")
-            @Default(b = true)
             public static boolean optionsModList = true;
         }
     }
@@ -41,7 +35,6 @@ public class General {
         @Comment("Disabling block breaking (same as swords in vanilla) for some items")
         public static class BlockBreaking {
             @Comment("All items with ItemSword parent class (same as vanilla)")
-            @Default(b = true)
             public static boolean swords = true;
 
             @Comment("All items with ItemTool parent class (axe, pickaxe, shovel)")
@@ -61,13 +54,10 @@ public class General {
         }
     }
 
-    // TODO: Сделать поддержку изменения параметра без необходимости рестарта.
     @Comment("Add quartz ore to pigman trigger list")
     @Restart
-    @Default(b = true)
     public static boolean quartzTrigger = true;
 
     @Comment("Drop all blocks on TNT explosion")
-    @Default(b = true)
     public static boolean noLossTNTExplosion = true;
 }
