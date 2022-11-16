@@ -15,6 +15,7 @@
     "AccessorFMLModContainer",
     "AccessorWeightedRandomFishable",
     "MixinEnchantment",
+    "MixinEntityCreeper",
     "MixinEntityFishHook",
     "MixinEntityTNTPrimed",
     "MixinFishingHooks",

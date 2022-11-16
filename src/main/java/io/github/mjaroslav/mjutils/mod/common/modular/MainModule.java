@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 @SubscribeModule(priority = -1)
 public class MainModule {
     public static final ForgeAnnotationConfig config = new ForgeAnnotationConfig(ModInfo.modId,
-        Paths.get("config", ModInfo.modId + ".cfg"), "0", General.class);
+        Paths.get("config", ModInfo.modId + ".cfg"), "1", General.class);
 
     public void listen(@NotNull FMLInitializationEvent event) {
         config.registerSyncCallback(() -> UtilsInteractions.setPigmanTriggerBlock(Blocks.quartz_block,

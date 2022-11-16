@@ -1,0 +1,18 @@
+root = true
+
+[**]
+end_of_line = lf
+insert_final_newline = true
+tab_width = 4
+indent_style = space
+indent_size = 4
+
+[**.md]
+trim_trailing_whitespace = false
+
+[**.{md,yml,yaml,json5,json}]
+tab_width = 2
+indent_size = 2
+
+[**.{java,py,html,css}]
+charset = utf-8

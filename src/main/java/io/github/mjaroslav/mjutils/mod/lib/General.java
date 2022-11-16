@@ -2,6 +2,8 @@ package io.github.mjaroslav.mjutils.mod.lib;
 
 
 import io.github.mjaroslav.mjutils.config.annotations.Comment;
+import io.github.mjaroslav.mjutils.config.annotations.Name;
+import io.github.mjaroslav.mjutils.config.annotations.Range;
 import io.github.mjaroslav.mjutils.config.annotations.Restart;
 
 @Comment("Root option category, contains all options and subcategories.")
@@ -58,6 +60,12 @@ public class General {
     @Restart
     public static boolean quartzTrigger = true;
 
-    @Comment("Drop all blocks on TNT explosion")
-    public static boolean noLossTNTExplosion = true;
+    @Comment("Changes each exploded by TNT block drop chance with this value, you can use -1 for use vanilla behaviour")
+    @Range(min = -1, max = 1)
+    @Name("override_tnt_explosion_drop_chance")
+    public static double overrideTNTExplosionDropChance = 1;
+
+    @Comment("Changes each exploded by creeper block drop chance with this value, you can use -1 for use vanilla behaviour. CodeChickenCore tweak for disable block breaking have more priority than this")
+    @Range(min = -1, max = 1)
+    public static double overrideCreeperExplosionDropChance = -1;
 }
