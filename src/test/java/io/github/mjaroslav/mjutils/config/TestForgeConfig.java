@@ -38,7 +38,7 @@ public class TestForgeConfig {
 
     @Test
     public void test$unregisterSyncCallback() {
-        ConfigCallback callback = () -> {
+        Runnable callback = () -> {
             throw new IllegalStateException("Expected");
         };
         config.registerSyncCallback(callback);

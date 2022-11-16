@@ -3,6 +3,7 @@ package io.github.mjaroslav.mjutils.config;
 import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.net.UtilsDesktop;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -13,78 +14,179 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Base config for realization. It contains already implemented or entry points to implement common logic such as
+ * loading and saving, versioning and restoring to default, adding extra logic after some actions by callbacks.
+ * <br>
+ * Library already have some implementations.
+ *
+ * @see PropertiesConfig
+ * @see Json5Config
+ * @see ForgeConfig
+ * @see ForgeAnnotationConfig
+ */
 @Getter
 public abstract class Config {
-    protected final Set<ConfigCallback> loadCallbacks = new HashSet<>();
-    protected final Set<ConfigCallback> saveCallbacks = new HashSet<>();
+    protected final Set<Runnable> loadCallbacks = new HashSet<>();
+    protected final Set<Runnable> saveCallbacks = new HashSet<>();
     protected final @NotNull String modId;
     protected final @NotNull Path file;
     protected final @Nullable String version;
+    /**
+     * Crash game if config can't be load or saved.
+     */
     @Setter
     protected boolean shouldFailOnError = false;
 
+    /**
+     * @param modId   mod owner ID of this config if not present then will be resolved automatically.
+     * @param file    file for config saving.
+     * @param version implemented version of this config, you can use it for handing cases when the loaded
+     *                version differs from the implemented.
+     */
     public Config(@Nullable String modId, @NotNull Path file, @Nullable String version) {
         this.modId = StringUtils.isEmpty(modId) ? UtilsMods.getActiveModId() : modId;
         this.file = file;
         this.version = version;
     }
 
-    public boolean registerLoadCallback(@NotNull ConfigCallback callback) {
+    /**
+     * Adds extra logic after each config load.
+     *
+     * @param callback functional interface with logic.
+     * @return true if this config did not already contain the specified callback.
+     * @see Config#unregisterLoadCallback(Runnable)
+     */
+    public boolean registerLoadCallback(@NotNull Runnable callback) {
         return loadCallbacks.add(callback);
     }
 
-    public boolean registerSaveCallback(@NotNull ConfigCallback callback) {
+    /**
+     * Adds extra logic after each config save.
+     *
+     * @param callback functional interface with logic.
+     * @return true if this config did not already contain the specified callback.
+     * @see Config#unregisterSaveCallback(Runnable)
+     */
+    public boolean registerSaveCallback(@NotNull Runnable callback) {
         return saveCallbacks.add(callback);
     }
 
-    public boolean unregisterLoadCallback(@NotNull ConfigCallback callback) {
+    /**
+     * Removes extra logic after each config load.
+     *
+     * @param callback already registered callback for unregister.
+     * @return true if this config contained the specified callback.
+     * @see Config#registerLoadCallback(Runnable)
+     */
+    public boolean unregisterLoadCallback(@NotNull Runnable callback) {
         return loadCallbacks.remove(callback);
     }
 
-    public boolean unregisterSaveCallback(@NotNull ConfigCallback callback) {
+    /**
+     * Removes extra logic after each config save.
+     *
+     * @param callback already registered callback for unregister.
+     * @return true if this config contained the specified callback.
+     * @see Config#registerSaveCallback(Runnable)
+     */
+    public boolean unregisterSaveCallback(@NotNull Runnable callback) {
         return saveCallbacks.remove(callback);
     }
 
+    /**
+     * Load values from config file and run load callbacks.
+     */
     public final void load() {
         try {
             loadFile();
             if (getVersion() != null && !getVersion().equals(getLoadedVersion())) {
-                setDefault();
+                restoreDefaultFile();
                 saveFile();
             }
-            loadCallbacks.forEach(ConfigCallback::call);
+            loadCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
-            if (isShouldFailOnError())
-                throw new RuntimeException(e);
-            else ModInfo.loggerLibrary.error("Configuration %s can't be loaded", e, getFile());
+            if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + "can't be load");
+            else ModInfo.loggerLibrary.error("Configuration %s can't be load", e, getFile());
         }
     }
 
+    /**
+     * Save values to config file and run save callbacks.
+     */
     public final void save() {
         try {
             saveFile();
-            saveCallbacks.forEach(ConfigCallback::call);
+            saveCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
-            if (isShouldFailOnError())
-                throw new IllegalStateException(e);
+            if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be saved");
             else ModInfo.loggerLibrary.error("Configuration %s can't be saved", e, getFile());
         }
     }
 
-    protected abstract void setDefault() throws Exception;
+    /**
+     * Restore values to default and save to config file.
+     */
+    public final void restoreDefault() {
+        try {
+            restoreDefaultFile();
+        } catch (Exception e) {
+            if (isShouldFailOnError())
+                UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be restored to default values");
+            else ModInfo.loggerLibrary.error("Configuration %s can't be restored to default values", e, getFile());
+        }
+    }
 
+    /**
+     * Restore default values and save to config file (by calling {@link Config#saveFile()} for example).
+     * Best practice is a calling this when another config version loaded. You can not implement this logic if you want.
+     *
+     * @throws Exception Just throw exception with reason if you can't load config.
+     */
+    protected abstract void restoreDefaultFile() throws Exception;
+
+    /**
+     * Read values from config file, you should handle file no existing and similar things by yourself.
+     * You also should handle difference of loaded and implemented version of configurations if this happens.
+     *
+     * @throws Exception Just throw exception with reason if you can't load config.
+     */
     protected abstract void loadFile() throws Exception;
 
+    /**
+     * Save values to config file, you should create parent directories and similar things by yourself.
+     *
+     * @throws Exception Just throw exception with reason if you can't save config.
+     */
     protected abstract void saveFile() throws Exception;
 
+    /**
+     * Get config version from loaded file.
+     *
+     * @return Loaded version or null if versions logic not implemented.
+     */
     protected abstract @Nullable String getLoadedVersion();
 
+    /**
+     * Create {@link ResourcePath} for specified mod config in assets.
+     *
+     * @param modId assets domain
+     * @param path  path to config, part to config dir will br removed.
+     * @return new resource path in format assets/modId/defaults/path
+     */
     public static @NotNull ResourcePath resolveDefaultFileResourcePath(@NotNull String modId, @NotNull Path path) {
         return ResourcePath.of(modId, "defaults/" + path.normalize().toAbsolutePath().toString()
             .replace(UtilsMods.getMinecraftDir().toPath().normalize()
                 .toAbsolutePath().toString(), ""));
     }
 
+    /**
+     * Create {@link ResourcePath} for specified mod config in assets. Assets domain will be resolved automatically.
+     *
+     * @param path path to config, part to config dir will remove.
+     * @return new resource path in format assets/modId/defaults/path
+     * @see Config#resolveDefaultFileResourcePath(String, Path)
+     */
     public static @NotNull ResourcePath resolveDefaultFileResourcePath(@NotNull Path path) {
         return resolveDefaultFileResourcePath(UtilsMods.getActiveModId(), path);
     }

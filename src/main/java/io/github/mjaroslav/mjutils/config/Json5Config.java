@@ -15,49 +15,88 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * {@link Config} implementation for {@link Jankson} with some helping methods.
+ *
+ * @see Jankson
+ */
+@Getter
+@Setter
 public class Json5Config extends Config {
+    /**
+     * Key name for config version.
+     */
     public static final String VERSION_KEY = "version";
 
     protected final @NotNull Jankson jankson;
-    @Getter
-    @Setter
+    /**
+     * Not deserialized value.
+     */
     protected @NotNull JsonObject value = new JsonObject();
-    @Getter
-    @Setter
     protected @Nullable Object defaultValue;
 
+    /**
+     * @see Json5Config#Json5Config(String, Path, String, Object)  Full constructor.
+     */
     public Json5Config(@NotNull Path file) {
         this(null, file, null, null);
     }
 
+    /**
+     * @see Json5Config#Json5Config(String, Path, String, Object)  Full constructor.
+     */
     public Json5Config(@Nullable String modId, @NotNull Path file) {
         this(modId, file, null, null);
     }
 
+    /**
+     * @see Json5Config#Json5Config(String, Path, String, Object)  Full constructor.
+     */
     public Json5Config(@NotNull Path file, @Nullable String version, @Nullable Object defaultValue) {
         this(null, file, version, defaultValue);
     }
 
-
+    /**
+     * @param defaultValue default value, can be {@link JsonObject}, {@link ResourcePath} and {@link String}
+     *                     (or {@link Path}) for {@link Config#resolveDefaultFileResourcePath(String, Path)}.
+     *                     Also, can be null if config not be restored to default.
+     * @see Config#Config(String, Path, String) Super constructor for another parameters.
+     */
     public Json5Config(@Nullable String modId, @NotNull Path file, @Nullable String version, @Nullable Object defaultValue) {
         super(modId, file, version);
         this.defaultValue = defaultValue;
         jankson = buildJankson();
     }
 
-    // For adding custom (de-)serializers
+    /**
+     * Build Jankson with special (de-) serializers if you need.
+     *
+     * @return ready Jankson object.
+     */
     @NotNull
     protected Jankson buildJankson() {
         return Jankson.builder().build();
     }
 
+    /**
+     * Deserialize value to param.
+     *
+     * @param clazz type for deserialization.
+     * @return deserialized value.
+     */
     @NotNull
     public <T> T get(@NotNull Class<T> clazz) {
         return jankson.fromJson(value, clazz);
     }
 
+    /**
+     * Serialize object to value.
+     *
+     * @param object object for serialization.
+     */
     public void set(@NotNull Object object) {
         value = (JsonObject) jankson.toJson(object);
     }
@@ -74,12 +113,15 @@ public class Json5Config extends Config {
     }
 
     @Override
-    protected void setDefault() throws Exception {
+    protected void restoreDefaultFile() throws Exception {
+        if (defaultValue instanceof Path path)
+            defaultValue = Config.resolveDefaultFileResourcePath(getModId(), path);
+        if (defaultValue instanceof String string)
+            defaultValue = Config.resolveDefaultFileResourcePath(getModId(), Paths.get(string));
         if (defaultValue instanceof ResourcePath path) {
             Files.copy(path.stream(), getFile(), StandardCopyOption.REPLACE_EXISTING);
             loadFile();
-        } else if (defaultValue instanceof JsonObject object)
-            value = object.clone();
+        } else if (defaultValue instanceof JsonObject object) value = object.clone();
         else throw new IllegalStateException("Not supported defaultValues format: " + defaultValue);
         saveFile();
     }

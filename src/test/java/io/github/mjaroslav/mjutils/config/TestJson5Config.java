@@ -86,7 +86,7 @@ public class TestJson5Config {
     @Test
     public void test$setDefault() throws Exception {
         val config = new Json5Config("test", path, null, defaultPath);
-        config.setDefault();
+        config.restoreDefaultFile();
         val actual = config.getValue();
         val expected = new JsonObject();
         expected.put(Json5Config.VERSION_KEY, JsonPrimitive.of("1"));

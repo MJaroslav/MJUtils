@@ -33,7 +33,7 @@ public class TestConfig {
     @Test
     public void test$unregisterLoadCallback() {
         val config = createMock();
-        ConfigCallback callback = () -> {
+        Runnable callback = () -> {
             throw new IllegalStateException("Expected");
         };
         config.registerLoadCallback(callback);
@@ -45,7 +45,7 @@ public class TestConfig {
     @Test
     public void test$unregisterSaveCallback() {
         val config = createMock();
-        ConfigCallback callback = () -> {
+        Runnable callback = () -> {
             throw new IllegalStateException("Expected");
         };
         config.registerSaveCallback(callback);
@@ -63,7 +63,7 @@ public class TestConfig {
             }
 
             @Override
-            protected void setDefault() {
+            protected void restoreDefaultFile() {
             }
 
             @Override

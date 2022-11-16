@@ -18,25 +18,60 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Extended implementation of {@link ForgeConfig} that can automatically parse config properties from Class.
+ * You should create class with public static fields (properties) and inner classes (subcategories). Supported field types:
+ * int, double, boolean, String and arrays of those types. You must initialize values of fields, its will be default
+ * values of properties. You can mark field or class with {@link Ignore} annotation for disabling parsing of them.
+ * All names will be converted with this pattern: <code>CategoryClassName -> class_name</code>,
+ * <code>ClassName -> class_name</code>, <code>fieldName -> field_name</code>. You can set custom name by {@link Name}
+ * annotation. Commentary can be added by using {@link Comment}. For double and int types you can set min and max
+ * values by {@link Range}. You can add language key for translation by {@link LangKey}. String values can be
+ * specified by one of {@link Pattern}, {@link Values}, {@link Values.Color} or {@link Values.Mod} annotations.
+ * If changing of property (and category) applied only after world or game restarting, use {@link Restart}.
+ * Finally, you can configure and fix array size with {@link ArraySize} annotation.
+ *
+ * @see ForgeConfig
+ */
 public class ForgeAnnotationConfig extends ForgeConfig {
+    /**
+     * Just copy of {@link net.minecraft.util.EnumChatFormatting EnumChatFormatting} for usage as valid pattern.
+     */
     public static final String[] COLOR_VALID_VALUES = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+    /**
+     * Regexp pattern of {@link ForgeAnnotationConfig#COLOR_VALID_VALUES}.
+     */
     public static final java.util.regex.Pattern COLOR_VALID_PATTERN = java.util.regex.Pattern.compile("^[0-9a-f]$");
 
     protected final @NotNull Class<?> rootCategoryClass;
     protected final @NotNull Map<Field, Object> defaults = new HashMap<>();
 
+    /**
+     * @see ForgeAnnotationConfig#ForgeAnnotationConfig(String, Path, String, Class) Full constructor.
+     */
     public ForgeAnnotationConfig(@NotNull Path file, @NotNull Class<?> rootCategoryClass) {
         this(null, file, null, rootCategoryClass);
     }
 
+    /**
+     * @see ForgeAnnotationConfig#ForgeAnnotationConfig(String, Path, String, Class) Full constructor.
+     */
     public ForgeAnnotationConfig(@Nullable String modId, @NotNull Path file, @NotNull Class<?> rootCategoryClass) {
         this(modId, file, null, rootCategoryClass);
     }
 
+    /**
+     * @see ForgeAnnotationConfig#ForgeAnnotationConfig(String, Path, String, Class) Full constructor.
+     */
     public ForgeAnnotationConfig(@NotNull Path file, @Nullable String version, @NotNull Class<?> rootCategoryClass) {
         this(null, file, version, rootCategoryClass);
     }
 
+    /**
+     * @param rootCategoryClass class of root category, all inner classes will be become subcategories,
+     *                          all fields will be become config properties.
+     * @see Config#Config(String, Path, String) Super constructor for another parameters.
+     */
     public ForgeAnnotationConfig(@Nullable String modId, @NotNull Path file, @Nullable String version,
                                  @NotNull Class<?> rootCategoryClass) {
         super(modId, file, version);
@@ -50,14 +85,14 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         });
     }
 
-    public static @NotNull String formatName(@NotNull String name) {
+    protected static @NotNull String formatName(@NotNull String name) {
         name = name.replace("Category", "").replaceAll("[A-Z]", "_$0").toLowerCase();
         if (name.startsWith("_")) name = name.substring(1);
         return name;
     }
 
-    public static void parseClass(@NotNull ForgeAnnotationConfig config, @NotNull Class<?> categoryClass,
-                                  @Nullable String parentCategoryName) throws Exception {
+    protected static void parseClass(@NotNull ForgeAnnotationConfig config, @NotNull Class<?> categoryClass,
+                                     @Nullable String parentCategoryName) throws Exception {
         if (categoryClass.isAnnotationPresent(Ignore.class)) return;
         var categoryName = !StringUtils.isNotBlank(parentCategoryName) ? Configuration.CATEGORY_GENERAL
             : String.format("%s.%s", parentCategoryName, formatName(categoryClass.getSimpleName()));
@@ -93,9 +128,9 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         }
     }
 
-    public static void parseField(@NotNull ForgeAnnotationConfig config, @NotNull Field field,
-                                  @NotNull String categoryName, @NotNull Property.Type parsedType,
-                                  boolean isArray) throws Exception {
+    protected static void parseField(@NotNull ForgeAnnotationConfig config, @NotNull Field field,
+                                     @NotNull String categoryName, @NotNull Property.Type parsedType,
+                                     boolean isArray) throws Exception {
         var propertyName = formatName(field.getName());
         val name = field.getAnnotation(Name.class);
         if (name != null) propertyName = name.value();
@@ -228,7 +263,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         category.put(propertyName, property);
     }
 
-    public static @Nullable Property.Type parseType(@NotNull Class<?> type) {
+    protected static @Nullable Property.Type parseType(@NotNull Class<?> type) {
         if (type.equals(int.class) || type.equals(int[].class)) return Property.Type.INTEGER;
         if (type.equals(boolean.class) || type.equals(boolean[].class)) return Property.Type.BOOLEAN;
         if (type.equals(double.class) || type.equals(double[].class)) return Property.Type.DOUBLE;

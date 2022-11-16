@@ -175,7 +175,7 @@ public class TestPropertiesConfig {
     public void test$setDefault() throws IOException {
         val config = new PropertiesConfig("test", path, null, defaultPath);
         config.setValue("default.value", "bad_value");
-        config.setDefault();
+        config.restoreDefaultFile();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");
         expected.setProperty("default.value", "value");
@@ -187,7 +187,7 @@ public class TestPropertiesConfig {
         config.setValue("version", "2");
         config.save();
         val config = new PropertiesConfig("test", path, null, defaultPath);
-        config.setDefault();
+        config.restoreDefaultFile();
         val expected = new Properties();
         expected.setProperty(PropertiesConfig.VERSION_KEY, "1");
         expected.setProperty("default.value", "value");

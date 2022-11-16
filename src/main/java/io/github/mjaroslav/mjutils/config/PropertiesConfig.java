@@ -2,6 +2,7 @@ package io.github.mjaroslav.mjutils.config;
 
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,11 +21,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+/**
+ * {@link Config} implementation for {@link Properties} with some helping methods.
+ *
+ * @see Properties
+ */
+@Getter
 public class PropertiesConfig extends Config {
+    /**
+     * Property name for config version.
+     */
     public static final String VERSION_KEY = "version";
     private static final Comparator<Entry<Object, Object>> propertyKeyComparator = (a, b) -> {
-        if (a.getKey() instanceof String keyA && b.getKey() instanceof String keyB)
-            return keyA.compareTo(keyB);
+        if (a.getKey() instanceof String keyA && b.getKey() instanceof String keyB) return keyA.compareTo(keyB);
         return 0; // Impossible, fuck Properties
     };
 
@@ -31,18 +41,34 @@ public class PropertiesConfig extends Config {
     protected final Properties values = new Properties();
     protected @Nullable Object defaultValues;
 
+    /**
+     * @see PropertiesConfig#PropertiesConfig(String, Path, String, Object)  Full constructor.
+     */
     public PropertiesConfig(@NotNull Path file) {
         this(null, file, null, null);
     }
 
+    /**
+     * @see PropertiesConfig#PropertiesConfig(String, Path, String, Object)  Full constructor.
+     */
     public PropertiesConfig(@Nullable String modId, @NotNull Path file) {
         this(modId, file, null, null);
     }
 
+
+    /**
+     * @see PropertiesConfig#PropertiesConfig(String, Path, String, Object)  Full constructor.
+     */
     public PropertiesConfig(@NotNull Path file, @Nullable String version, @Nullable Object defaultValues) {
         this(null, file, version, defaultValues);
     }
 
+    /**
+     * @param defaultValues default values, can be {@link Properties}, {@link ResourcePath} and {@link String}
+     *                      (or {@link Path}) for {@link Config#resolveDefaultFileResourcePath(String, Path)}.
+     *                      Also, can be null if config not be restored to default.
+     * @see Config#Config(String, Path, String) Super constructor for another parameters.
+     */
     public PropertiesConfig(@Nullable String modId, @NotNull Path file, @Nullable String version, @Nullable Object defaultValues) {
         super(StringUtils.isEmpty(modId) ? UtilsMods.getActiveModId() : modId, file, version);
         this.defaultValues = defaultValues;
@@ -174,6 +200,9 @@ public class PropertiesConfig extends Config {
         return values.containsKey(key) ? getDoubleArray(key) : defaultValue;
     }
 
+    /**
+     * Primitive arrays not supported, use non-primitive instead.
+     */
     public void setValue(@NotNull String key, @NotNull Object value, @Nullable String comment) {
         if (value instanceof Object[] array) { // TODO: Add support for primitive type arrays
             if (array.length == 0) values.setProperty(key, "");
@@ -187,6 +216,9 @@ public class PropertiesConfig extends Config {
         comments.put(key, comment);
     }
 
+    /**
+     * @see PropertiesConfig#setValue(String, Object, String) Full method.
+     */
     public void setValue(@NotNull String key, @NotNull Object value) {
         setValue(key, value, null);
     }
@@ -236,18 +268,21 @@ public class PropertiesConfig extends Config {
         val builder = new StringBuilder();
         values.entrySet().stream().sorted(propertyKeyComparator).forEach(entry -> {
             val key = (String) entry.getKey();
-            if (comments.get(key) != null) {
+            if (comments.get(key) != null)
                 // New lines written by other devs, and they usually use just \n
                 for (var comment : comments.get(key).split("(\\r?\\n)|(" + System.lineSeparator() + ")"))
                     builder.append("# ").append(comment).append(System.lineSeparator());
-            }
             builder.append(key).append('=').append(entry.getValue()).append(System.lineSeparator());
         });
         Files.write(file, builder.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
-    protected void setDefault() throws IOException {
+    protected void restoreDefaultFile() throws IOException {
+        if (defaultValues instanceof Path path)
+            defaultValues = Config.resolveDefaultFileResourcePath(getModId(), path);
+        if (defaultValues instanceof String string)
+            defaultValues = Config.resolveDefaultFileResourcePath(getModId(), Paths.get(string));
         if (defaultValues instanceof ResourcePath path) {
             Files.copy(path.stream(), getFile(), StandardCopyOption.REPLACE_EXISTING);
             loadFile();
