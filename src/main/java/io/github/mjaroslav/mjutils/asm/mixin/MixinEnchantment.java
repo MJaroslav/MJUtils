@@ -1,6 +1,9 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
+import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import net.minecraft.enchantment.Enchantment;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,11 +17,12 @@ import java.util.Arrays;
 public abstract class MixinEnchantment {
     @Mutable
     @Shadow
-    private static Enchantment[] enchantmentsList;
+    public static @Final Enchantment[] enchantmentsList;
 
     // Extends enchantments array.
     @Inject(method = "<clinit>", at = @At("TAIL"))
-    private static void cinit(CallbackInfo ci) {
+    private static void cinit(@NotNull CallbackInfo ci) {
         enchantmentsList = Arrays.copyOf(enchantmentsList, 1024);
+        ModInfo.loggerLibrary.debug("Enchantments array size changed to 1024");
     }
 }

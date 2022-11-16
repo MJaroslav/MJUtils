@@ -4,9 +4,11 @@ import com.github.mjaroslav.mcingametester.api.Assert;
 import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
 import io.github.mjaroslav.mjutils.mod.MJUtils;
 import io.github.mjaroslav.mjutils.mod.common.modular.MainModule;
-import cpw.mods.fml.common.LoaderState;
+import io.github.mjaroslav.mjutils.util.game.UtilsMods;
+import lombok.val;
 
 @Common(when = LoaderState.CONSTRUCTING)
 public class TestInGameModuleLoader {
@@ -39,10 +41,12 @@ public class TestInGameModuleLoader {
     @Test
     void test$activatedModules() {
         // Expected modules: MainModule, Proxy and not activated ThaumcraftModule
-        Assert.isEquals(loader.getActivatedModulesCount(), 2, "Found non expected modules");
+        // But I added extra logic because I sometimes run tests by IDEA
+        val thaumcraft = UtilsMods.isModsLoaded("Thaumcraft");
+        Assert.isEquals(loader.getActivatedModulesCount(), thaumcraft ? 3 : 2, "Found non expected modules");
         Assert.isEquals(loader.getFoundModulesCount(), 3, "Thaumcraft module not found");
         Assert.isEquals(loader.getModules().get(0).getModuleClassName(), MainModule.class.getName(),
-                "Non expected module activated");
-        Assert.isEquals(loader.getModules().get(1).getModule(), proxy, "Loaded different proxy module");
+            "Non expected module activated");
+        Assert.isEquals(loader.getModules().get(thaumcraft ? 2 : 1).getModule(), proxy, "Loaded different proxy module");
     }
 }

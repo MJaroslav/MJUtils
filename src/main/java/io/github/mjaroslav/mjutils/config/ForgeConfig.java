@@ -50,6 +50,7 @@ public class ForgeConfig extends Config {
 
     public final void sync() {
         syncCallbacks.forEach(ConfigCallback::call);
+        if (properties.hasChanged()) properties.save();
     }
 
     @Override
@@ -61,7 +62,6 @@ public class ForgeConfig extends Config {
     @Override
     protected void loadFile() {
         properties.load();
-        if (properties.hasChanged()) saveFile();
     }
 
     @Override
