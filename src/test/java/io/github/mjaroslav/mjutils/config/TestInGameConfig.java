@@ -1,37 +1,41 @@
 package io.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mcingametester.api.Common;
+import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
 import lombok.val;
+import net.minecraft.util.ReportedException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.nio.file.Paths;
 
-public class TestConfig {
+@Common(when = LoaderState.CONSTRUCTING)
+public class TestInGameConfig {
     @Test
-    public void test$registerLoadCallback() {
+    void test$registerLoadCallback() {
         val config = createMock();
         config.registerLoadCallback(() -> {
             throw new IllegalStateException("Expected");
         });
-        Assert.assertThrows("Expected exception not thrown", RuntimeException.class, config::load);
+        Assert.assertThrows("Expected exception not thrown", ReportedException.class, config::load);
         config.save();
     }
 
     @Test
-    public void test$registerSaveCallback() {
+    void test$registerSaveCallback() {
         val config = createMock();
         config.registerSaveCallback(() -> {
             throw new IllegalStateException("Expected");
         });
         config.load();
-        Assert.assertThrows("Expected exception not thrown", RuntimeException.class, config::save);
+        Assert.assertThrows("Expected exception not thrown", ReportedException.class, config::save);
     }
 
     @Test
-    public void test$unregisterLoadCallback() {
+    void test$unregisterLoadCallback() {
         val config = createMock();
         Runnable callback = () -> {
             throw new IllegalStateException("Expected");
@@ -43,7 +47,7 @@ public class TestConfig {
     }
 
     @Test
-    public void test$unregisterSaveCallback() {
+    void test$unregisterSaveCallback() {
         val config = createMock();
         Runnable callback = () -> {
             throw new IllegalStateException("Expected");

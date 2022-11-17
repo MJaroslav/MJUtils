@@ -1,12 +1,14 @@
 package io.github.mjaroslav.mjutils.config;
 
+import com.github.mjaroslav.mcingametester.api.AfterEach;
+import com.github.mjaroslav.mcingametester.api.BeforeEach;
+import com.github.mjaroslav.mcingametester.api.Common;
+import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
 import io.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +20,8 @@ import java.util.Properties;
 
 import static org.junit.Assert.*;
 
-public class TestPropertiesConfig {
+@Common(when = LoaderState.CONSTRUCTING)
+public class TestInGamePropertiesConfig {
     private static final ResourcePath resourcePath = ResourcePath.full("io/github/mjaroslav/mjutils/config/TestPropertiesConfig.properties");
     private static final ResourcePath expectedResourcePath = ResourcePath.full("io/github/mjaroslav/mjutils/config/TestPropertiesConfigExpected.properties");
     private static final ResourcePath defaultPath = ResourcePath.full("/io/github/mjaroslav/mjutils/config/TestPropertiesConfigDefault.properties");
@@ -26,26 +29,26 @@ public class TestPropertiesConfig {
 
     private PropertiesConfig config;
 
-    @Before
-    public void before() throws IOException {
+    @BeforeEach
+    void before() throws IOException {
         Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
         config = new PropertiesConfig("test", path);
         config.load();
     }
 
-    @After
-    public void after() throws IOException {
+    @AfterEach
+    void after() throws IOException {
         Files.deleteIfExists(path);
     }
 
     @Test
-    public void test$getString() {
+    void test$getString() {
         assertEquals("String value comment", "String value comment", config.getComment("value.string"));
         assertEquals("String value", "String value", config.getString("value.string"));
     }
 
     @Test
-    public void test$getStringArray() {
+    void test$getStringArray() {
         assertArrayEquals("String array value comment", new String[]{"Multi line", "value comment"},
             Objects.requireNonNull(config.getComment("value.string.array")).split(System.lineSeparator()));
         assertArrayEquals("String array value", new String[]{"String", "value", "array"},
@@ -56,13 +59,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$getInt() {
+    void test$getInt() {
         assertNull("int value comment", config.getComment("value.int"));
         assertEquals("int value", 15, config.getInt("value.int"));
     }
 
     @Test
-    public void test$getIntArray() {
+    void test$getIntArray() {
         assertNull("int array value comment", config.getComment("value.int.array"));
         assertArrayEquals("int array value", new int[]{-10, 6, 300},
             config.getIntArray("value.int.array"));
@@ -72,13 +75,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$getLong() {
+    void test$getLong() {
         assertNull("long value comment", config.getComment("value.long"));
         assertEquals("long value", 34359738368L, config.getLong("value.long"));
     }
 
     @Test
-    public void test$getLongArray() {
+    void test$getLongArray() {
         assertNull("long array value comment", config.getComment("value.long.array"));
         assertArrayEquals("long array value", new long[]{34359738368L, -34359738368L},
             config.getLongArray("value.long.array"));
@@ -88,13 +91,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$getBoolean() {
+    void test$getBoolean() {
         assertNull("boolean value comment", config.getComment("value.boolean"));
         Assert.assertTrue("boolean value", config.getBoolean("value.boolean"));
     }
 
     @Test
-    public void test$getBooleanArray() {
+    void test$getBooleanArray() {
         assertNull("boolean array value comment", config.getComment("value.boolean.array"));
         assertArrayEquals("boolean array value", new boolean[]{false, true, false},
             config.getBooleanArray("value.boolean.array"));
@@ -104,13 +107,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$getFloat() {
+    void test$getFloat() {
         assertNull("float value comment", config.getComment("value.float"));
         assertEquals("float value", 6.5f, config.getFloat("value.float"), 0f);
     }
 
     @Test
-    public void test$getFloatArray() {
+    void test$getFloatArray() {
         assertNull("float array value comment", config.getComment("value.float.array"));
         assertArrayEquals("float array value", new float[]{-10.5f, 0.123f, 300f},
             config.getFloatArray("value.float.array"), 0f);
@@ -120,13 +123,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$getDouble() {
+    void test$getDouble() {
         assertNull("double value comment", config.getComment("value.double"));
         assertEquals("double value", 15.123321d, config.getDouble("value.double"), 0d);
     }
 
     @Test
-    public void test$getDoubleArray() {
+    void test$getDoubleArray() {
         assertNull("double array value comment", config.getComment("value.double.array"));
         assertArrayEquals("double array value", new double[]{-10.123123d, 0.0d, -300d},
             config.getDoubleArray("value.double.array"), 0d);
@@ -136,7 +139,7 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$setValue() {
+    void test$setValue() {
         config.setValue("set.string", "String value", "Test comment");
         assertEquals("Set string value comment", "Test comment", config.getComment("set.string"));
         assertEquals("Set string value", "String value", config.getString("set.string"));
@@ -152,7 +155,7 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$save() throws IOException {
+    void test$save() throws IOException {
         config.setValue("set.string", "String value", "Test comment");
         config.setValue("set.double.array", new Object[]{5.1d, -6.123d, 0.0d}, "Test multiline\nComment");
         config.setValue("set.double.array.one", new Object[]{-5.5d});
@@ -166,13 +169,13 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$setComment() {
+    void test$setComment() {
         config.setComment("value.string", "Test comment");
         assertEquals("Different comments", "Test comment", config.getComment("value.string"));
     }
 
     @Test
-    public void test$setDefault() throws IOException {
+    void test$setDefault() throws IOException {
         val config = new PropertiesConfig("test", path, null, defaultPath);
         config.setValue("default.value", "bad_value");
         config.restoreDefaultFile();
@@ -183,7 +186,7 @@ public class TestPropertiesConfig {
     }
 
     @Test
-    public void test$version() throws IOException {
+    void test$version() throws IOException {
         config.setValue("version", "2");
         config.save();
         val config = new PropertiesConfig("test", path, null, defaultPath);

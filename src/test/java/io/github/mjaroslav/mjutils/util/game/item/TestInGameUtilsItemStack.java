@@ -4,6 +4,7 @@ import com.github.mjaroslav.mcingametester.api.Assert;
 import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
 import lombok.val;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -12,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.isEquals;
 import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.requireNonNullStackOrElse;
 
-@Common
+@Common(when = LoaderState.INITIALIZATION)
 public class TestInGameUtilsItemStack {
     private static ItemStack testStackStick;
     private static ItemStack testStackDiamond;

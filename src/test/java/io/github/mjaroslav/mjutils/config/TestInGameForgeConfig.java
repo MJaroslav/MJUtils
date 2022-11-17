@@ -1,43 +1,47 @@
 package io.github.mjaroslav.mjutils.config;
 
-import org.junit.After;
+import com.github.mjaroslav.mcingametester.api.AfterEach;
+import com.github.mjaroslav.mcingametester.api.BeforeEach;
+import com.github.mjaroslav.mcingametester.api.Common;
+import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
+import net.minecraft.util.ReportedException;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class TestForgeConfig {
+@Common(when = LoaderState.CONSTRUCTING)
+public class TestInGameForgeConfig {
     private static final Path path = Paths.get("TestForgeConfig.cfg");
 
     private ForgeConfig config;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         config = new ForgeConfig("test", path);
         config.setShouldFailOnError(true);
         config.load();
     }
 
-    @After
-    public void after() throws IOException {
+    @AfterEach
+    void after() throws IOException {
         Files.deleteIfExists(path);
     }
 
     @Test
-    public void test$registerSyncCallback() {
+    void test$registerSyncCallback() {
         config.registerSyncCallback(() -> {
             throw new IllegalStateException("Expected");
         });
-        Assert.assertThrows("Expected exception not thrown", RuntimeException.class, config::load);
-        Assert.assertThrows("Expected exception not thrown", RuntimeException.class, config::save);
+        Assert.assertThrows("Expected exception not thrown", ReportedException.class, config::load);
+        Assert.assertThrows("Expected exception not thrown", ReportedException.class, config::save);
     }
 
     @Test
-    public void test$unregisterSyncCallback() {
+    void test$unregisterSyncCallback() {
         Runnable callback = () -> {
             throw new IllegalStateException("Expected");
         };

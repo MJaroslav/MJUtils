@@ -5,15 +5,17 @@ import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.JsonPrimitive;
 import blue.endless.jankson.annotation.SerializedName;
+import com.github.mjaroslav.mcingametester.api.AfterEach;
+import com.github.mjaroslav.mcingametester.api.BeforeEach;
+import com.github.mjaroslav.mcingametester.api.Common;
+import com.github.mjaroslav.mcingametester.api.Test;
+import cpw.mods.fml.common.LoaderState;
 import io.github.mjaroslav.mjutils.util.io.ResourcePath;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,27 +23,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public class TestJson5Config {
+@Common(when = LoaderState.CONSTRUCTING)
+public class TestInGameJson5Config {
     private static final ResourcePath resourcePath = ResourcePath.full("/io/github/mjaroslav/mjutils/config/TestJson5Config.json5");
     private static final ResourcePath defaultPath = ResourcePath.full("/io/github/mjaroslav/mjutils/config/TestJson5ConfigDefault.json5");
     private static final Path path = Paths.get("TestJson5Config.json5");
 
     private Json5Config config;
 
-    @Before
-    public void before() throws IOException {
+    @BeforeEach
+    void before() throws IOException {
         Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
         config = new Json5Config("test", path);
         config.load();
     }
 
-    @After
-    public void after() throws IOException {
+    @AfterEach
+    void after() throws IOException {
         Files.deleteIfExists(path);
     }
 
     @Test
-    public void test$value() {
+    void test$value() {
         val expected = createMock();
         var actual = config.getValue();
         Assert.assertEquals("JsonObjects not equals", expected, actual);
@@ -53,14 +56,14 @@ public class TestJson5Config {
     }
 
     @Test
-    public void test$get() {
+    void test$get() {
         val expected = new GenericMock();
         val actual = config.get(GenericMock.class);
         Assert.assertEquals("Generics not equals", expected, actual);
     }
 
     @Test
-    public void test$set() {
+    void test$set() {
         val expected = new GenericMock();
         var actual = config.get(GenericMock.class);
         Assert.assertEquals("Generics not equals", expected, actual);
@@ -72,7 +75,7 @@ public class TestJson5Config {
     }
 
     @Test
-    public void test$save() throws IOException {
+    void test$save() throws IOException {
         Files.deleteIfExists(path);
         config.save();
         Assert.assertTrue("File not created", Files.isRegularFile(path));
@@ -84,7 +87,7 @@ public class TestJson5Config {
     }
 
     @Test
-    public void test$setDefault() throws Exception {
+    void test$setDefault() throws Exception {
         val config = new Json5Config("test", path, null, defaultPath);
         config.restoreDefaultFile();
         val actual = config.getValue();
@@ -95,7 +98,7 @@ public class TestJson5Config {
     }
 
     @Test
-    public void test$version() {
+    void test$version() {
         config.setValue(createMock());
         config.save();
         val configForLoad = new Json5Config("test", path, "1", defaultPath);
