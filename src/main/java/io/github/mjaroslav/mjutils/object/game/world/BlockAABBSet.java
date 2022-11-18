@@ -280,13 +280,13 @@ public class BlockAABBSet {
                     result.maxY *= -1;
                     result.maxZ *= -1;
                 } else {
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.minY += result.minZ;
                     result.minZ = result.minY - result.minZ;
                     result.minY -= result.minZ;
                     if (xReverse) result.minY *= -1;
                     else result.minZ *= -1;
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.maxY += result.maxZ;
                     result.maxZ = result.maxY - result.maxZ;
                     result.maxY -= result.maxZ;
@@ -303,13 +303,13 @@ public class BlockAABBSet {
                     result.maxZ *= -1;
                 } else {
                     result.centralize();
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.minX += result.minZ;
                     result.minZ = result.minX - result.minZ;
                     result.minX -= result.minZ;
                     if (yReverse) result.minX *= -1;
                     else result.minZ *= -1;
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.maxX += result.maxZ;
                     result.maxZ = result.maxX - result.maxZ;
                     result.maxX -= result.maxZ;
@@ -325,13 +325,13 @@ public class BlockAABBSet {
                     result.maxX *= -1;
                     result.maxY *= -1;
                 } else {
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.minX += result.minY;
                     result.minY = result.minX - result.minY;
                     result.minX -= result.minY;
                     if (zReverse) result.minX *= -1;
                     else result.minY *= -1;
-                    // (a;b) -> (b;-a)
+                    // (a;b) <-> (b;-a)
                     result.maxX += result.maxY;
                     result.maxY = result.maxX - result.maxY;
                     result.maxX -= result.maxY;
@@ -479,13 +479,13 @@ public class BlockAABBSet {
         public @NotNull BlockAABB rotateX(boolean reverse) {
             val result = copy();
             result.centralize();
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.minY += result.minZ;
             result.minZ = result.minY - result.minZ;
             result.minY -= result.minZ;
             if (reverse) result.minY *= -1;
             else result.minZ *= -1;
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.maxY += result.maxZ;
             result.maxZ = result.maxY - result.maxZ;
             result.maxY -= result.maxZ;
@@ -500,13 +500,13 @@ public class BlockAABBSet {
         public @NotNull BlockAABB rotateY(boolean reverse) {
             val result = copy();
             result.centralize();
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.minX += result.minZ;
             result.minZ = result.minX - result.minZ;
             result.minX -= result.minZ;
             if (reverse) result.minX *= -1;
             else result.minZ *= -1;
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.maxX += result.maxZ;
             result.maxZ = result.maxX - result.maxZ;
             result.maxX -= result.maxZ;
@@ -521,13 +521,13 @@ public class BlockAABBSet {
         public @NotNull BlockAABB rotateZ(boolean reverse) {
             val result = copy();
             result.centralize();
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.minX += result.minY;
             result.minY = result.minX - result.minY;
             result.minX -= result.minY;
             if (reverse) result.minX *= -1;
             else result.minY *= -1;
-            // (a;b) -> (b;-a)
+            // (a;b) <-> (b;-a)
             result.maxX += result.maxY;
             result.maxY = result.maxX - result.maxY;
             result.maxX -= result.maxY;
@@ -569,7 +569,7 @@ public class BlockAABBSet {
         }
 
         /**
-         * Just swaps minimums and maximus of each axis if they not on own places.
+         * Just swaps minimums and maximums of each axis if they not on own places.
          */
         public void normalize() {
             if (maxX < minX) {

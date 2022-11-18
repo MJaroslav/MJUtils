@@ -35,7 +35,7 @@ public class UtilsDesktop {
     public void openURL(@NotNull URI uri) {
         DESKTOP.ifPresent(pair -> {
             try {
-                pair.getA().invoke(pair.getB(), uri);
+                pair.getX().invoke(pair.getY(), uri);
             } catch (Throwable e) {
                 ModInfo.loggerLibrary.error("Couldn't open link", e);
             }

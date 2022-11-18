@@ -24,13 +24,13 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
     @Override
     public void onMouseClicked(int x, int y, boolean isDrugged) {
         super.onMouseClicked(x, y, isDrugged);
-        if(isDrugged)
+        if (isDrugged)
             return;
         ScrollingContentElement selected = null;
         Pair<Boolean, Pair<Integer, Integer>> hoveredElement = new Pair<>();
         for (ScrollingContentElement element : contentList) {
             hoveredElement = element.isHovered(this, this.x, this.y + 4 - (int) scrollPosition, x, y);
-            if (hoveredElement.getA()) {
+            if (hoveredElement.getX()) {
                 selected = element;
                 break;
             }
@@ -38,8 +38,8 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
         if (selected != null) {
             ScrollingContentElement.OnMouseClickListener listener = selected.getOnMouseClickListener();
             if (listener != null)
-                listener.listen(selected, hoveredElement.getB().getA(),
-                        hoveredElement.getB().getB());
+                listener.listen(selected, hoveredElement.getY().getX(),
+                    hoveredElement.getY().getY());
         }
 
     }
@@ -54,7 +54,7 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
         GL11.glEnable(GL11.GL_BLEND);
         for (ScrollingContentElement content : contentList) {
             val contentHovered = content.isHovered(this, beginX, shiftY, mouseX, mouseY);
-            boolean hovered = isPaneHovered(mouseX, mouseY) && contentHovered.getA();
+            boolean hovered = isPaneHovered(mouseX, mouseY) && contentHovered.getX();
             content.drawScreen(beginX, y, hovered, floatTicks);
             if (Debug.renderDebugLinesInScrollingPane)
                 content.drawDebugLines(beginX, y, hovered, floatTicks);

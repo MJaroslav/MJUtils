@@ -30,11 +30,11 @@ public class GuiImage implements ScrollingContentElement {
     public Pair<Boolean, Pair<Integer, Integer>> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
         val result = new Pair<Boolean, Pair<Integer, Integer>>();
         if (mouseX >= contentX + xBegin && mouseX <= contentX + xBegin + contentWidth &&
-                mouseY >= contentY + yOffset && mouseY <= contentY + yOffset + contentHeight) {
-            result.setA(true);
-            result.setB(new Pair<>((int) (contentX + xBegin + contentWidth - mouseX),
-                    (int) (contentY + yOffset + contentHeight - mouseY)));
-        } else result.setA(false);
+            mouseY >= contentY + yOffset && mouseY <= contentY + yOffset + contentHeight) {
+            result.setX(true);
+            result.setY(new Pair<>((int) (contentX + xBegin + contentWidth - mouseX),
+                (int) (contentY + yOffset + contentHeight - mouseY)));
+        } else result.setX(false);
         return result;
     }
 
