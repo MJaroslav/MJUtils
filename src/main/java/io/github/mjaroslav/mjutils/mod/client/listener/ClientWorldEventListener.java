@@ -29,13 +29,13 @@ public class ClientWorldEventListener {
         val world = Minecraft.getMinecraft().theWorld;
         val player = Minecraft.getMinecraft().thePlayer;
         if (mov == null || world == null || player == null || (BlockCollisionHighlighting.enable == 2
-            && !player.isSneaking())) return;
+                && !player.isSneaking())) return;
         final int x = mov.blockX, y = mov.blockY, z = mov.blockZ;
         val block = world.getBlock(x, y, z);
         if (block == null) return;
         val boxes = new ArrayList<AxisAlignedBB>();
         block.addCollisionBoxesToList(world, x, y, z, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 2, y + 3,
-            z + 2), boxes, player);
+                z + 2), boxes, player);
         if (boxes.isEmpty()) return;
         val lighting = glGetBoolean(GL_LIGHTING);
         val texture = glGetBoolean(GL_TEXTURE_2D);
@@ -53,12 +53,12 @@ public class ClientWorldEventListener {
         for (var box : boxes) {
             if (BlockAABBSet.isDeadZoned(box, x, y, z))
                 color = UtilsFormat.unpackColorIntToDoubleArray(BlockCollisionHighlighting.deadColor, ColorFormat.RGB,
-                    ColorFormat.RGB);
+                        ColorFormat.RGB);
             else {
                 color = UtilsFormat.unpackColorIntToDoubleArray(BlockCollisionHighlighting.colorCycle[colorCounter],
-                    ColorFormat.RGB, ColorFormat.RGB);
+                        ColorFormat.RGB, ColorFormat.RGB);
                 colorCounter++;
-                if (colorCounter > BlockCollisionHighlighting.colorCycle.length) colorCounter = 0;
+                if (colorCounter >= BlockCollisionHighlighting.colorCycle.length) colorCounter = 0;
             }
             glColor3d(color[0], color[1], color[2]);
             // Just indian code for all box edges

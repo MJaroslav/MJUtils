@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.object.game.world;
 
-import io.github.mjaroslav.mjutils.object.Trio.MonoTrio;
+import io.github.mjaroslav.mjutils.object.Trio.NumberTrio;
 import lombok.ToString;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -12,8 +12,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;
 
+// TODO: Add Trio as methods
 @ToString(callSuper = true)
-public class Pos extends MonoTrio<Double> implements Comparable<Object> {
+public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     public static final Pos xyz = new Pos(-1, -1, -1);
     public static final Pos xy = new Pos(-1, -1, 0);
     public static final Pos xyZ = new Pos(-1, -1, 1);
@@ -41,7 +42,6 @@ public class Pos extends MonoTrio<Double> implements Comparable<Object> {
     public static final Pos XYz = new Pos(1, 1, -1);
     public static final Pos XY = new Pos(1, 1, 0);
     public static final Pos XYZ = new Pos(1, 1, 1);
-
 
     public Pos(@NotNull ChunkPosition position) {
         super((double) position.chunkPosX, (double) position.chunkPosY, (double) position.chunkPosZ);
@@ -415,13 +415,13 @@ public class Pos extends MonoTrio<Double> implements Comparable<Object> {
     }
 
     @Contract(" -> new")
-    public MonoTrio<Integer> intValue() {
-        return new MonoTrio<>(intX(), intY(), intZ());
+    public NumberTrio<Integer> intValue() {
+        return new NumberTrio<>(intX(), intY(), intZ());
     }
 
     @Contract(" -> new")
-    public MonoTrio<Float> floatValue() {
-        return new MonoTrio<>(floatX(), floatY(), floatZ());
+    public NumberTrio<Float> floatValue() {
+        return new NumberTrio<>(floatX(), floatY(), floatZ());
     }
 
     @Contract(" -> new")
@@ -437,45 +437,45 @@ public class Pos extends MonoTrio<Double> implements Comparable<Object> {
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ChunkPosition position) {
         return AxisAlignedBB.getBoundingBox(min(getX(), position.chunkPosX), min(getY(), position.chunkPosY), min(getZ(),
-            position.chunkPosZ), max(getX(), position.chunkPosX), max(getY(), position.chunkPosY), max(getZ(), position.chunkPosZ));
+                position.chunkPosZ), max(getX(), position.chunkPosX), max(getY(), position.chunkPosY), max(getZ(), position.chunkPosZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull Vec3 vec) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + vec.xCoord), min(getY(), getY() + vec.yCoord),
-            min(getZ(), getZ() + vec.zCoord), max(getX(), getX() + vec.xCoord), max(getY(),
-                getY() + vec.yCoord), max(getZ(), getZ() + vec.zCoord));
+                min(getZ(), getZ() + vec.zCoord), max(getX(), getX() + vec.xCoord), max(getY(),
+                        getY() + vec.yCoord), max(getZ(), getZ() + vec.zCoord));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ChunkCoordinates coordinates) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + coordinates.posX), min(getY(), getY() + coordinates.posY),
-            min(getZ(), getZ() + coordinates.posZ), max(getX(), getX() + coordinates.posX), max(getY(),
-                getY() + coordinates.posY), max(getZ(), getZ() + coordinates.posZ));
+                min(getZ(), getZ() + coordinates.posZ), max(getX(), getX() + coordinates.posX), max(getY(),
+                        getY() + coordinates.posY), max(getZ(), getZ() + coordinates.posZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ForgeDirection direction) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + direction.offsetX), min(getY(), getY() + direction.offsetY),
-            min(getZ(), getZ() + direction.offsetZ), max(getX(), getX() + direction.offsetX), max(getY(),
-                getY() + direction.offsetY), max(getZ(), getZ() + direction.offsetZ));
+                min(getZ(), getZ() + direction.offsetZ), max(getX(), getX() + direction.offsetX), max(getY(),
+                        getY() + direction.offsetY), max(getZ(), getZ() + direction.offsetZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull Pos pos) {
         return AxisAlignedBB.getBoundingBox(min(getX(), pos.getX()), min(getY(), pos.getY()), min(getZ(), pos.getZ()),
-            max(getX(), pos.getX()), max(getY(), pos.getY()), max(getZ(), pos.getZ()));
+                max(getX(), pos.getX()), max(getY(), pos.getY()), max(getZ(), pos.getZ()));
     }
 
     @Contract("_, _, _ -> new")
     public AxisAlignedBB toAABB(double x, double y, double z) {
         return AxisAlignedBB.getBoundingBox(min(getX(), x), min(getY(), y), min(getZ(), z), max(getX(), x),
-            max(getY(), y), max(getZ(), z));
+                max(getY(), y), max(getZ(), z));
     }
 
     public boolean isInsideOfBox(@NotNull AxisAlignedBB aabb) {
         return getX() > aabb.minX && getX() < aabb.maxX && getY() > aabb.minY && getY() < aabb.maxY
-            && getZ() > aabb.minZ && getZ() < aabb.maxZ;
+                && getZ() > aabb.minZ && getZ() < aabb.maxZ;
     }
 
     @Contract(" -> new")
@@ -507,6 +507,10 @@ public class Pos extends MonoTrio<Double> implements Comparable<Object> {
             x = vec.xCoord;
             y = vec.yCoord;
             z = vec.zCoord;
+        } else if (o instanceof NumberTrio<?> trio) {
+            x = trio.getX().doubleValue();
+            y = trio.getY().doubleValue();
+            z = trio.getZ().doubleValue();
         } else return 0;
         return (int) (getY() == y ? (getZ() == z ? getX() - x : getZ() - z) : getY() - y);
     }
@@ -523,6 +527,8 @@ public class Pos extends MonoTrio<Double> implements Comparable<Object> {
             return intX() == position.chunkPosX && intY() == position.chunkPosY && intZ() == position.chunkPosZ;
         else if (o instanceof Vec3 vec)
             return getX() == vec.xCoord && getY() == vec.yCoord && getZ() == vec.zCoord;
+        else if (o instanceof NumberTrio<?> trio)
+            return getX().equals(trio.getX()) && getY().equals(trio.getY()) && getZ().equals(trio.getZ());
         else return super.equals(o);
     }
 }
