@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,8 @@ import java.util.Map;
  * All names will be converted with this pattern: <code>CategoryClassName -> class_name</code>,
  * <code>ClassName -> class_name</code>, <code>fieldName -> field_name</code>. You can set custom name by {@link Name}
  * annotation. Commentary can be added by using {@link Comment}. For double and int types you can set min and max
- * values by {@link Range}. You can add language key for translation by {@link LangKey}. String values can be
+ * values by {@link Range}. Also, for int you can use {@link HEX} for use hexadecimal representation of a number in file.
+ * You can add language key for translation by {@link LangKey}. String values can be
  * specified by one of {@link Pattern}, {@link Values}, {@link Values.Color} or {@link Values.Mod} annotations.
  * If changing of property (and category) applied only after world or game restarting, use {@link Restart}.
  * Finally, you can configure and fix array size with {@link ArraySize} annotation.
@@ -42,6 +44,14 @@ public class ForgeAnnotationConfig extends ForgeConfig {
      * Regexp pattern of {@link ForgeAnnotationConfig#COLOR_VALID_VALUES}.
      */
     public static final java.util.regex.Pattern COLOR_VALID_PATTERN = java.util.regex.Pattern.compile("^[0-9a-f]$");
+    /**
+     * Regexp pattern for {@link HEX} integers: # and 6 HEX digits.
+     */
+    public static final java.util.regex.Pattern HEX_COLOR_PATTERN = java.util.regex.Pattern.compile("^#[0-9A-Fa-f]{6}$");
+    /**
+     * Regexp pattern for {@link HEX} integers with alpha: # and 8 HEX digits.
+     */
+    public static final java.util.regex.Pattern HEX_COLOR_ALPHA_PATTERN = java.util.regex.Pattern.compile("^#[0-9A-Fa-f]8}$");
 
     protected final @NotNull Class<?> rootCategoryClass;
     protected final @NotNull Map<Field, Object> defaults = new HashMap<>();
@@ -146,37 +156,52 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         Property property;
         switch (parsedType) {
             case INTEGER -> {
-                if (isArray)
-                    property = config.properties.get(categoryName, propertyName, (int[]) defaultValue, propertyComment);
-                else
-                    property = config.properties.get(categoryName, propertyName, (int) defaultValue, propertyComment);
-                field.set(null, isArray ? property.getIntList() : property.getInt());
-                var hasRange = false;
-                var unlimMin = true;
-                var unlimMax = true;
-                val range = field.getAnnotation(Range.class);
-                if (range != null) {
-                    if (range.max() != Double.MAX_VALUE && range.max() != Integer.MAX_VALUE) {
-                        property.setMaxValue((int) range.max());
-                        unlimMax = false;
-                    }
-                    if (range.min() != Double.MIN_VALUE && range.min() != Integer.MIN_VALUE) {
-                        property.setMinValue((int) range.min());
-                        unlimMin = false;
-                    }
-                    hasRange = !unlimMax || !unlimMin;
-                }
-                if (StringUtils.isNotBlank(property.comment))
-                    if (hasRange) {
-                        var rangeComment = new StringBuilder(" [range:");
-                        if (!unlimMin)
-                            rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
-                        if (!unlimMax)
-                            rangeComment.append(" <= ").append(property.getMaxValue());
-                        rangeComment.append(", default: ").append(property.getDefault()).append("]");
-                        property.comment += rangeComment.toString();
+                val hex = field.getAnnotation(HEX.class);
+                if (hex != null) { // Special case for HEX colors
+                    val format = "#%0" + (hex.alpha() ? 8 : 6) + "X";
+                    if (isArray) {
+                        val strings = Arrays.stream(((int[]) defaultValue)).mapToObj(i -> String.format(format, i))
+                            .toArray(String[]::new);
+                        property = config.properties.get(categoryName, propertyName, strings, propertyComment);
                     } else
-                        property.comment += " [default: " + property.getDefault() + "]";
+                        property = config.properties.get(categoryName, propertyName, String.format(format, defaultValue),
+                            propertyComment);
+                    property.setValidationPattern(hex.alpha() ? HEX_COLOR_ALPHA_PATTERN : HEX_COLOR_PATTERN);
+                    field.set(null, isArray ? Arrays.stream(property.getStringList()).mapToInt(s ->
+                        Integer.parseInt(s.substring(1), 16)).toArray() : Integer.parseInt(property.getString().substring(1), 16));
+                } else { // Others cases of int
+                    if (isArray)
+                        property = config.properties.get(categoryName, propertyName, (int[]) defaultValue, propertyComment);
+                    else
+                        property = config.properties.get(categoryName, propertyName, (int) defaultValue, propertyComment);
+                    field.set(null, isArray ? property.getIntList() : property.getInt());
+                    var hasRange = false;
+                    var unlimMin = true;
+                    var unlimMax = true;
+                    val range = field.getAnnotation(Range.class);
+                    if (range != null) {
+                        if (range.max() != Double.MAX_VALUE && range.max() != Integer.MAX_VALUE) {
+                            property.setMaxValue((int) range.max());
+                            unlimMax = false;
+                        }
+                        if (range.min() != Double.MIN_VALUE && range.min() != Integer.MIN_VALUE) {
+                            property.setMinValue((int) range.min());
+                            unlimMin = false;
+                        }
+                        hasRange = !unlimMax || !unlimMin;
+                    }
+                    if (StringUtils.isNotBlank(property.comment))
+                        if (hasRange) {
+                            var rangeComment = new StringBuilder(" [range:");
+                            if (!unlimMin)
+                                rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
+                            if (!unlimMax)
+                                rangeComment.append(" <= ").append(property.getMaxValue());
+                            rangeComment.append(", default: ").append(property.getDefault()).append("]");
+                            property.comment += rangeComment.toString();
+                        } else
+                            property.comment += " [default: " + property.getDefault() + "]";
+                }
             }
             case BOOLEAN -> {
                 if (isArray)

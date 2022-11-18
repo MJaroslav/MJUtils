@@ -1,10 +1,7 @@
 package io.github.mjaroslav.mjutils.mod.lib;
 
 
-import io.github.mjaroslav.mjutils.config.annotations.Comment;
-import io.github.mjaroslav.mjutils.config.annotations.Name;
-import io.github.mjaroslav.mjutils.config.annotations.Range;
-import io.github.mjaroslav.mjutils.config.annotations.Restart;
+import io.github.mjaroslav.mjutils.config.annotations.*;
 
 @Comment("Root option category, contains all options and subcategories.")
 public class General {
@@ -12,6 +9,22 @@ public class General {
     public static class Debug {
         @Comment("Draw special lines in GuiContentScrollingPane and in child elements.")
         public static boolean renderDebugLinesInScrollingPane = false;
+
+        @Comment("Block collision highlighting")
+        public static class BlockCollisionHighlighting {
+            @Range(min = 0, max = 2)
+            @Comment("Enable highlighting of block bounding boxes. 0 - disable, 1 - enable, 2 - enable while sneaking. " +
+                "Can cause problems if block creating it's own collision list with dynamic data such as entities and world.")
+            public static int enable = 0;
+
+            @HEX
+            @Comment("Colors for lines of AABB in cyclic order.")
+            public static int[] colorCycle = new int[]{0x0000FF, 0x00FF00, 0xFF00FF, 0xFFFF00, 0x00FFFF};
+
+            @HEX
+            @Comment("Color for lines of AABB with dead zones.")
+            public static int deadColor = 0xFF0000;
+        }
     }
 
     @Comment("Cosmetic options, not make changes on server.")
