@@ -18,6 +18,7 @@
     "MixinEnchantment",
     "MixinEntityCreeper",
     "MixinEntityFishHook",
+    "MixinEntityPigZombie",
     "MixinEntityTNTPrimed",
     "MixinFishingHooks",
     "MixinFMLModContainer",
@@ -25,10 +26,10 @@
     "MixinPotion"
   ],
   "client": [
-      "MixinGuiButton",
-      "MixinGuiButtonExt",
-      "MixinGuiTextField",
-      "MixinPlayerControllerMP"
+    "MixinGuiButton",
+    "MixinGuiButtonExt",
+    "MixinGuiTextField",
+    "MixinPlayerControllerMP"
   ],
   "server": [
   ]

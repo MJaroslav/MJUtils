@@ -174,9 +174,9 @@ public class UtilsFishing {
 
         @Override
         public boolean test(@Nullable WeightedRandomFishable input) {
-            return input == null || !UtilsItemStack.isEquals(((AccessorWeightedRandomFishable) input)
-                    .getFishableStack(), pattern) || ((AccessorWeightedRandomFishable) input).getEnchantable()
-                    != enchantable || ((AccessorWeightedRandomFishable) input).getRandomDamage() != randomDamage;
+            return input == null || !UtilsItemStack.equals(((AccessorWeightedRandomFishable) input)
+                .getFishableStack(), pattern) || ((AccessorWeightedRandomFishable) input).getEnchantable()
+                != enchantable || ((AccessorWeightedRandomFishable) input).getRandomDamage() != randomDamage;
         }
     }
 
@@ -195,8 +195,8 @@ public class UtilsFishing {
 
         @Override
         public boolean test(WeightedRandomFishable input) {
-            return input == null || !UtilsItemStack.isItemsEquals(((AccessorWeightedRandomFishable) input)
-                    .getFishableStack(), pattern);
+            return input == null || !UtilsItemStack.equalsItems(((AccessorWeightedRandomFishable) input)
+                .getFishableStack(), pattern);
         }
     }
 }

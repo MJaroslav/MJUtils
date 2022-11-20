@@ -1,9 +1,9 @@
 package io.github.mjaroslav.mjutils.object;
 
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,17 +14,17 @@ import java.util.stream.Collectors;
 
 @Getter
 public class DelegatingMap<K, V> implements Map<K, V> {
-    public final @Nullable BiPredicate<K, Object> equalsHandler;
-    public final @Nullable ToIntFunction<K> hashCodeHandler;
-    public final @NotNull Map<Wrapper<K>, V> impl;
-    public final @NotNull Class<?> cachedKeyClass;
+    protected final @Nullable BiPredicate<K, Object> equalsDelegate;
+    protected final @Nullable ToIntFunction<K> hashCodeDelegate;
+    protected final @NotNull Map<DelegatingObject<K>, V> impl;
+    protected final @NotNull Class<?> genericType;
 
-    public DelegatingMap(@Nullable BiPredicate<K, Object> equalsHandler, @Nullable ToIntFunction<K> hashCodeHandler,
-                         @NotNull Map<Wrapper<K>, V> impl) {
-        this.equalsHandler = equalsHandler;
-        this.hashCodeHandler = hashCodeHandler;
+    public DelegatingMap(@Nullable BiPredicate<K, Object> equalsDelegate, @Nullable ToIntFunction<K> hashCodeDelegate,
+                         @NotNull Map<DelegatingObject<K>, V> impl) {
+        this.equalsDelegate = equalsDelegate;
+        this.hashCodeDelegate = hashCodeDelegate;
         this.impl = impl;
-        cachedKeyClass = UtilsReflection.getParameterizedClass(getClass(), 0);
+        genericType = UtilsReflection.getParameterizedClass(getClass(), 0);
     }
 
     @Override
@@ -47,19 +47,15 @@ public class DelegatingMap<K, V> implements Map<K, V> {
         return impl.containsValue(value);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public @Nullable V get(@Nullable Object key) {
-        if (key != null && cachedKeyClass.isAssignableFrom(key.getClass()))
-            return impl.get(new Wrapper<>((K) key, equalsHandler, hashCodeHandler));
-        else return null;
+    @Contract("_ -> new")
+    public static @NotNull <K2, V2> DelegatingMap<K2, V2> hashMap(@Nullable BiPredicate<K2, Object> equalsDelegate) {
+        return new DelegatingMap<>(equalsDelegate, null, new HashMap<>());
     }
 
-    @Override
-    public @Nullable V put(@Nullable K key, @Nullable V value) {
-        return impl.put(new Wrapper<>(key, equalsHandler, hashCodeHandler), value);
+    @Contract("_ -> new")
+    public static @NotNull <K2, V2> DelegatingMap<K2, V2> hashMap(@Nullable ToIntFunction<K2> hashCodeDelegate) {
+        return new DelegatingMap<>(null, hashCodeDelegate, new HashMap<>());
     }
-
 
     @Override
     public @Nullable V remove(Object key) {
@@ -67,9 +63,10 @@ public class DelegatingMap<K, V> implements Map<K, V> {
         return value == null ? null : impl.remove(value);
     }
 
-    @Override
-    public void putAll(@NotNull Map<? extends K, ? extends V> m) {
-        m.forEach((key, value) -> impl.put(new Wrapper<>(key, equalsHandler, hashCodeHandler), value));
+    @Contract("_, _ -> new")
+    public static @NotNull <K2, V2> DelegatingMap<K2, V2> hashMap(@Nullable BiPredicate<K2, Object> equalsDelegate,
+                                                                  @Nullable ToIntFunction<K2> hashCodeDelegate) {
+        return new DelegatingMap<>(equalsDelegate, hashCodeDelegate, new HashMap<>());
     }
 
     @Override
@@ -77,10 +74,11 @@ public class DelegatingMap<K, V> implements Map<K, V> {
         impl.clear();
     }
 
-    @NotNull
+    @SuppressWarnings("unchecked")
     @Override
-    public Set<K> keySet() {
-        return impl.keySet().stream().map(wrapper -> wrapper.key).collect(Collectors.toSet());
+    public @Nullable V get(@Nullable Object key) {
+        return key != null && genericType.isAssignableFrom(key.getClass()) ?
+            impl.get(DelegatingObject.of((K) key, equalsDelegate, hashCodeDelegate)) : null;
     }
 
     @NotNull
@@ -89,36 +87,28 @@ public class DelegatingMap<K, V> implements Map<K, V> {
         return impl.values();
     }
 
+    @Override
+    public @Nullable V put(@Nullable K key, @Nullable V value) {
+        return impl.put(DelegatingObject.of(key, equalsDelegate, hashCodeDelegate), value);
+    }
+
+    @Override
+    public void putAll(@NotNull Map<? extends K, ? extends V> m) {
+        m.forEach((key, value) -> impl.put(DelegatingObject.of(key, equalsDelegate, hashCodeDelegate), value));
+    }
+
+    @NotNull
+    @Override
+    public DelegatingSet<K> keySet() {
+        val result = DelegatingSet.hashSet(equalsDelegate, hashCodeDelegate);
+        impl.keySet().stream().map(DelegatingObject::getValue).forEach(result::add);
+        return result;
+    }
+
     @NotNull
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return impl.entrySet().stream().map(entry ->
-                        new AbstractMap.SimpleEntry<>(entry.getKey().key, entry.getValue()))
-                .collect(Collectors.toSet());
-    }
-
-    @AllArgsConstructor
-    public static class Wrapper<K> {
-        public final @Nullable K key;
-        public final @Nullable BiPredicate<K, Object> equalsHandler;
-        public final @Nullable ToIntFunction<K> hashCodeHandler;
-
-        @Override
-        public int hashCode() {
-            return key != null && hashCodeHandler != null
-                    ? hashCodeHandler.applyAsInt(key) : Objects.hashCode(key);
-        }
-
-        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-        @Override
-        public boolean equals(@Nullable Object obj) {
-            return key != null && equalsHandler != null
-                    ? equalsHandler.test(key, obj) : Objects.equals(key, obj);
-        }
-    }
-
-    public static @NotNull <K2, V2> DelegatingMap<K2, V2> byHashMap(@Nullable BiPredicate<K2, Object> equalsHandler,
-                                                                    @Nullable ToIntFunction<K2> hashCodeHandler) {
-        return new DelegatingMap<>(equalsHandler, hashCodeHandler, new HashMap<>());
+        return impl.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey().getValue(),
+            entry.getValue())).collect(Collectors.toSet());
     }
 }

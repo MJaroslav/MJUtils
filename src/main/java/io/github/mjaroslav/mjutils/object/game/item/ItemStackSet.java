@@ -19,12 +19,8 @@ public class ItemStackSet extends DelegatingSet<ItemStack> {
     }
 
     public ItemStackSet(int params) {
-        super((stack, obj) -> {
-            ItemStack secondStack = null;
-            if (obj instanceof ItemStack)
-                secondStack = (ItemStack) obj;
-            return UtilsItemStack.isEquals(stack, secondStack, params);
-        }, null, new HashSet<>());
+        super((stack, obj) -> UtilsItemStack.equals(stack, obj instanceof ItemStack second ? second : null, params),
+            stack -> UtilsItemStack.hashCode(stack, params), new HashSet<>());
     }
 
     public ItemStackSet(@NotNull Collection<ItemStack> stacks, int params) {

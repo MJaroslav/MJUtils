@@ -10,8 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.isEquals;
-import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.requireNonNullStackOrElse;
+import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.*;
 
 @Common(when = LoaderState.INITIALIZATION)
 public class TestInGameUtilsItemStack {
@@ -38,9 +37,9 @@ public class TestInGameUtilsItemStack {
         val actualNull = requireNonNullStackOrElse(testStackNull, expectedElse);
         val actualItemNull = requireNonNullStackOrElse(testStackItemNull, expectedElse);
         val actualSizeZero = requireNonNullStackOrElse(testStackSizeZero, expectedElse);
-        Assert.isTrue(isEquals(expected, actual), "Normal stack");
-        Assert.isTrue(isEquals(expectedElse, actualNull), "Null stack");
-        Assert.isTrue(isEquals(expectedElse, actualItemNull), "Item null stack");
-        Assert.isTrue(isEquals(expectedElse, actualSizeZero), "Zero size stack");
+        Assert.isTrue(UtilsItemStack.equals(expected, actual), "Normal stack");
+        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualNull), "Null stack");
+        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualItemNull), "Item null stack");
+        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualSizeZero), "Zero size stack");
     }
 }

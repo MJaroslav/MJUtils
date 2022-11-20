@@ -9,8 +9,12 @@ import java.util.Arrays;
 
 @UtilityClass
 public class UtilsFormat {
-    public boolean isMask(int test, int mask) {
-        return (test & mask) == mask;
+    public boolean isMaskAnd(int test, int masks) {
+        return (test & masks) == masks;
+    }
+
+    public boolean isMaskOr(int test, int masks) {
+        return (test & masks) != 0;
     }
 
     public int @NotNull [] unpackColorIntToIntArray(int packedColor) {

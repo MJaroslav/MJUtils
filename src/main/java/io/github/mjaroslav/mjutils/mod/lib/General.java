@@ -96,9 +96,11 @@ public class General {
         }
     }
 
-    @Comment("Add quartz ore to pigman trigger list")
-    @Restart
-    public static boolean quartzTrigger = true;
+    @Comment("Add quartz to pig zombie greed attack list. When block was obtained it will be cause near pig zombies agro like as simple attacking.")
+    public static boolean quartzCausePigsGreedAttack;
+
+    @Comment("Pig zombies not will cause greed attack while block was obtained with silk touch.")
+    public static boolean silkMakePigsBlind = true;
 
     @Comment("Changes each exploded by TNT block drop chance with this value, you can use -1 for use vanilla behaviour")
     @Range(min = -1, max = 1)

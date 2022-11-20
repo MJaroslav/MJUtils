@@ -1,28 +1,33 @@
 package io.github.mjaroslav.mjutils.object;
 
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+@Getter
 public class DelegatingSet<T> implements Set<T> {
-    public final @Nullable BiPredicate<T, Object> equalsHandler;
-    public final @Nullable ToIntFunction<T> hashCodeHandler;
-    public final @NotNull Set<Wrapper<T>> impl;
-    public final @NotNull Class<?> cachedKeyClass;
+    protected final @Nullable BiPredicate<T, Object> equalsDelegate;
+    protected final @Nullable ToIntFunction<T> hashCodeDelegate;
+    protected final @NotNull Set<DelegatingObject<T>> impl;
+    protected final @NotNull Class<?> genericType;
 
-    public DelegatingSet(@Nullable BiPredicate<T, Object> equalsHandler, @Nullable ToIntFunction<T> hashCodeHandler,
-                         @NotNull Set<Wrapper<T>> impl) {
-        this.equalsHandler = equalsHandler;
-        this.hashCodeHandler = hashCodeHandler;
+    public DelegatingSet(@Nullable BiPredicate<T, Object> equalsDelegate, @Nullable ToIntFunction<T> hashCodeDelegate,
+                         @NotNull Set<DelegatingObject<T>> impl) {
+        this.equalsDelegate = equalsDelegate;
+        this.hashCodeDelegate = hashCodeDelegate;
         this.impl = impl;
-        cachedKeyClass = UtilsReflection.getParameterizedClass(getClass(), 0);
+        genericType = UtilsReflection.getParameterizedClass(getClass(), 0);
     }
 
     @Override
@@ -35,64 +40,55 @@ public class DelegatingSet<T> implements Set<T> {
         return impl.isEmpty();
     }
 
+    @Contract("_ -> new")
+    public static @NotNull <T2> DelegatingSet<T2> hashSet(@Nullable ToIntFunction<T2> hashCodeDelegate) {
+        return new DelegatingSet<>(null, hashCodeDelegate, new HashSet<>());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull <T2> DelegatingSet<T2> hashSet(@Nullable BiPredicate<T2, Object> equalsDelegate) {
+        return new DelegatingSet<>(equalsDelegate, null, new HashSet<>());
+    }
+
+    @Contract("_, _ -> new")
+    public static @NotNull <T2> DelegatingSet<T2> hashSet(@Nullable BiPredicate<T2, Object> equalsDelegate,
+                                                          @Nullable ToIntFunction<T2> hashCodeDelegate) {
+        return new DelegatingSet<>(equalsDelegate, hashCodeDelegate, new HashSet<>());
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean contains(@Nullable Object o) {
-        if (o != null && cachedKeyClass.isAssignableFrom(o.getClass()))
-            return impl.contains(new Wrapper<>((T) o, equalsHandler, hashCodeHandler));
-        return false;
+        return o != null && genericType.isAssignableFrom(o.getClass()) &&
+            impl.contains(DelegatingObject.of((T) o, equalsDelegate, hashCodeDelegate));
     }
 
     @Override
     public @NotNull Iterator<T> iterator() {
-        return impl.stream().map(wrapper -> wrapper.value).iterator();
+        return impl.stream().map(DelegatingObject::getValue).iterator();
     }
 
     @Override
     public @Nullable Object @NotNull [] toArray() {
-        return impl.stream().map(wrapper -> wrapper.value).toArray();
+        return impl.stream().map(DelegatingObject::getValue).toArray();
     }
 
     @SuppressWarnings("SuspiciousToArrayCall")
     @Override
     public <T1> @Nullable T1 @NotNull [] toArray(@Nullable T1 @NotNull [] a) {
-        return impl.stream().map(wrapper -> wrapper.value).collect(Collectors.toSet()).toArray(a);
+        return impl.stream().map(DelegatingObject::getValue).collect(Collectors.toSet()).toArray(a);
     }
 
     @Override
     public boolean add(@Nullable T t) {
-        return impl.add(new Wrapper<>(t, equalsHandler, hashCodeHandler));
+        return impl.add(DelegatingObject.of(t, equalsDelegate, hashCodeDelegate));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean remove(@Nullable Object o) {
-        if (o != null && cachedKeyClass.isAssignableFrom(o.getClass()))
-            return impl.remove(new Wrapper<>((T) o, equalsHandler, hashCodeHandler));
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(@NotNull Collection<?> c) {
-        return c.stream().map(this::contains).filter(element -> element).count() == c.size();
-    }
-
-    @Override
-    public boolean addAll(@NotNull Collection<? extends T> c) {
-        return impl.addAll(c.stream().map(element -> new Wrapper<>(element, equalsHandler, hashCodeHandler))
-                .collect(Collectors.toSet()));
-    }
-
-    @Override
-    public boolean retainAll(@NotNull Collection<?> c) {
-        boolean modified = false;
-        val it = iterator();
-        while (it.hasNext())
-            if (!c.contains(it.next())) {
-                it.remove();
-                modified = true;
-            }
-        return modified;
+        return o != null && genericType.isAssignableFrom(o.getClass()) && impl.remove(DelegatingObject.
+            of((T) o, equalsDelegate, hashCodeDelegate));
     }
 
     @Override
@@ -107,28 +103,31 @@ public class DelegatingSet<T> implements Set<T> {
         impl.clear();
     }
 
-    @AllArgsConstructor
-    public static class Wrapper<T> {
-        public final @Nullable T value;
-        public final @Nullable BiPredicate<T, Object> equalsHandler;
-        public final @Nullable ToIntFunction<T> hashCodeHandler;
-
-        @Override
-        public int hashCode() {
-            return value != null && hashCodeHandler != null
-                    ? hashCodeHandler.applyAsInt(value) : Objects.hashCode(value);
-        }
-
-        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-        @Override
-        public boolean equals(@Nullable Object obj) {
-            return value != null && equalsHandler != null
-                    ? equalsHandler.test(value, obj) : Objects.equals(value, obj);
-        }
+    @Override
+    public boolean containsAll(@NotNull Collection<?> c) {
+        return c.stream().map(this::contains).filter(Boolean::valueOf).count() == c.size();
     }
 
-    public static @NotNull <T2> DelegatingSet<T2> byHashSet(@Nullable BiPredicate<T2, Object> equalsHandler,
-                                                            @Nullable ToIntFunction<T2> hashCodeHandler) {
-        return new DelegatingSet<>(equalsHandler, hashCodeHandler, new HashSet<>());
+    @Override
+    public boolean addAll(@NotNull Collection<? extends T> c) {
+        return impl.addAll(c.stream().map(element -> DelegatingObject.of(element, equalsDelegate, hashCodeDelegate))
+            .collect(Collectors.toSet()));
+    }
+
+    @Override
+    public boolean retainAll(@NotNull Collection<?> c) {
+        var modified = false;
+        val it = iterator();
+        while (it.hasNext())
+            if (!c.contains(it.next())) {
+                it.remove();
+                modified = true;
+            }
+        return modified;
+    }
+
+    @Override
+    public String toString() {
+        return "DelegatingSet@[" + impl.stream().map(DelegatingObject::toString).collect(Collectors.joining()) + "]";
     }
 }

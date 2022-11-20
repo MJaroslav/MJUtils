@@ -83,7 +83,7 @@ public class TestUtilsFormat {
 
     @Test
     public void test$isMask() {
-        Assert.assertFalse("Not match", isMask(0b000, 0b010));
-        Assert.assertTrue("Match", isMask(0b010, 0b010));
+        Assert.assertFalse("Not match", isMaskAnd(0b000, 0b010));
+        Assert.assertTrue("Match", isMaskAnd(0b010, 0b010));
     }
 }

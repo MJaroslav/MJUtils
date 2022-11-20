@@ -10,15 +10,12 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @UtilityClass
 public class UtilsReflection {
-    private final Map<Class<?>, Type[]> GENERIC_CACHE = new HashMap<>();
-
     public Enum<?>[] getEnumValues(@NotNull Class<?> enumClass) {
         try {
             Field valuesField = null;
@@ -125,11 +122,7 @@ public class UtilsReflection {
     }
 
     public @NotNull Class<?> getParameterizedClass(@NotNull Class<?> clazz, int index) {
-        var result = GENERIC_CACHE.get(clazz);
-        if (result != null)
-            return (Class<?>) result[index];
-        var generics = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments();
-        GENERIC_CACHE.put(clazz, generics);
-        return (Class<?>) generics[index];
+        // TODO: Add _cache_, not shit
+        return (Class<?>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[index];
     }
 }

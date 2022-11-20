@@ -14,6 +14,7 @@ public class ItemStackMap<V> extends DelegatingMap<ItemStack, V> {
     }
 
     public ItemStackMap(int params) {
-        super((a, b) -> UtilsItemStack.isEquals(a, (ItemStack) b, params), null, new HashMap<>());
+        super((stack, obj) -> UtilsItemStack.equals(stack, obj instanceof ItemStack second ? second : null, params),
+            stack -> UtilsItemStack.hashCode(stack, params), new HashMap<>());
     }
 }

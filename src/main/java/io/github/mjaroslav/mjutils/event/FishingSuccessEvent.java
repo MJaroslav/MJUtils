@@ -8,6 +8,8 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.FishingHooks.FishableCategory;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Random;
@@ -21,19 +23,19 @@ public class FishingSuccessEvent extends Event {
     /**
      * Player that owner of fishhook, should not be null usually else event will cancel.
      */
-    public final EntityPlayer fishman;
+    public final @Nullable EntityPlayer fishman;
     /**
      * Entity event-caller, you can (and should) get world and position from it.
      */
-    public final EntityFishHook fishHook;
+    public final @NotNull EntityFishHook fishHook;
     /**
      * Caught item fishable category, set null for cancel event.
      */
-    public FishableCategory caughtCategory;
+    public @Nullable FishableCategory caughtCategory;
     /**
      * Caught item, set null for cancel event.
      */
-    public ItemStack caughtItem;
+    public @Nullable ItemStack caughtItem;
     /**
      * Caught experience, set 0 if no drop needed.
      */
