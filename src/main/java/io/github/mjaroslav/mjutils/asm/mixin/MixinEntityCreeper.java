@@ -23,7 +23,7 @@ public abstract class MixinEntityCreeper extends EntityMob {
         "Lnet/minecraft/world/World;createExplosion(Lnet/minecraft/entity/Entity;DDDFZ)Lnet/minecraft/world/Explosion;"))
     private Explosion explode(@NotNull World instance, @NotNull Entity owner, double x, double y, double z, float power,
                               boolean isFlaming) {
-        if (General.overrideTNTExplosionDropChance > 0)
+        if (General.overrideCreeperExplosionDropChance > 0)
             return UtilsWorld.newExplosionWithDropChance(worldObj, owner, x, y, z, power, false, isFlaming,
                 (float) General.overrideCreeperExplosionDropChance);
         else return worldObj.createExplosion(owner, x, y, z, power, isFlaming);

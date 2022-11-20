@@ -1,7 +1,6 @@
 package io.github.mjaroslav.mjutils.object.game.world;
 
 import io.github.mjaroslav.mjutils.object.Trio.NumberTrio;
-import lombok.ToString;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
@@ -10,10 +9,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 import static java.lang.Math.*;
 
 // TODO: Add Trio as methods
-@ToString(callSuper = true)
 public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     public static final Pos xyz = new Pos(-1, -1, -1);
     public static final Pos xy = new Pos(-1, -1, 0);
@@ -434,48 +434,53 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
         return new ChunkCoordinates(intX(), intY(), intZ());
     }
 
+    public static void forEachInBox(@NotNull Pos a, @NotNull Pos b, @NotNull Consumer<Pos> action) {
+        Pos temp = new Pos();
+        for (var x = Math.min(a.intX(), b.intX()); x < Math.max(a.intX(), b.intX()) + 1; x++)
+            for (var y = Math.min(a.intY(), b.intY()); y < Math.max(a.intY(), b.intY()) + 1; y++)
+                for (var z = Math.min(a.intZ(), b.intZ()); z < Math.max(a.intZ(), b.intZ()) + 1; z++) {
+                    temp.set((double) x, (double) y, (double) z);
+                    action.accept(temp);
+                }
+    }
+
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ChunkPosition position) {
         return AxisAlignedBB.getBoundingBox(min(getX(), position.chunkPosX), min(getY(), position.chunkPosY), min(getZ(),
-                position.chunkPosZ), max(getX(), position.chunkPosX), max(getY(), position.chunkPosY), max(getZ(), position.chunkPosZ));
+            position.chunkPosZ), max(getX(), position.chunkPosX), max(getY(), position.chunkPosY), max(getZ(), position.chunkPosZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull Vec3 vec) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + vec.xCoord), min(getY(), getY() + vec.yCoord),
-                min(getZ(), getZ() + vec.zCoord), max(getX(), getX() + vec.xCoord), max(getY(),
-                        getY() + vec.yCoord), max(getZ(), getZ() + vec.zCoord));
+            min(getZ(), getZ() + vec.zCoord), max(getX(), getX() + vec.xCoord), max(getY(),
+                getY() + vec.yCoord), max(getZ(), getZ() + vec.zCoord));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ChunkCoordinates coordinates) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + coordinates.posX), min(getY(), getY() + coordinates.posY),
-                min(getZ(), getZ() + coordinates.posZ), max(getX(), getX() + coordinates.posX), max(getY(),
-                        getY() + coordinates.posY), max(getZ(), getZ() + coordinates.posZ));
+            min(getZ(), getZ() + coordinates.posZ), max(getX(), getX() + coordinates.posX), max(getY(),
+                getY() + coordinates.posY), max(getZ(), getZ() + coordinates.posZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull ForgeDirection direction) {
         return AxisAlignedBB.getBoundingBox(min(getX(), getX() + direction.offsetX), min(getY(), getY() + direction.offsetY),
-                min(getZ(), getZ() + direction.offsetZ), max(getX(), getX() + direction.offsetX), max(getY(),
-                        getY() + direction.offsetY), max(getZ(), getZ() + direction.offsetZ));
+            min(getZ(), getZ() + direction.offsetZ), max(getX(), getX() + direction.offsetX), max(getY(),
+                getY() + direction.offsetY), max(getZ(), getZ() + direction.offsetZ));
     }
 
     @Contract("_ -> new")
     public AxisAlignedBB toAABB(@NotNull Pos pos) {
         return AxisAlignedBB.getBoundingBox(min(getX(), pos.getX()), min(getY(), pos.getY()), min(getZ(), pos.getZ()),
-                max(getX(), pos.getX()), max(getY(), pos.getY()), max(getZ(), pos.getZ()));
+            max(getX(), pos.getX()), max(getY(), pos.getY()), max(getZ(), pos.getZ()));
     }
 
     @Contract("_, _, _ -> new")
     public AxisAlignedBB toAABB(double x, double y, double z) {
         return AxisAlignedBB.getBoundingBox(min(getX(), x), min(getY(), y), min(getZ(), z), max(getX(), x),
-                max(getY(), y), max(getZ(), z));
-    }
-
-    public boolean isInsideOfBox(@NotNull AxisAlignedBB aabb) {
-        return getX() > aabb.minX && getX() < aabb.maxX && getY() > aabb.minY && getY() < aabb.maxY
-                && getZ() > aabb.minZ && getZ() < aabb.maxZ;
+            max(getY(), y), max(getZ(), z));
     }
 
     @Contract(" -> new")
@@ -530,5 +535,15 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
         else if (o instanceof NumberTrio<?> trio)
             return getX().equals(trio.getX()) && getY().equals(trio.getY()) && getZ().equals(trio.getZ());
         else return super.equals(o);
+    }
+
+    public boolean isInsideOfBox(@NotNull AxisAlignedBB aabb) {
+        return getX() > aabb.minX && getX() < aabb.maxX && getY() > aabb.minY && getY() < aabb.maxY
+            && getZ() > aabb.minZ && getZ() < aabb.maxZ;
+    }
+
+    @Override
+    public String toString() {
+        return "Pos(" + getX() + ", " + getY() + ", " + getZ() + ")";
     }
 }

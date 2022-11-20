@@ -13,9 +13,11 @@ public class General {
         @Comment("Block collision highlighting")
         public static class BlockCollisionHighlighting {
             @Range(min = 0, max = 2)
-            @Comment("Enable highlighting of block bounding boxes. 0 - disable, 1 - enable, 2 - enable while sneaking. " +
-                "Can cause problems if block creating it's own collision list with dynamic data such as entities and world.")
-            public static int enable = 0;
+            @Comment("Enable highlighting of block bounding boxes. Can cause problems if block creating it's own collision list with dynamic data such as entities and world.")
+            public static Toggle enable = Toggle.DISABLE;
+            @Range(min = 1)
+            @Comment("Highlight zone range in blocks.")
+            public static int range = 1;
 
             @HEX
             @Comment("Colors for lines of AABB in cyclic order.")
@@ -24,11 +26,33 @@ public class General {
             @HEX
             @Comment("Color for lines of AABB with dead zones.")
             public static int deadColor = 0xFF0000;
+
+            @Ignore
+            public enum Toggle {
+                DISABLE, CURSOR, CURSOR_SHIFT, PLAYER, PLAYER_SHIFT;
+
+                public boolean isEnabled() {
+                    return this != DISABLE;
+                }
+
+                public boolean isShift() {
+                    return this == CURSOR_SHIFT || this == PLAYER_SHIFT;
+                }
+
+                public boolean isPlayer() {
+                    return this == PLAYER || this == PLAYER_SHIFT;
+                }
+
+                public boolean isCursor() {
+                    return this == CURSOR || this == CURSOR_SHIFT;
+                }
+            }
         }
     }
 
     @Comment("Cosmetic options, not make changes on server.")
     public static class Client {
+
         @Comment("Show ore dict names in tooltip (in advanced tooltip mode).")
         public static boolean showOreDictNames = true;
 
@@ -37,6 +61,9 @@ public class General {
 
         @Comment("Toggles of default GUIs replacements (for new features or/and fixes)")
         public static class GuiReplacements {
+            @Comment("Replace standard buttons and text fields colors if their text is #HEX color.")
+            public static boolean colors = true;
+
             @Comment("Allows you disable/enable mods, provides displaying of screenshots, etc in main menu mods GUI")
             public static boolean mainMenuModList = true;
 

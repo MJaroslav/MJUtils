@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class WorldPos {
     public Block getBlock(@NotNull IBlockAccess owner, @NotNull NumberTrio<?> pos) {
-        return owner.getBlock(pos.getZ().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+        return owner.getBlock(pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }
 
     public int getBlockMetadata(@NotNull IBlockAccess owner, @NotNull NumberTrio<?> pos) {
@@ -24,12 +24,12 @@ public class WorldPos {
     public void playSoundEffect(@NotNull World owner, @NotNull NumberTrio<?> pos, @NotNull String name, float volume,
                                 float pitch) {
         owner.playSoundEffect(pos.getX().doubleValue(), pos.getY().doubleValue(), pos.getZ().doubleValue(), name,
-                volume, pitch);
+            volume, pitch);
     }
 
     public void spawnParticle(@NotNull World owner, @NotNull String name, @NotNull NumberTrio<?> pos,
                               @NotNull NumberTrio<?> velocity) {
         owner.spawnParticle(name, pos.getX().doubleValue(), pos.getY().doubleValue(), pos.getZ().doubleValue(),
-                velocity.getX().doubleValue(), velocity.getY().doubleValue(), velocity.getZ().doubleValue());
+            velocity.getX().doubleValue(), velocity.getY().doubleValue(), velocity.getZ().doubleValue());
     }
 }

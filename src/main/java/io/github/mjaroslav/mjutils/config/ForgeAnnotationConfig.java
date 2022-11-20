@@ -4,7 +4,9 @@ import io.github.mjaroslav.mjutils.config.annotations.*;
 import io.github.mjaroslav.mjutils.config.annotations.Restart.Value;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Color;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Mod;
+import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import lombok.val;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
@@ -37,7 +39,7 @@ import java.util.Map;
  */
 public class ForgeAnnotationConfig extends ForgeConfig {
     /**
-     * Just copy of {@link net.minecraft.util.EnumChatFormatting EnumChatFormatting} for usage as valid pattern.
+     * Just copy of {@link net.minecraft.util.EnumChatFormatting EnumChatFormatting} with only colors for usage as valid pattern.
      */
     public static final String[] COLOR_VALID_VALUES = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
     /**
@@ -51,7 +53,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
     /**
      * Regexp pattern for {@link HEX} integers with alpha: # and 8 HEX digits.
      */
-    public static final java.util.regex.Pattern HEX_COLOR_ALPHA_PATTERN = java.util.regex.Pattern.compile("^#[0-9A-Fa-f]8}$");
+    public static final java.util.regex.Pattern HEX_COLOR_ALPHA_PATTERN = java.util.regex.Pattern.compile("^#[0-9A-Fa-f]{8}$");
 
     protected final @NotNull Class<?> rootCategoryClass;
     protected final @NotNull Map<Field, Object> defaults = new HashMap<>();
@@ -149,7 +151,8 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         if (comment != null) propertyComment = comment.value();
         val category = config.properties.getCategory(categoryName);
         if (parsedType == Type.STRING)
-            if (field.isAnnotationPresent(Color.class)) parsedType = Type.COLOR;
+            if (field.isAnnotationPresent(Color.class) || field.getType().equals(EnumChatFormatting.class))
+                parsedType = Type.COLOR;
             else if (field.isAnnotationPresent(Mod.class)) parsedType = Type.MOD_ID;
         val defaultValue = config.defaults.getOrDefault(field, field.get(null));
         config.defaults.putIfAbsent(field, defaultValue);
@@ -175,32 +178,13 @@ public class ForgeAnnotationConfig extends ForgeConfig {
                     else
                         property = config.properties.get(categoryName, propertyName, (int) defaultValue, propertyComment);
                     field.set(null, isArray ? property.getIntList() : property.getInt());
-                    var hasRange = false;
-                    var unlimMin = true;
-                    var unlimMax = true;
                     val range = field.getAnnotation(Range.class);
                     if (range != null) {
-                        if (range.max() != Double.MAX_VALUE && range.max() != Integer.MAX_VALUE) {
+                        if (range.max() != Double.MAX_VALUE && range.max() != Integer.MAX_VALUE)
                             property.setMaxValue((int) range.max());
-                            unlimMax = false;
-                        }
-                        if (range.min() != Double.MIN_VALUE && range.min() != Integer.MIN_VALUE) {
+                        if (range.min() != Double.MIN_VALUE && range.min() != Integer.MIN_VALUE)
                             property.setMinValue((int) range.min());
-                            unlimMin = false;
-                        }
-                        hasRange = !unlimMax || !unlimMin;
                     }
-                    if (StringUtils.isNotBlank(property.comment))
-                        if (hasRange) {
-                            var rangeComment = new StringBuilder(" [range:");
-                            if (!unlimMin)
-                                rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
-                            if (!unlimMax)
-                                rangeComment.append(" <= ").append(property.getMaxValue());
-                            rangeComment.append(", default: ").append(property.getDefault()).append("]");
-                            property.comment += rangeComment.toString();
-                        } else
-                            property.comment += " [default: " + property.getDefault() + "]";
                 }
             }
             case BOOLEAN -> {
@@ -211,8 +195,6 @@ public class ForgeAnnotationConfig extends ForgeConfig {
                     property = config.properties.get(categoryName, propertyName, (boolean) defaultValue,
                         propertyComment);
                 field.set(null, isArray ? property.getBooleanList() : property.getBoolean());
-                if (StringUtils.isNotBlank(property.comment))
-                    property.comment += " [default: " + property.getDefault() + "]";
             }
             case DOUBLE -> {
                 if (isArray)
@@ -222,43 +204,35 @@ public class ForgeAnnotationConfig extends ForgeConfig {
                     property = config.properties.get(categoryName, propertyName, (double) defaultValue,
                         propertyComment);
                 field.set(null, isArray ? property.getDoubleList() : property.getDouble());
-                var hasRange = false;
-                var unlimMin = true;
-                var unlimMax = true;
                 val range = field.getAnnotation(Range.class);
                 if (range != null) {
-                    if (range.max() != Double.MAX_VALUE) {
-                        property.setMaxValue(range.max());
-                        unlimMax = false;
-                    }
-                    if (range.min() != Double.MIN_VALUE) {
-                        property.setMinValue(range.min());
-                        unlimMin = false;
-                    }
-                    hasRange = !unlimMax || !unlimMin;
+                    if (range.max() != Double.MAX_VALUE) property.setMaxValue(range.max());
+                    if (range.min() != Double.MIN_VALUE) property.setMinValue(range.min());
                 }
-                if (StringUtils.isNotBlank(property.comment))
-                    if (hasRange) {
-                        var rangeComment = new StringBuilder(" [range:");
-                        if (!unlimMin)
-                            rangeComment.append(" ").append(property.getMinValue()).append(" <= value");
-                        if (!unlimMax)
-                            rangeComment.append(" <= ").append(property.getMaxValue());
-                        rangeComment.append(", default: ").append(property.getDefault()).append("]");
-                        property.comment += rangeComment.toString();
-                    } else
-                        property.comment += " [default: " + property.getDefault() + "]";
             }
             default -> {
-                if (isArray)
-                    property = config.properties.get(categoryName, propertyName, (String[]) defaultValue,
-                        propertyComment);
-                else
-                    property = config.properties.get(categoryName, propertyName, (String) defaultValue,
-                        propertyComment);
-                field.set(null, isArray ? property.getStringList() : property.getString());
-                if (StringUtils.isNotBlank(property.comment))
-                    property.comment += " [default: " + property.getDefault() + "]";
+                val type = field.getType();
+                if (Enum.class.isAssignableFrom(type) || Enum[].class.isAssignableFrom(type)) {
+                    if (isArray)
+                        property = config.properties.get(categoryName, propertyName, Arrays
+                                .stream(((Enum<?>[]) defaultValue)).map(Enum::name).toArray(String[]::new),
+                            propertyComment, parsedType);
+                    else
+                        property = config.properties.get(categoryName, propertyName, defaultValue.toString(),
+                            propertyComment, parsedType);
+                    if (isArray)
+                        field.set(null, Arrays.stream(property.getStringList()).map(l -> UtilsReflection
+                            .getEnumFromName(l, field.getType())).toArray(Enum<?>[]::new));
+                    else
+                        field.set(null, UtilsReflection.getEnumFromName(property.getString(), field.getType()));
+                    property.setValidValues(Arrays.stream(UtilsReflection.getEnumValues(type)).map(Enum::name)
+                        .toArray(String[]::new));
+                } else {
+                    property = isArray ? config.properties.get(categoryName, propertyName, (String[]) defaultValue,
+                        propertyComment, parsedType) : config.properties.get(categoryName, propertyName,
+                        (String) defaultValue, propertyComment, parsedType);
+                    field.set(null, isArray ? property.getStringList() : property.getString());
+                }
             }
         }
         val restart = field.getAnnotation(Restart.class);
@@ -277,10 +251,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         if (langKey != null) property.setLanguageKey(langKey.value());
         else property.setLanguageKey("config.property." + config.getModId() + ":" + categoryName + "."
             + propertyName + ".name");
-        if (property.getType() == Type.COLOR) {
-            property.setValidValues(COLOR_VALID_VALUES);
-            property.setValidationPattern(COLOR_VALID_PATTERN);
-        }
+        if (property.getType() == Type.COLOR) property.setValidValues(COLOR_VALID_VALUES);
         val pattern = field.getAnnotation(Pattern.class);
         if (pattern != null) property.setValidationPattern(java.util.regex.Pattern.compile(pattern.value()));
         val values = field.getAnnotation(Values.class);
@@ -289,10 +260,11 @@ public class ForgeAnnotationConfig extends ForgeConfig {
     }
 
     protected static @Nullable Property.Type parseType(@NotNull Class<?> type) {
-        if (type.equals(int.class) || type.equals(int[].class)) return Property.Type.INTEGER;
-        if (type.equals(boolean.class) || type.equals(boolean[].class)) return Property.Type.BOOLEAN;
-        if (type.equals(double.class) || type.equals(double[].class)) return Property.Type.DOUBLE;
-        if (type.equals(String.class) || type.equals(String[].class)) return Property.Type.STRING;
+        if (type.equals(int.class) || type.equals(int[].class)) return Type.INTEGER;
+        if (type.equals(boolean.class) || type.equals(boolean[].class)) return Type.BOOLEAN;
+        if (type.equals(double.class) || type.equals(double[].class)) return Type.DOUBLE;
+        if (type.equals(String.class) || type.equals(String[].class) || Enum.class.isAssignableFrom(type)
+            || Enum[].class.isAssignableFrom(type)) return Type.STRING;
         return null; // Is a subcategory.
     }
 }

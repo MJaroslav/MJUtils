@@ -25,7 +25,10 @@
     "MixinPotion"
   ],
   "client": [
-    "MixinPlayerControllerMP"
+      "MixinGuiButton",
+      "MixinGuiButtonExt",
+      "MixinGuiTextField",
+      "MixinPlayerControllerMP"
   ],
   "server": [
   ]

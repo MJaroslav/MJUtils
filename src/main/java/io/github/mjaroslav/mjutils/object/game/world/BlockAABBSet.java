@@ -233,6 +233,13 @@ public class BlockAABBSet {
         }
     }
 
+    @Contract("_, _, _ -> new")
+    public BlockAABBSet rotate(int x, int y, int z) {
+        val result = new BlockAABBSet();
+        getBoxes().stream().map(box -> box.rotate(x, y, z)).forEach(result::addBox);
+        return result;
+    }
+
     /**
      * Axis Aligned Bounding Box for creating {@link net.minecraft.block.Block Block} collisions.
      * Can consume values in range from 0 to 16 for x- and z-axis and from 0 to 32 for y-axis.
@@ -302,7 +309,6 @@ public class BlockAABBSet {
                     result.maxX *= -1;
                     result.maxZ *= -1;
                 } else {
-                    result.centralize();
                     // (a;b) <-> (b;-a)
                     result.minX += result.minZ;
                     result.minZ = result.minX - result.minZ;
