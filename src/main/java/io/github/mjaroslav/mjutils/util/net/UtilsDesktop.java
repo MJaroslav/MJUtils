@@ -1,8 +1,8 @@
 package io.github.mjaroslav.mjutils.util.net;
 
 import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
-import io.github.mjaroslav.mjutils.object.LazyOptional;
-import io.github.mjaroslav.mjutils.object.Pair;
+import io.github.mjaroslav.mjutils.util.object.Lazy;
+import io.github.mjaroslav.mjutils.util.object.Pair;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.crash.CrashReport;
@@ -15,7 +15,7 @@ import java.net.URI;
 
 @UtilityClass
 public class UtilsDesktop {
-    private final LazyOptional<Pair<Method, Object>> DESKTOP = new LazyOptional<>(() -> {
+    private final Lazy<Pair<Method, Object>> DESKTOP = new Lazy<>(() -> {
         try {
             val clazz = Class.forName("java.awt.Desktop");
             val method = clazz.getMethod("browse", URI.class);

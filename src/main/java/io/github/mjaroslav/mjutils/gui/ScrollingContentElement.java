@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.object.Pair;
+import io.github.mjaroslav.mjutils.util.object.Pair;
 
 import javax.annotation.Nullable;
 

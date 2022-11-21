@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.object.game.item;
 
-import io.github.mjaroslav.mjutils.object.DelegatingMap;
 import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.object.DelegatingMap;
 import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;

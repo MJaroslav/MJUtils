@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.object.game.world;
 
-import io.github.mjaroslav.mjutils.object.Trio.NumberTrio;
+import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static java.lang.Math.*;
@@ -415,16 +416,6 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     }
 
     @Contract(" -> new")
-    public NumberTrio<Integer> intValue() {
-        return new NumberTrio<>(intX(), intY(), intZ());
-    }
-
-    @Contract(" -> new")
-    public NumberTrio<Float> floatValue() {
-        return new NumberTrio<>(floatX(), floatY(), floatZ());
-    }
-
-    @Contract(" -> new")
     public Vec3 toVec3() {
         return Vec3.createVectorHelper(getX(), getY(), getZ());
     }
@@ -521,6 +512,11 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY(), getZ());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null) return false;
         else if (o == this) return true;
@@ -544,6 +540,6 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
 
     @Override
     public String toString() {
-        return "Pos(" + getX() + ", " + getY() + ", " + getZ() + ")";
+        return "Pos(x = " + getX() + ", y = " + getY() + ", z = " + getZ() + ")";
     }
 }

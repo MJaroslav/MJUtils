@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object;
+package io.github.mjaroslav.mjutils.util.object;
 
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import lombok.Getter;
@@ -15,11 +15,34 @@ import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+/**
+ * Special realization of {@link Set} for using {@link DelegatingObject}.
+ *
+ * @param <T> type that will be used in {@link DelegatingObject}.
+ * @see DelegatingObject
+ */
 @Getter
 public class DelegatingSet<T> implements Set<T> {
+    /**
+     * Equals predicate. Make it null if you want to use original predicate.
+     *
+     * @see DelegatingObject#equalsDelegate
+     */
     protected final @Nullable BiPredicate<T, Object> equalsDelegate;
+    /**
+     * Hash code function. Make it null if you want to use original function.
+     *
+     * @see DelegatingObject#hashCodeDelegate
+     */
     protected final @Nullable ToIntFunction<T> hashCodeDelegate;
+    /**
+     * Internal set for backand of this map. Just use {@link HashSet} or
+     * {@link DelegatingSet#hashSet(BiPredicate, ToIntFunction)}.
+     */
     protected final @NotNull Set<DelegatingObject<T>> impl;
+    /**
+     * Preserved type generic.
+     */
     protected final @NotNull Class<?> genericType;
 
     public DelegatingSet(@Nullable BiPredicate<T, Object> equalsDelegate, @Nullable ToIntFunction<T> hashCodeDelegate,

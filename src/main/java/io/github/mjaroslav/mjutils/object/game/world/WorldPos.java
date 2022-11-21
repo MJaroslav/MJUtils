@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.object.game.world;
 
-import io.github.mjaroslav.mjutils.object.Trio.NumberTrio;
+import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;

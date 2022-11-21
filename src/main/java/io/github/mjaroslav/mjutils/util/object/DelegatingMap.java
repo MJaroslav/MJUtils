@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object;
+package io.github.mjaroslav.mjutils.util.object;
 
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import lombok.Getter;
@@ -12,11 +12,35 @@ import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+/**
+ * Special realization of {@link Map} for using {@link DelegatingObject} as keys.
+ *
+ * @param <K> type of key that will be used in {@link DelegatingObject}.
+ * @param <V> map values type.
+ * @see DelegatingObject
+ */
 @Getter
 public class DelegatingMap<K, V> implements Map<K, V> {
+    /**
+     * Equals predicate. Make it null if you want to use original predicate.
+     *
+     * @see DelegatingObject#equalsDelegate
+     */
     protected final @Nullable BiPredicate<K, Object> equalsDelegate;
+    /**
+     * Hash code function. Make it null if you want to use original function.
+     *
+     * @see DelegatingObject#hashCodeDelegate
+     */
     protected final @Nullable ToIntFunction<K> hashCodeDelegate;
+    /**
+     * Internal map for backand of this map. Just use {@link HashMap} or
+     * {@link DelegatingMap#hashMap(BiPredicate, ToIntFunction)}.
+     */
     protected final @NotNull Map<DelegatingObject<K>, V> impl;
+    /**
+     * Preserved type of key generic.
+     */
     protected final @NotNull Class<?> genericType;
 
     public DelegatingMap(@Nullable BiPredicate<K, Object> equalsDelegate, @Nullable ToIntFunction<K> hashCodeDelegate,
@@ -110,5 +134,11 @@ public class DelegatingMap<K, V> implements Map<K, V> {
     public Set<Entry<K, V>> entrySet() {
         return impl.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey().getValue(),
             entry.getValue())).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toString() {
+        return "DelegatingMap@[" + impl.entrySet().stream().map(entry -> "{" + entry.getKey() + "=" + entry.getValue()
+            + "}").collect(Collectors.joining()) + "]";
     }
 }

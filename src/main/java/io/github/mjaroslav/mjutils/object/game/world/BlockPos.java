@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.object.game.world;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorBlock;
-import io.github.mjaroslav.mjutils.object.Trio.NumberTrio;
+import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.EffectRenderer;
@@ -44,14 +44,14 @@ public class BlockPos {
     public int getMixedBrightnessForBlock(@NotNull Block owner, @NotNull IBlockAccess world,
                                           @NotNull NumberTrio<?> pos) {
         return owner.getMixedBrightnessForBlock(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue());
+            pos.getZ().intValue());
     }
 
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                         int side) {
         return owner.shouldSideBeRendered(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                side);
+            side);
     }
 
     public boolean isBlockSolid(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
@@ -69,20 +69,20 @@ public class BlockPos {
                                         @NotNull AxisAlignedBB mask, @NotNull List list,
                                         @Nullable Entity collidedEntity) {
         owner.addCollisionBoxesToList(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), mask,
-                list, collidedEntity);
+            list, collidedEntity);
     }
 
     public AxisAlignedBB getCollisionBoundingBoxFromPool(@NotNull Block owner, @NotNull World world,
                                                          @NotNull NumberTrio<?> pos) {
         return owner.getCollisionBoundingBoxFromPool(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue());
+            pos.getZ().intValue());
     }
 
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getSelectedBoundingBoxFromPool(@NotNull Block owner, @NotNull World world,
                                                         @NotNull NumberTrio<?> pos) {
         return owner.getSelectedBoundingBoxFromPool(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue());
+            pos.getZ().intValue());
     }
 
     public void updateTick(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -113,7 +113,7 @@ public class BlockPos {
     public float getPlayerRelativeBlockHardness(@NotNull Block owner, @NotNull EntityPlayer player, @NotNull World world,
                                                 @NotNull NumberTrio<?> pos) {
         return owner.getPlayerRelativeBlockHardness(player, world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue());
+            pos.getZ().intValue());
     }
 
     public void dropBlockAsItem(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int meta,
@@ -124,13 +124,13 @@ public class BlockPos {
     public void dropBlockAsItemWithChance(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                           int meta, float chance, int fortune) {
         owner.dropBlockAsItemWithChance(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                meta, chance, fortune);
+            meta, chance, fortune);
     }
 
     public void dropBlockAsItem(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                 @NotNull ItemStack stack) {
         ((AccessorBlock) owner).invokeDropBlockAsItem(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue(), stack);
+            pos.getZ().intValue(), stack);
     }
 
     public void dropXpOnBlockBreak(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int xp) {
@@ -146,19 +146,19 @@ public class BlockPos {
     public void onBlockDestroyedByExplosion(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                             @NotNull Explosion explosion) {
         owner.onBlockDestroyedByExplosion(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                explosion);
+            explosion);
     }
 
     public boolean canReplace(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                               @NotNull ForgeDirection direction, @NotNull ItemStack stack) {
         return owner.canReplace(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal(), stack);
+            direction.ordinal(), stack);
     }
 
     public boolean canPlaceBlockOnSide(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                        @NotNull ForgeDirection direction) {
         return owner.canPlaceBlockOnSide(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal());
+            direction.ordinal());
     }
 
     public boolean canPlaceBlockAt(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos) {
@@ -169,7 +169,7 @@ public class BlockPos {
                                     @NotNull EntityPlayer player, @NotNull ForgeDirection direction,
                                     @NotNull NumberTrio<?> hit) {
         return owner.onBlockActivated(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                player, direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue());
+            player, direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue());
     }
 
     public void onEntityWalking(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -180,7 +180,7 @@ public class BlockPos {
     public int onBlockPlaced(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                              @NotNull ForgeDirection direction, @NotNull NumberTrio<?> hit, int meta) {
         return owner.onBlockPlaced(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue(), meta);
+            direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue(), meta);
     }
 
     public void onBlockClicked(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -191,8 +191,8 @@ public class BlockPos {
     public void velocityToAddToEntity(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                       @NotNull Entity entity, @NotNull NumberTrio<?> velocity) {
         owner.velocityToAddToEntity(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                entity, Vec3.createVectorHelper(velocity.getX().doubleValue(), velocity.getY().doubleValue(),
-                        velocity.getZ().doubleValue()));
+            entity, Vec3.createVectorHelper(velocity.getX().doubleValue(), velocity.getY().doubleValue(),
+                velocity.getZ().doubleValue()));
     }
 
     public void setBlockBoundsBasedOnState(@NotNull Block owner, @NotNull IBlockAccess world,
@@ -208,19 +208,19 @@ public class BlockPos {
     public int isProvidingWeakPower(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                     @NotNull ForgeDirection direction) {
         return owner.isProvidingWeakPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal());
+            direction.ordinal());
     }
 
     public void onEntityCollidedWithBlock(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                           @NotNull Entity entity) {
         owner.onEntityCollidedWithBlock(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                entity);
+            entity);
     }
 
     public int isProvidingStrongPower(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                       @NotNull ForgeDirection direction) {
         return owner.isProvidingStrongPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal());
+            direction.ordinal());
     }
 
     public void harvestBlock(@NotNull Block owner, @NotNull World world, @NotNull EntityPlayer player,
@@ -235,7 +235,7 @@ public class BlockPos {
     public void onBlockPlacedBy(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                 @NotNull EntityLivingBase placer, @NotNull ItemStack stack) {
         owner.onBlockPlacedBy(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), placer,
-                stack);
+            stack);
     }
 
     public void onPostBlockPlaced(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int meta) {
@@ -245,13 +245,13 @@ public class BlockPos {
     public boolean onBlockEventReceived(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                         int event, int parameter) {
         return owner.onBlockEventReceived(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                event, parameter);
+            event, parameter);
     }
 
     public void onFallenUpon(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                              @NotNull Entity entity, float distance) {
         owner.onFallenUpon(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), entity,
-                distance);
+            distance);
     }
 
     @SideOnly(Side.CLIENT)
@@ -266,7 +266,7 @@ public class BlockPos {
     public void onBlockHarvested(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int meta,
                                  @NotNull EntityPlayer harvester) {
         owner.onBlockHarvested(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), meta,
-                harvester);
+            harvester);
     }
 
     public void onBlockPreDestroy(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int meta) {
@@ -280,7 +280,7 @@ public class BlockPos {
     public int getComparatorInputOverride(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                           @NotNull ForgeDirection direction) {
         return owner.getComparatorInputOverride(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue(), direction.ordinal());
+            pos.getZ().intValue(), direction.ordinal());
     }
 
     public int getLightValue(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos) {
@@ -316,14 +316,14 @@ public class BlockPos {
     public boolean removedByPlayer(@NotNull Block owner, @NotNull World world, @NotNull EntityPlayer player,
                                    @NotNull NumberTrio<?> pos, boolean willHarvest) {
         return owner.removedByPlayer(world, player, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                willHarvest);
+            willHarvest);
     }
 
     @Deprecated
     public boolean removedByPlayer(@NotNull Block owner, @NotNull World world, EntityPlayer player,
                                    @NotNull NumberTrio<?> pos) {
         return owner.removedByPlayer(world, player, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue());
+            pos.getZ().intValue());
     }
 
     public int getFlammability(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
@@ -339,7 +339,7 @@ public class BlockPos {
     public int getFireSpreadSpeed(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                   @NotNull ForgeDirection face) {
         return owner.getFireSpreadSpeed(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                face);
+            face);
     }
 
     public boolean isFireSource(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -350,13 +350,13 @@ public class BlockPos {
     public ArrayList<ItemStack> getDrops(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                          int metadata, int fortune) {
         return owner.getDrops(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), metadata,
-                fortune);
+            fortune);
     }
 
     public boolean canSilkHarvest(@NotNull Block owner, @NotNull World world, @NotNull EntityPlayer player,
                                   @NotNull NumberTrio<?> pos, int metadata) {
         return owner.canSilkHarvest(world, player, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                metadata);
+            metadata);
     }
 
     public boolean canCreatureSpawn(@NotNull Block owner, @NotNull EnumCreatureType type, @NotNull IBlockAccess world,
@@ -373,13 +373,13 @@ public class BlockPos {
     public Pos getBedSpawnPosition(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                    @NotNull EntityPlayer player) {
         return new Pos(owner.getBedSpawnPosition(world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue(), player));
+            pos.getZ().intValue(), player));
     }
 
     public void setBedOccupied(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                @NotNull EntityPlayer player, boolean occupied) {
         owner.setBedOccupied(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), player,
-                occupied);
+            occupied);
     }
 
     public int getBedDirection(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos) {
@@ -414,14 +414,14 @@ public class BlockPos {
     public boolean isReplaceableOreGen(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                        @NotNull Block target) {
         return owner.isReplaceableOreGen(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                target);
+            target);
     }
 
     public float getExplosionResistance(@NotNull Block owner, @NotNull Entity entity, @NotNull World world,
                                         @NotNull NumberTrio<?> pos, @NotNull NumberTrio<?> explosionPos) {
         return owner.getExplosionResistance(entity, world, pos.getX().intValue(), pos.getY().intValue(),
-                pos.getZ().intValue(), explosionPos.getX().doubleValue(), explosionPos.getY().doubleValue(),
-                explosionPos.getZ().doubleValue());
+            pos.getZ().intValue(), explosionPos.getX().doubleValue(), explosionPos.getY().doubleValue(),
+            explosionPos.getZ().doubleValue());
     }
 
     public void onBlockExploded(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -432,7 +432,7 @@ public class BlockPos {
     public boolean canConnectRedstone(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                       @NotNull ForgeDirection direction) {
         return owner.canConnectRedstone(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal());
+            direction.ordinal());
     }
 
     public boolean canPlaceTorchOnTop(@NotNull Block owner, @NotNull World world,
@@ -443,7 +443,7 @@ public class BlockPos {
     public ItemStack getPickBlock(@NotNull Block owner, MovingObjectPosition target, @NotNull World world,
                                   @NotNull NumberTrio<?> pos, @NotNull EntityPlayer player) {
         return owner.getPickBlock(target, world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                player);
+            player);
     }
 
     @Deprecated
@@ -460,19 +460,19 @@ public class BlockPos {
     public boolean addDestroyEffects(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos, int meta,
                                      @NotNull EffectRenderer effectRenderer) {
         return owner.addDestroyEffects(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), meta,
-                effectRenderer);
+            effectRenderer);
     }
 
     public boolean canSustainPlant(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                    @NotNull ForgeDirection direction, @NotNull IPlantable plantable) {
         return owner.canSustainPlant(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction, plantable);
+            direction, plantable);
     }
 
     public void onPlantGrow(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                             @NotNull NumberTrio<?> sourcePos) {
         owner.onPlantGrow(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                sourcePos.getX().intValue(), sourcePos.getY().intValue(), sourcePos.getZ().intValue());
+            sourcePos.getX().intValue(), sourcePos.getY().intValue(), sourcePos.getZ().intValue());
     }
 
     public boolean isFertile(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos) {
@@ -486,13 +486,13 @@ public class BlockPos {
     public boolean canEntityDestroy(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                     @NotNull Entity entity) {
         return owner.canEntityDestroy(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                entity);
+            entity);
     }
 
     public boolean isBeaconBase(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                 @NotNull NumberTrio<?> beaconPos) {
         return owner.isBeaconBase(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                beaconPos.getX().intValue(), beaconPos.getY().intValue(), beaconPos.getZ().intValue());
+            beaconPos.getX().intValue(), beaconPos.getY().intValue(), beaconPos.getZ().intValue());
     }
 
     public boolean rotateBlock(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
@@ -511,19 +511,19 @@ public class BlockPos {
     public boolean recolourBlock(@NotNull Block owner, @NotNull World world, @NotNull NumberTrio<?> pos,
                                  @NotNull ForgeDirection side, int color) {
         return owner.recolourBlock(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), side,
-                color);
+            color);
     }
 
     public void onNeighborChange(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                  @NotNull NumberTrio<?> tilePos) {
         owner.onNeighborChange(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                tilePos.getX().intValue(), tilePos.getY().intValue(), tilePos.getZ().intValue());
+            tilePos.getX().intValue(), tilePos.getY().intValue(), tilePos.getZ().intValue());
     }
 
     public boolean shouldCheckWeakPower(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos,
                                         @NotNull ForgeDirection direction) {
         return owner.shouldCheckWeakPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-                direction.ordinal());
+            direction.ordinal());
     }
 
     public boolean getWeakChanges(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos) {
