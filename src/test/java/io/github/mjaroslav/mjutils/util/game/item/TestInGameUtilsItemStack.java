@@ -5,12 +5,13 @@ import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
 import cpw.mods.fml.common.LoaderState;
+import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
 import lombok.val;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.*;
+import static io.github.mjaroslav.mjutils.util.item.UtilsItemStack.*;
 
 @Common(when = LoaderState.INITIALIZATION)
 public class TestInGameUtilsItemStack {

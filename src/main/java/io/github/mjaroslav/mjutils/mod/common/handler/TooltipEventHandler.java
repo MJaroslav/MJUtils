@@ -1,9 +1,9 @@
 package io.github.mjaroslav.mjutils.mod.common.handler;
 
-import io.github.mjaroslav.mjutils.mod.lib.General.Client;
-import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import io.github.mjaroslav.mjutils.mod.lib.General.Client;
+import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -20,8 +20,8 @@ public class TooltipEventHandler {
     @SubscribeEvent
     public void itemTooltipEvent(ItemTooltipEvent event) {
         if (((event.showAdvancedItemTooltips && Client.showOreDictNames) ||
-                Client.alwaysShowOreDictNames) && UtilsItemStack.isNotEmpty(event.itemStack)
-                && OreDictionary.getOreIDs(event.itemStack).length > 0) {
+            Client.alwaysShowOreDictNames) && UtilsItemStack.isNotEmpty(event.itemStack)
+            && OreDictionary.getOreIDs(event.itemStack).length > 0) {
             List<String> lines = new ArrayList<>();
             StringBuilder line = new StringBuilder();
             String ore;
@@ -33,17 +33,17 @@ public class TooltipEventHandler {
                     lines.add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString() + ore);
                 else {
                     lines.add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString() +
-                            line.toString().trim());
+                        line.toString().trim());
                     line = new StringBuilder();
                 }
             }
             if (line.length() > 0)
                 lines.add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString() +
-                        line.toString().trim());
+                    line.toString().trim());
             if (lines.size() > 0) {
                 event.toolTip.add("");
                 event.toolTip.add(ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC.toString() +
-                        "OreDictionary names:");
+                    "OreDictionary names:");
                 event.toolTip.addAll(lines);
             }
         }

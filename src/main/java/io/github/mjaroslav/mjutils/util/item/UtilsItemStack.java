@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game.item;
+package io.github.mjaroslav.mjutils.util.item;
 
 import io.github.mjaroslav.mjutils.util.UtilsFormat;
 import lombok.experimental.UtilityClass;
@@ -18,6 +18,9 @@ import java.util.Objects;
 
 import static net.minecraftforge.oredict.OreDictionary.*;
 
+/**
+ * Utilities for working with {@link ItemStack ItemStacks}.
+ */
 @UtilityClass
 public class UtilsItemStack {
     /**
@@ -83,32 +86,85 @@ public class UtilsItemStack {
      */
     public final int STACK_STRONG = 0b100000000;
 
+    /**
+     * Returns first argument if it is not empty else second.
+     *
+     * @param stack        nullable primary stack.
+     * @param defaultStack non-null stack for using when first is null.
+     * @return first if it is not empty or second stack else
+     */
     public @NotNull ItemStack requireNonNullStackOrElse(@Nullable ItemStack stack, @NotNull ItemStack defaultStack) {
         return isEmpty(stack) ? defaultStack : stack;
     }
 
-    public @NotNull ItemStack requireNonNullStack(@Nullable ItemStack stack) {
+    /**
+     * Return always non-empty stack by replacing empty value by stack with 1 air block.
+     *
+     * @param stack nullable stack for returning.
+     * @return stack if it is no empty stack with 1 air else.
+     */
+    public @NotNull ItemStack requireNoEmptyStack(@Nullable ItemStack stack) {
         return isEmpty(stack) ? new ItemStack(Blocks.air, 1) : stack;
     }
 
+    /**
+     * Checks stack for null or empty.
+     *
+     * @param stack stack for check.
+     * @return true if stack is null or stack item is null or stack size less than 1.
+     */
     @Contract("null -> true")
     public boolean isEmpty(@Nullable ItemStack stack) {
         return stack == null || stack.getItem() == null || stack.stackSize < 1;
     }
 
+    /**
+     * Checks stack for not null and not empty.
+     *
+     * @param stack stack for check.
+     * @return true if stack is not null and stack item is also not null and stack size more than 0.
+     */
     @Contract("null -> false")
     public boolean isNotEmpty(@Nullable ItemStack stack) {
         return stack != null && stack.getItem() != null && stack.stackSize > 0;
     }
 
+    /**
+     * Checks two stacks for equals by item and meta. Equivalent of
+     * {@code UtilsItemStack#equals(a, b, ITEM | META)}.
+     *
+     * @param a first nullable stack.
+     * @param b second nullable stack.
+     * @return true if items and metas of stack equals or both stacks is null.
+     */
     public boolean equalsItems(@Nullable ItemStack a, @Nullable ItemStack b) {
         return equals(a, b, ITEM | META);
     }
 
+    /**
+     * Checks two stacks for non-strong equality.Equivalent of
+     * {@code UtilsItemStack#equals(a, b, ITEM | COUNT | META | NBT)}.
+     *
+     * @param a first nullable stack.
+     * @param b second nullable stack.
+     * @return true if items, count, metas and nbt equals or both stacks is null. Count can be less than 1 for any match,
+     * meta can be {@link OreDictionary#WILDCARD_VALUE} for any match and NBT can be null.
+     */
     public boolean equals(@Nullable ItemStack a, @Nullable ItemStack b) {
         return equals(a, b, ITEM | COUNT | META | NBT);
     }
 
+    /**
+     * Checks two stacks for equality with specified parameters.
+     *
+     * @param a      first nullable stack.
+     * @param b      second nullable stack.
+     * @param params bit mask by OR-ing constant parameters: {@link UtilsItemStack#ITEM},
+     *               {@link UtilsItemStack#ITEM_STRONG}, {@link UtilsItemStack#COUNT}, {@link UtilsItemStack#COUNT_STRONG},
+     *               {@link UtilsItemStack#NBT}, {@link UtilsItemStack#NBT_STRONG}, {@link UtilsItemStack#META},
+     *               {@link UtilsItemStack#META_STRONG} and {@link UtilsItemStack#STACK_STRONG}.
+     * @return true if stack are equals by this specified parameters and true if no parameters passed.
+     */
     public boolean equals(@Nullable ItemStack a, @Nullable ItemStack b, int params) {
         if (params == 0) return true;
         if (a == null || b == null) return !UtilsFormat.isMaskAnd(params, STACK_STRONG) && a == b;
@@ -129,16 +185,37 @@ public class UtilsItemStack {
         return flagItem && flagCount && flagMeta && flagNBT;
     }
 
+    /**
+     * Create new 1 sized stack from Item, Block or registry name String with {@link OreDictionary#WILDCARD_VALUE}.
+     *
+     * @param object item, must be Item, Block or registry name.
+     * @return new created item stack or fail if it can't be created.
+     */
     @Contract("null -> fail")
     public @NotNull ItemStack newStack(@Nullable Object object) {
         return newStack(object, 1, WILDCARD_VALUE);
     }
 
+    /**
+     * Create new specific sized stack from Item, Block or registry name String with {@link OreDictionary#WILDCARD_VALUE}.
+     *
+     * @param object item, must be Item, Block or registry name.
+     * @param count  item count for stack.
+     * @return new created item stack or fail if it can't be created.
+     */
     @Contract("null, _ -> fail")
     public @NotNull ItemStack newStack(@Nullable Object object, int count) {
         return newStack(object, count, WILDCARD_VALUE);
     }
 
+    /**
+     * Create new specific sized stack from Item, Block or registry name String with specified damage (meta).
+     *
+     * @param object item, must be Item, Block or registry name.
+     * @param count  item count for stack.
+     * @param damage stack damage.
+     * @return new created item stack or fail if it can't be created.
+     */
     @Contract("null, _, _ -> fail")
     public @NotNull ItemStack newStack(@Nullable Object object, int count, int damage) {
         if (object instanceof Block block) return new ItemStack(block, count, damage);
@@ -154,6 +231,13 @@ public class UtilsItemStack {
             throw new IllegalArgumentException("Value must be Block, Item , ItemStack or String (with registry name)!");
     }
 
+    /**
+     * Generate hash code of stack with paramters from {@link UtilsItemStack#equals(ItemStack, ItemStack, int)}.
+     *
+     * @param stack  stack for hashing.
+     * @param params equals params for taking properties from stack.
+     * @return hash code of stack, 0 if stack is null, 1 if no parameters passed.
+     */
     public int hashCode(@Nullable ItemStack stack, int params) {
         if (stack == null) return 0;
         var result = 1;

@@ -1,6 +1,5 @@
-package io.github.mjaroslav.mjutils.object.game.item;
+package io.github.mjaroslav.mjutils.util.item;
 
-import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
 import io.github.mjaroslav.mjutils.util.object.DelegatingSet;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -8,10 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack.*;
+import static io.github.mjaroslav.mjutils.util.item.UtilsItemStack.*;
 
 /**
- * Set for ItemStacks.
+ * Special case of {@link DelegatingSet} for using {@link ItemStack}. Uses params
+ * from {@link UtilsItemStack#equals(ItemStack, ItemStack, int)}.
+ *
+ * @see ItemStack
+ * @see DelegatingSet
  */
 public class ItemStackSet extends DelegatingSet<ItemStack> {
     public ItemStackSet() {

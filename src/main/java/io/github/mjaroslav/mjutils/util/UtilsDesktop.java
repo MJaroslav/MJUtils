@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.net;
+package io.github.mjaroslav.mjutils.util;
 
 import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.object.Lazy;
@@ -13,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.net.URI;
 
+/**
+ * Utilities for manipulating with PC and game.
+ */
 @UtilityClass
 public class UtilsDesktop {
     private final Lazy<Pair<Method, Object>> DESKTOP = new Lazy<>(() -> {

@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.util.game;
 
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorFishingHooks;
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorWeightedRandomFishable;
-import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.Block;

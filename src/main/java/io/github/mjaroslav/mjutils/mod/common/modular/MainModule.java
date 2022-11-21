@@ -18,7 +18,7 @@ import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
-import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;

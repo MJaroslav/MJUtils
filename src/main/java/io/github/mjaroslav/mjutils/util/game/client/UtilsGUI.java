@@ -1,14 +1,14 @@
 package io.github.mjaroslav.mjutils.util.game.client;
 
-import io.github.mjaroslav.mjutils.util.UtilsFormat;
-import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
-import io.github.mjaroslav.mjutils.util.game.UtilsMods;
-import io.github.mjaroslav.mjutils.util.net.UtilsDesktop;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.FMLLog;
+import io.github.mjaroslav.mjutils.util.UtilsDesktop;
+import io.github.mjaroslav.mjutils.util.UtilsFormat;
+import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
+import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat.ARGB;
+import static io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat.*;
 import static org.lwjgl.opengl.GL11.*;
 
 @Log4j2
@@ -113,14 +113,14 @@ public class UtilsGUI {
         if (!button.visible)
             return -1;
         var hovered = mouseX >= button.xPosition && mouseX <= button.xPosition + button.width &&
-                mouseY >= button.yPosition && mouseY <= button.yPosition + button.height;
+            mouseY >= button.yPosition && mouseY <= button.yPosition + button.height;
         return hovered ? checkForEnabling ? button.enabled ? 2 : 0 : 2 : 1;
     }
 
     public @Nullable GuiConfig createModGUIConfig(@Nullable String modId, @NotNull GuiScreen from) {
         try {
             return (GuiConfig) FMLClientHandler.instance().getGuiFactoryFor(UtilsMods.getContainer(modId))
-                    .mainConfigGuiClass().getConstructor(GuiScreen.class).newInstance(from);
+                .mainConfigGuiClass().getConstructor(GuiScreen.class).newInstance(from);
         } catch (Exception e) {
             FMLLog.log(Level.ERROR, e, "There was a critical issue trying to build the config GUI for %s", modId);
             return null;
@@ -129,7 +129,7 @@ public class UtilsGUI {
 
     public boolean isModHaveGUIConfig(@NotNull String modId) {
         return Optional.ofNullable(UtilsMods.getContainer(modId))
-                .map(FMLClientHandler.instance()::getGuiFactoryFor)
-                .map(IModGuiFactory::mainConfigGuiClass).isPresent();
+            .map(FMLClientHandler.instance()::getGuiFactoryFor)
+            .map(IModGuiFactory::mainConfigGuiClass).isPresent();
     }
 }

@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.object.game.item.ItemStackMap;
-import io.github.mjaroslav.mjutils.util.game.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.item.ItemStackMap;
+import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
