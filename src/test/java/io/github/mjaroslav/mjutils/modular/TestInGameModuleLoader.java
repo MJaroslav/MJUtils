@@ -5,8 +5,8 @@ import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
 import cpw.mods.fml.common.LoaderState;
-import io.github.mjaroslav.mjutils.mod.MJUtils;
-import io.github.mjaroslav.mjutils.mod.common.modular.MainModule;
+import io.github.mjaroslav.mjutils.internal.MJUtils;
+import io.github.mjaroslav.mjutils.internal.common.modular.MainModule;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.val;
 
@@ -35,7 +35,7 @@ public class TestInGameModuleLoader {
 
     @Test
     void test$modInstance() {
-        Assert.isTrue(instance == loader.getModInstance(), "Different mod instances");
+        Assert.isTrue(instance == loader.getModInstance(), "Different internal instances");
     }
 
     @Test

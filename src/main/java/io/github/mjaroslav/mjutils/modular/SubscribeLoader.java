@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * ModuleLoader marker. You should use this on public and
- * static field with type {@link ModuleLoader} in your main mod class.
+ * static field with type {@link ModuleLoader} in your main internal class.
  * <br>
  * See also {@link ModuleLoader}
  */
@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 public @interface SubscribeLoader {
     /**
      * Custom root package for module finder.
-     * As default value used package of main mod class
+     * As default value used package of main internal class
      * (class where this annotation used).
      * <br>
      * Note that if {@link SubscribeModule#value()} present in module,

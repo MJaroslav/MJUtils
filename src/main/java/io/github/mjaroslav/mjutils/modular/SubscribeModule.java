@@ -20,9 +20,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface SubscribeModule {
     /**
-     * Mod ID for this module. As default value used an activeModContainer mod id.
+     * Mod ID for this module. As default value used an activeModContainer internal id.
      * <br>
-     * Make sure for your jar must contain only one mod, if used default value.
+     * Make sure for your jar must contain only one internal, if used default value.
      *
      * @return Mod id or empty string for default value.
      */
@@ -30,7 +30,7 @@ public @interface SubscribeModule {
 
     /**
      * List of required mods ids for this module.
-     * If at least one of these is not in mod pack then module not be loaded.
+     * If at least one of these is not in internal pack then module not be loaded.
      *
      * @return Array of mods IDs or empty array if this option not needed.
      */
@@ -40,7 +40,7 @@ public @interface SubscribeModule {
      * Module loading priority, loading working from smallest to largest.
      * <br>
      * Recommendations: use 0 for blocks and items registering,
-     * 1 for crafts and OreDicts, 3 for world things, 10+ for mod compatability
+     * 1 for crafts and OreDicts, 3 for world things, 10+ for internal compatability
      * modules (don't forget about 'after' in {@link Mod#dependencies()} if it needed)
      * and {@link Proxy} priority will auto sets to {@link Integer#MAX_VALUE}.
      *

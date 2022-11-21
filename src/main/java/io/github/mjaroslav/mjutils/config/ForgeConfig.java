@@ -117,7 +117,7 @@ public class ForgeConfig extends Config {
     /**
      * ID for config comparing on {@link OnConfigChangedEvent} called. Use it in GUIConfig.
      *
-     * @return just pair of mod ID and file.
+     * @return just pair of internal ID and file.
      */
     public @NotNull String getConfigId() {
         return getModId() + "@" + getFile();
@@ -138,6 +138,7 @@ public class ForgeConfig extends Config {
         public static final ForgeConfigEventHandler INSTANCE = new ForgeConfigEventHandler();
 
         private final Map<String, ForgeConfig> CONFIGURATIONS = new HashMap<>();
+
         private void addConfig(@NotNull ForgeConfig config) {
             CONFIGURATIONS.put(config.getConfigId(), config);
         }

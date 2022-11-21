@@ -4,7 +4,7 @@ import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import lombok.val;
 import net.minecraft.item.Item;

@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util;
 
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.object.Lazy;
 import io.github.mjaroslav.mjutils.util.object.Pair;
 import lombok.experimental.UtilityClass;

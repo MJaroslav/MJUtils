@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;

@@ -7,7 +7,7 @@ import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
 import cpw.mods.fml.common.discovery.asm.ModAnnotation.EnumHolder;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import lombok.Getter;
@@ -47,10 +47,10 @@ public final class ModuleLoader {
             val info = new ModuleInfo(modDependencies, priority, loadOn, asmParsedAnnotation.getClassName());
             if (info.isAllRequiredModsLoaded()) {
                 modules.add(info);
-                ModInfo.loggerModules.debug("Found module \"%s\" for mod \"%s\"", UtilsReflection.getSimpleClassName(
+                ModInfo.loggerModules.debug("Found module \"%s\" for internal \"%s\"", UtilsReflection.getSimpleClassName(
                     info.getModuleClassName()), modId);
             } else
-                ModInfo.loggerModules.debug("Module \"%s\" from \"%s\" mod not will be load because mod pack not " +
+                ModInfo.loggerModules.debug("Module \"%s\" from \"%s\" internal not will be load because internal pack not " +
                         "have all required mods for module: [%s]",
                     UtilsReflection.getSimpleClassName(info.getModuleClassName()), modId, String.join(", ",
                         info.getModDependencies()));
@@ -63,16 +63,16 @@ public final class ModuleLoader {
         if (proxy != null) {
             modules.add(new ModuleInfo(proxy));
             foundModulesCount++;
-            ModInfo.loggerModules.debug("Found proxy module for \"%s\" mod", modId);
+            ModInfo.loggerModules.debug("Found proxy module for \"%s\" internal", modId);
         }
     }
 
     public void sortModules() {
-        ModInfo.loggerModules.debug("Sorting modules for \"%s\" mod: %s", modId, modules.stream().map(module ->
+        ModInfo.loggerModules.debug("Sorting modules for \"%s\" internal: %s", modId, modules.stream().map(module ->
             UtilsReflection.getSimpleClassName(module.getModuleClassName())).collect(Collectors.toList()));
         modules.sort(Comparator.comparingInt(ModuleInfo::getPriority));
         activatedModulesCount = modules.size();
-        ModInfo.loggerModules.info("Activated %s\\%s of found modules for \"%s\" mod: %s", activatedModulesCount,
+        ModInfo.loggerModules.info("Activated %s\\%s of found modules for \"%s\" internal: %s", activatedModulesCount,
             foundModulesCount, modId,
             modules.stream().map(module -> UtilsReflection.getSimpleClassName(module.getModuleClassName()))
                 .collect(Collectors.toList()));
@@ -80,7 +80,7 @@ public final class ModuleLoader {
 
     @SuppressWarnings("deprecation")
     public void listen(@NotNull FMLModContainer container, @NotNull FMLEvent event) {
-        ModInfo.loggerModules.debug("Listen \"%s\" event for %s modules of \"%s\" mod", event, modules.size(), modId);
+        ModInfo.loggerModules.debug("Listen \"%s\" event for %s modules of \"%s\" internal", event, modules.size(), modId);
         val bar = ProgressManager.push("Modules", modules.size(), true);
         modules.forEach(module -> {
             bar.step(UtilsReflection.getSimpleClassName(module.getModuleClassName()));

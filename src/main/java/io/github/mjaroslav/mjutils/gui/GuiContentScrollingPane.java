@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.mod.lib.General.Debug;
+import io.github.mjaroslav.mjutils.internal.lib.General.Debug;
 import io.github.mjaroslav.mjutils.util.object.Pair;
 import lombok.val;
 import net.minecraft.client.gui.GuiScreen;

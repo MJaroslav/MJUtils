@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import static io.github.mjaroslav.mjutils.mod.lib.General.Debug.BlockCollisionHighlighting.*;
+import static io.github.mjaroslav.mjutils.internal.lib.General.Debug.BlockCollisionHighlighting.*;
 import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)

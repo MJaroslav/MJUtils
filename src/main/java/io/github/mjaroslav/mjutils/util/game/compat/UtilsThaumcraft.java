@@ -9,10 +9,10 @@ import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.network.PacketHandler;
 import thaumcraft.common.lib.network.playerdata.PacketSyncResearch;
 
-import static thaumcraft.common.lib.events.EventHandlerRunic.getFinalWarp;
+import static thaumcraft.common.lib.events.EventHandlerRunic.*;
 
 /**
- * Utilities for Thaumcraft mod integration. It works
+ * Utilities for Thaumcraft internal integration. It works
  * only when Thaumcraft is loaded.
  */
 public class UtilsThaumcraft {

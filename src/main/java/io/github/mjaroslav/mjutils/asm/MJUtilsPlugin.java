@@ -1,9 +1,9 @@
 package io.github.mjaroslav.mjutils.asm;
 
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.tox1cozz.mixinbooterlegacy.IEarlyMixinLoader;
 
 import java.util.Collections;

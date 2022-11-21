@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
-import io.github.mjaroslav.mjutils.mod.lib.General.Client.GuiReplacements;
+import io.github.mjaroslav.mjutils.internal.lib.General.Client.GuiReplacements;
 import net.minecraft.client.gui.GuiButton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

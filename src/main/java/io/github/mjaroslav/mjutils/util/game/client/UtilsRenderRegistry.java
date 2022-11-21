@@ -23,7 +23,7 @@ public class UtilsRenderRegistry {
      * ClientRegistry.bindTileEntitySpecialRenderer(tileClass, renderer)}
      *
      * @param tileClass specified TileEntity class.
-     * @param renderer  TileEntity render handler.
+     * @param renderer  TileEntity render listener.
      */
     public static void rendererTileEntity(Class<? extends TileEntity> tileClass, TileEntitySpecialRenderer renderer) {
         ClientRegistry.bindTileEntitySpecialRenderer(tileClass, renderer);
@@ -34,7 +34,7 @@ public class UtilsRenderRegistry {
      * IItemRenderer) MinecraftForgeClient.registerItemRenderer(item, renderer)}
      *
      * @param item     specified item.
-     * @param renderer item render handler.
+     * @param renderer item render listener.
      */
     public static void rendererItem(Item item, IItemRenderer renderer) {
         MinecraftForgeClient.registerItemRenderer(item, renderer);
@@ -45,7 +45,7 @@ public class UtilsRenderRegistry {
      *ISimpleBlockRenderingHandler)
      * RenderingRegistry.registerBlockHandler(renderer)}
      *
-     * @param renderer block render handler with block render id.
+     * @param renderer block render listener with block render id.
      */
     public static void rendererBlock(ISimpleBlockRenderingHandler renderer) {
         RenderingRegistry.registerBlockHandler(renderer);
@@ -57,7 +57,7 @@ public class UtilsRenderRegistry {
      * RenderingRegistry.registerBlockHandler(id, renderer)}
      *
      * @param id       block render id
-     * @param renderer block render handler.
+     * @param renderer block render listener.
      */
     public static void rendererBlock(int id, ISimpleBlockRenderingHandler renderer) {
         RenderingRegistry.registerBlockHandler(id, renderer);

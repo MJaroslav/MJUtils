@@ -77,8 +77,8 @@ public class TestUtilsFormat {
         val actualDouble = packToColorInt(0xAA / 255D, 0xBB / 255D, 0xCC / 255D, 0xDD / 255D, BGRA);
 
         Assert.assertEquals("int", expected, actualInt);
-        Assert.assertEquals("float", expected, actualFloat);
-        Assert.assertEquals("double", expected, actualDouble);
+        Assert.assertEquals("float", expected, actualFloat, 0.0039062f);
+        Assert.assertEquals("double", expected, actualDouble, 0.0039062d);
     }
 
     @Test

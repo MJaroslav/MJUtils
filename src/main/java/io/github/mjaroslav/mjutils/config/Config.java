@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.config;
 
-import io.github.mjaroslav.mjutils.mod.lib.ModInfo;
+import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.io.ResourcePath;
@@ -39,7 +39,7 @@ public abstract class Config {
     protected boolean shouldFailOnError = false;
 
     /**
-     * @param modId   mod owner ID of this config if not present then will be resolved automatically.
+     * @param modId   internal owner ID of this config if not present then will be resolved automatically.
      * @param file    file for config saving.
      * @param version implemented version of this config, you can use it for handing cases when the loaded
      *                version differs from the implemented.
@@ -168,7 +168,7 @@ public abstract class Config {
     protected abstract @Nullable String getLoadedVersion();
 
     /**
-     * Create {@link ResourcePath} for specified mod config in assets.
+     * Create {@link ResourcePath} for specified internal config in assets.
      *
      * @param modId assets domain
      * @param path  path to config, part to config dir will br removed.
@@ -181,7 +181,7 @@ public abstract class Config {
     }
 
     /**
-     * Create {@link ResourcePath} for specified mod config in assets. Assets domain will be resolved automatically.
+     * Create {@link ResourcePath} for specified internal config in assets. Assets domain will be resolved automatically.
      *
      * @param path path to config, part to config dir will remove.
      * @return new resource path in format assets/modId/defaults/path
