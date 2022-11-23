@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game.client;
+package io.github.mjaroslav.mjutils.util.game;
 
 import net.minecraft.util.ResourceLocation;
 

@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game.client;
+package io.github.mjaroslav.mjutils.util.game;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

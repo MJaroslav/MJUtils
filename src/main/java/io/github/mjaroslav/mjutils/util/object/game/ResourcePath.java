@@ -124,7 +124,7 @@ public final class ResourcePath {
      */
     @Contract(" -> new")
     public @NotNull ResourceLocation toLocation() throws IllegalStateException {
-        if (isAssetsPath())
+        if (!isAssetsPath())
             throw new IllegalStateException("Trying to create ResourceLocation from non-assets ResourcePath");
         return new ResourceLocation(path.replace("/assets/" + namespace + "/", namespace + ":"));
     }

@@ -1,13 +1,11 @@
-package io.github.mjaroslav.mjutils.util.game.client;
+package io.github.mjaroslav.mjutils.util.game;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.github.mjaroslav.mjutils.object.game.world.BlockAABBSet;
-import io.github.mjaroslav.mjutils.object.game.world.BlockPos;
-import io.github.mjaroslav.mjutils.object.game.world.Pos;
-import io.github.mjaroslav.mjutils.object.game.world.WorldPos;
 import io.github.mjaroslav.mjutils.util.UtilsFormat;
 import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
+import io.github.mjaroslav.mjutils.util.object.game.BlockAABBSet;
+import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.client.Minecraft;
@@ -46,7 +44,7 @@ public class UtilsDebugRender {
         Pos.forEachInBox(min, max, i -> {
             list.clear();
             colorCounter = 0;
-            BlockPos.addCollisionBoxesToList(WorldPos.getBlock(world, i), world, i, mask, list, null);
+            UtilsPosBlock.addCollisionBoxesToList(UtilsPosWorld.getBlock(world, i), world, i, mask, list, null);
             list.forEach(box -> {
                 innerApplyCollisionColor(BlockAABBSet.isDeadZoned(box, i.getX().intValue(), i.getY().intValue(),
                     i.getZ().intValue()));

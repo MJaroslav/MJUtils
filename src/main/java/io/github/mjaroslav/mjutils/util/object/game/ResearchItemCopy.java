@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object.game.other;
+package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.internal.common.listener.ThaumEventListener;
 import io.github.mjaroslav.mjutils.internal.common.listener.ThaumEventListener.ResearchCopy;

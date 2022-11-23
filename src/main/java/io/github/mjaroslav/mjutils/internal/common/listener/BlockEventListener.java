@@ -5,7 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import io.github.mjaroslav.mjutils.event.PigZombiesGreedEvent;
 import io.github.mjaroslav.mjutils.internal.lib.General;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
-import io.github.mjaroslav.mjutils.util.game.world.UtilsWorld;
+import io.github.mjaroslav.mjutils.util.game.UtilsWorld;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;

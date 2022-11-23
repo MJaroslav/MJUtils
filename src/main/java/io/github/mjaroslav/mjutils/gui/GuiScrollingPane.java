@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
+import io.github.mjaroslav.mjutils.util.game.UtilsGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -66,9 +66,11 @@ public abstract class GuiScrollingPane {
         onVisibilityChanged(visible);
     }
 
-    public void init() {}
+    public void init() {
+    }
 
-    public void onClose() {}
+    public void onClose() {
+    }
 
     public void onVisibilityChanged(boolean newValue) {
     }

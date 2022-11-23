@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.client.render.model;
+package io.github.mjaroslav.mjutils.util.object.game;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

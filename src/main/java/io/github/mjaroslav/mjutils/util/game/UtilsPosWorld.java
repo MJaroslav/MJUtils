@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object.game.world;
+package io.github.mjaroslav.mjutils.util.game;
 
 import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import lombok.experimental.UtilityClass;
@@ -7,8 +7,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+// TODO: MAKE DOCS AND MAKE FULL IT
 @UtilityClass
-public class WorldPos {
+public class UtilsPosWorld {
     public Block getBlock(@NotNull IBlockAccess owner, @NotNull NumberTrio<?> pos) {
         return owner.getBlock(pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }

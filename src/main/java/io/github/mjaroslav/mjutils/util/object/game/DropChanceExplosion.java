@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object.game.world;
+package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorExplosion;
 import lombok.Getter;
@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static io.github.mjaroslav.mjutils.object.game.world.BlockPos.*;
-import static io.github.mjaroslav.mjutils.object.game.world.WorldPos.*;
+import static io.github.mjaroslav.mjutils.util.game.UtilsPosBlock.*;
+import static io.github.mjaroslav.mjutils.util.game.UtilsPosWorld.*;
 
 public class DropChanceExplosion extends Explosion {
     @Getter
@@ -38,7 +38,7 @@ public class DropChanceExplosion extends Explosion {
         val expPos = new Pos(explosionX, explosionY, explosionZ);
         val world = ((AccessorExplosion) this).getWorldObj();
         playSoundEffect(world, expPos, "random.explode", 4F, (1F + (world.rand.nextFloat() - world.rand.nextFloat())
-                * 0.2F) * 0.7F);
+            * 0.2F) * 0.7F);
         if (explosionSize >= 2.0F && isSmoking) spawnParticle(world, "hugeexplosion", expPos, Pos.X);
         else spawnParticle(world, "largeexplode", expPos, Pos.X);
         var temp = new Pos();
@@ -52,7 +52,7 @@ public class DropChanceExplosion extends Explosion {
                     var velocity = temp.sub(explosionX, explosionY, explosionZ);
                     val diameter = velocity.diameter();
                     velocity = velocity.div(diameter).mul(0.5D / (diameter / explosionSize + 0.1D)).mul(
-                            world.rand.nextFloat() * world.rand.nextFloat() + 0.3F);
+                        world.rand.nextFloat() * world.rand.nextFloat() + 0.3F);
                     spawnParticle(world, "explode", temp.add(explosionX, explosionY, explosionZ).div(2d), velocity);
                     spawnParticle(world, "smoke", temp, velocity);
                 }
@@ -69,7 +69,7 @@ public class DropChanceExplosion extends Explosion {
                 block = getBlock(world, temp);
                 val underBlock = getBlock(world, temp.minusY());
                 if (block.getMaterial() == Material.air && underBlock.func_149730_j() &&
-                        ((AccessorExplosion) this).getExplosionRNG().nextInt(3) == 0)
+                    ((AccessorExplosion) this).getExplosionRNG().nextInt(3) == 0)
                     setBlock(world, temp, Blocks.fire);
             }
     }

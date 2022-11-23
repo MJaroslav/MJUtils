@@ -1,9 +1,10 @@
-package io.github.mjaroslav.mjutils.object.game.world;
+package io.github.mjaroslav.mjutils.util.game;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorBlock;
 import io.github.mjaroslav.mjutils.util.object.NumberTrio;
+import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.EffectRenderer;
@@ -30,8 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// TODO: CHECK ALL ANNOTATIONS
 @UtilityClass
-public class BlockPos {
+public class UtilsPosBlock {
     public boolean getBlocksMovement(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull NumberTrio<?> pos) {
         return owner.getBlocksMovement(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }

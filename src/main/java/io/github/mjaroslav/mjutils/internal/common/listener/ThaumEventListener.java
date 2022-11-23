@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.internal.common.listener;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import io.github.mjaroslav.mjutils.util.game.compat.UtilsThaumcraft;
+import io.github.mjaroslav.mjutils.util.game.UtilsThaumcraft;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.util.StringUtils;

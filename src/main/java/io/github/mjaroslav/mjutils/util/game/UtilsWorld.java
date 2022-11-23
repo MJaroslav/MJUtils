@@ -1,7 +1,7 @@
-package io.github.mjaroslav.mjutils.util.game.world;
+package io.github.mjaroslav.mjutils.util.game;
 
 import io.github.mjaroslav.mjutils.asm.mixin.AccessorEntityPigZombie;
-import io.github.mjaroslav.mjutils.object.game.world.DropChanceExplosion;
+import io.github.mjaroslav.mjutils.util.object.game.DropChanceExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityPigZombie;
@@ -33,7 +33,7 @@ public class UtilsWorld {
         if (world == null || world.isRemote || target == null)
             return 0;
         List<EntityPigZombie> list = world.getEntitiesWithinAABB(EntityPigZombie.class,
-                AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1).expand(expand, expand, expand));
+            AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1).expand(expand, expand, expand));
         for (EntityPigZombie entity : list)
             ((AccessorEntityPigZombie) entity).invokeBecomeAngryAt(target);
         return list.size();

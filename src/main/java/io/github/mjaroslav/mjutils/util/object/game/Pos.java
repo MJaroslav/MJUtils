@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.object.game.world;
+package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import net.minecraft.util.AxisAlignedBB;

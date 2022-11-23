@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game.compat;
+package io.github.mjaroslav.mjutils.util.game;
 
 import baubles.api.BaublesApi;
 import net.minecraft.entity.player.EntityPlayer;

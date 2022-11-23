@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game.client;
+package io.github.mjaroslav.mjutils.util.game;
 
 import com.google.common.collect.Sets;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -8,7 +8,6 @@ import cpw.mods.fml.common.FMLLog;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
 import io.github.mjaroslav.mjutils.util.UtilsFormat;
 import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
-import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
