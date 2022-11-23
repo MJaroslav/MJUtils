@@ -1,5 +1,6 @@
 package io.github.mjaroslav.mjutils.util.io;
 
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.val;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;

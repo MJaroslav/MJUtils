@@ -5,7 +5,7 @@ import com.github.mjaroslav.mcingametester.api.BeforeEach;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
 import cpw.mods.fml.common.LoaderState;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;

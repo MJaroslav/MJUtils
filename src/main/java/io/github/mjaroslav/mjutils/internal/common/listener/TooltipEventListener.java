@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.internal.common.listener;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import io.github.mjaroslav.mjutils.internal.lib.General.Client;
-import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;

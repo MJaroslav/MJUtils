@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.client.render.model.obj;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.val;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;

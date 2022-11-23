@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.object.game.client;
 
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

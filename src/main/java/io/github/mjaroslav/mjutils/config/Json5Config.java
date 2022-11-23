@@ -4,7 +4,7 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.JsonPrimitive;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;

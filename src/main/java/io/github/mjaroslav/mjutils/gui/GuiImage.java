@@ -1,8 +1,8 @@
 package io.github.mjaroslav.mjutils.gui;
 
 import io.github.mjaroslav.mjutils.object.game.client.CachedImage;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
 import io.github.mjaroslav.mjutils.util.object.Pair;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.io;
+package io.github.mjaroslav.mjutils.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -29,18 +29,16 @@ public class UtilsFiles {
      * Wrapper for {@link Paths#get(String, String...)} that use {@link UtilsFiles#normalizePath(Object)}
      * as first parameter.
      *
-     * @return Normalized and absolute {@link Path} from first parameter with resolved childs or
+     * @return Normalized and absolute {@link Path} from first parameter with resolved children or
      * null if type of first parameter not supported in {@link UtilsFiles#normalizePath(Object)}.
      * @see Paths#get(String, String...)
      * @see UtilsFiles#normalizePath(Object)
      */
-    public @UnknownNullability Path get(@NotNull Object value, @NotNull String @NotNull ... childs) {
+    public Path get(@NotNull Object value, @NotNull String @NotNull ... children) {
         var result = normalizePath(value);
-        if (result != null) {
-            for (var child : childs)
-                result = result.resolve(child);
-            return result/*.normalize().toAbsolutePath()*/; // I'm not sure in this
-        } else return null;
+        if (result == null) return null;
+        for (var child : children) result = result.resolve(child);
+        return result.normalize().toAbsolutePath();
     }
 
     /**
@@ -49,7 +47,7 @@ public class UtilsFiles {
      * @see FilenameUtils#removeExtension(String)
      */
     public @NotNull String removeExtension(@NotNull Path file) {
-        return FilenameUtils.removeExtension(file.getFileName().toString());
+        return FilenameUtils.removeExtension(file.toAbsolutePath().normalize().getFileName().toString());
     }
 
     /**
@@ -61,9 +59,8 @@ public class UtilsFiles {
      */
     public @Nullable String replaceExtension(@NotNull Path file, @NotNull String newExtension) {
         val ext = getExtension(file);
-        val to = get(file.getParent(), removeExtension(file) + "." + newExtension);
-        if (move(file, to) == null)
-            return null;
+        if (move(file, get(file.toAbsolutePath().normalize().getParent(),
+            removeExtension(file) + "." + newExtension)) == null) return null;
         return ext;
     }
 
@@ -74,7 +71,7 @@ public class UtilsFiles {
      */
     public @NotNull Stream<Path> list(@NotNull Path path) {
         try {
-            return Files.list(path);
+            return Files.list(path.toAbsolutePath().normalize());
         } catch (IOException e) {
             return Stream.empty();
         }
@@ -86,7 +83,7 @@ public class UtilsFiles {
      * @see FilenameUtils#getExtension(String)
      */
     public @NotNull String getExtension(@NotNull Path path) {
-        return FilenameUtils.getExtension(path.getFileName().toString());
+        return FilenameUtils.getExtension(path.toAbsolutePath().normalize().getFileName().toString());
     }
 
     /**
@@ -97,12 +94,9 @@ public class UtilsFiles {
      */
     @Contract("null, _ -> false")
     public boolean isExtension(@Nullable Path path, @NotNull String @NotNull ... extensions) {
-        if (path == null)
-            return false;
+        if (path == null) return false;
         val ext = getExtension(path);
-        for (var check : extensions)
-            if (ext.equalsIgnoreCase(check))
-                return true;
+        for (var check : extensions) if (ext.equalsIgnoreCase(check)) return true;
         return false;
     }
 
@@ -117,29 +111,25 @@ public class UtilsFiles {
      */
     @Contract("null -> null")
     public @UnknownNullability Path normalizePath(@Nullable Object source) {
-        if (source instanceof String string)
-            return Paths.get(string).normalize().toAbsolutePath();
-        else if (source instanceof File file)
-            return file.toPath().normalize().toAbsolutePath();
-        else if (source instanceof Path path)
-            return path.normalize().toAbsolutePath();
+        if (source instanceof String string) return Paths.get(string).toAbsolutePath().normalize();
+        else if (source instanceof File file) return file.toPath().toAbsolutePath().normalize();
+        else if (source instanceof Path path) return path.toAbsolutePath().normalize();
         else if (source instanceof URL url) {
             switch (url.getProtocol()) {
                 case "jar": {
                     try {
                         val connection = (JarURLConnection) url.openConnection();
-                        return Paths.get(connection.getJarFileURL().getFile()).normalize().toAbsolutePath();
+                        return Paths.get(connection.getJarFileURL().getFile()).toAbsolutePath().normalize();
                     } catch (IOException ignored) {
                         return null;
                     }
                 }
                 case "file":
-                    return Paths.get(url.getFile()).normalize().toAbsolutePath();
+                    return Paths.get(url.getFile()).toAbsolutePath().normalize();
                 default: // switch used for new possible required protocols 
                     return null;
             }
-        } else if (source instanceof URI uri)
-            return Paths.get(uri).normalize().toAbsolutePath();
+        } else if (source instanceof URI uri) return Paths.get(uri).toAbsolutePath().normalize();
         else return null;
     }
 
@@ -189,7 +179,7 @@ public class UtilsFiles {
     public @Nullable Path createDirectories(@Nullable Path file, @NotNull FileAttribute<?> @NotNull ... attrs) {
         if (file != null)
             try {
-                return Files.createDirectories(file, attrs);
+                return Files.createDirectories(file, attrs).toAbsolutePath().normalize();
             } catch (IOException ignored) {
             }
         return null;

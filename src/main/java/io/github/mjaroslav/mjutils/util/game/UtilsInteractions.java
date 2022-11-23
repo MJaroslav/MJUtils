@@ -1,7 +1,6 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.util.item.ItemStackSet;
-import io.github.mjaroslav.mjutils.util.item.UtilsItemStack;
+import io.github.mjaroslav.mjutils.util.object.game.ItemStackSet;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.Block;

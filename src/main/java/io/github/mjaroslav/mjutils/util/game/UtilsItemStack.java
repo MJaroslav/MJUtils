@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.item;
+package io.github.mjaroslav.mjutils.util.game;
 
 import io.github.mjaroslav.mjutils.util.UtilsFormat;
 import lombok.experimental.UtilityClass;

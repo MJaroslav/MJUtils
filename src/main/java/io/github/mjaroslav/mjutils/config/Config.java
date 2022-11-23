@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.config;
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;

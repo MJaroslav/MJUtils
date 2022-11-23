@@ -14,7 +14,7 @@ import io.github.mjaroslav.mjutils.gui.GuiText.GuiTextBuilder;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.game.client.UtilsGUI;
 import io.github.mjaroslav.mjutils.util.game.client.UtilsTextures;
-import io.github.mjaroslav.mjutils.util.io.ResourcePath;
+import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.val;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
