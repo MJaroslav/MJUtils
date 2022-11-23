@@ -4,7 +4,7 @@ import io.github.mjaroslav.mjutils.config.annotations.*;
 import io.github.mjaroslav.mjutils.config.annotations.Restart.Value;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Color;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Mod;
-import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
+import io.github.mjaroslav.mjutils.util.UtilsReflection;
 import lombok.val;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;

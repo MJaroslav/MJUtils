@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util.object;
 
-import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
+import io.github.mjaroslav.mjutils.util.UtilsReflection;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.Contract;
@@ -48,7 +48,7 @@ public class DelegatingMap<K, V> implements Map<K, V> {
         this.equalsDelegate = equalsDelegate;
         this.hashCodeDelegate = hashCodeDelegate;
         this.impl = impl;
-        genericType = UtilsReflection.getParameterizedClass(getClass(), 0);
+        genericType = UtilsReflection.getGenericType(getClass(), 0);
     }
 
     @Override

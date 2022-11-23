@@ -1,27 +1,96 @@
-# eclipse
-bin
-*.launch
-.settings
+##############################
+# Source https://gist.github.com/dedunumax/54e82214715e35439227
+##############################
+
+##############################
+## Java
+##############################
+.mtj.tmp/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+# Jars in resources
+!src/*/resources/**/*.jar
+
+##############################
+## Maven
+##############################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+##############################
+## IntelliJ
+##############################
+out/
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+##############################
+## Eclipse
+##############################
+.settings/
+bin/
+tmp/
 .metadata
 .classpath
 .project
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.factorypath
 
-# vs code
-.vscode
+##############################
+## NetBeans
+##############################
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
 
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
+##############################
+## Visual Studio Code
+##############################
+.vscode/
+.code-workspace
 
-# gradle
-build
-.gradle
+##############################
+## OS X
+##############################
+.DS_Store
 
-# Other
-logs/
-log/
-gradle.properties
+##############################
+## Project extra
+##############################
 run/
+eclipse/

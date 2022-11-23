@@ -1,13 +1,13 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.modular.ModuleLoader;
-import io.github.mjaroslav.mjutils.modular.Proxy;
-import io.github.mjaroslav.mjutils.modular.SubscribeLoader;
-import io.github.mjaroslav.mjutils.util.io.UtilsFiles;
-import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import io.github.mjaroslav.mjutils.modular.ModuleLoader;
+import io.github.mjaroslav.mjutils.modular.Proxy;
+import io.github.mjaroslav.mjutils.modular.SubscribeLoader;
+import io.github.mjaroslav.mjutils.util.UtilsReflection;
+import io.github.mjaroslav.mjutils.util.io.UtilsFiles;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +50,7 @@ public class UtilsMods {
 
     public @Nullable ModContainer getContainer(@Nullable String modId) {
         Optional<ModContainer> optional = Loader.instance().getActiveModList().stream()
-                .filter(mod -> mod.getModId().equals(modId)).findFirst();
+            .filter(mod -> mod.getModId().equals(modId)).findFirst();
         return optional.orElse(null);
     }
 
@@ -211,14 +211,14 @@ public class UtilsMods {
         val versionModsDir = modsDir.resolve(Loader.MC_VERSION);
 
         val disabledMods = UtilsFiles.list(modsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
-                "disabled")).collect(Collectors.toSet());
+            "disabled")).collect(Collectors.toSet());
         disabledMods.addAll(UtilsFiles.list(versionModsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
-                "disabled")).collect(Collectors.toSet()));
+            "disabled")).collect(Collectors.toSet()));
 
         Loader.instance().getModList().forEach(container -> {
             if (container instanceof InjectedModContainer) {
                 val location = ((InjectedModContainer) container).wrappedContainer
-                        .getClass().getProtectionDomain().getCodeSource().getLocation();
+                    .getClass().getProtectionDomain().getCodeSource().getLocation();
                 if (location.getProtocol().equals("jar") || location.getProtocol().equals("file")) {
                     val file = UtilsFiles.normalizePath(location);
                     if (file != null) {
@@ -262,7 +262,7 @@ public class UtilsMods {
             val entry = zip.getEntry("mcmod.info");
             if (entry != null) {
                 val mc = MetadataCollection.from(zip.getInputStream(entry),
-                        path.getFileName().toString());
+                    path.getFileName().toString());
                 ModMetadata[] modList = ReflectionHelper.getPrivateValue(MetadataCollection.class, mc, "modList");
                 for (var mod : modList)
                     result.add(new DisabledModContainer(mod, path));

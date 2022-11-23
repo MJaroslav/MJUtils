@@ -5,7 +5,7 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
-import io.github.mjaroslav.mjutils.util.lang.reflect.UtilsReflection;
+import io.github.mjaroslav.mjutils.util.UtilsReflection;
 import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
