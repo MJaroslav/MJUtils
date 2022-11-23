@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import static io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat.*;
+
 /**
  * Utilities for transferring between different simple formats such as packed int color.
  * <p>
@@ -43,7 +45,7 @@ public class UtilsFormat {
      * @return int array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..255 range).
      */
     public int @NotNull [] unpackColorIntToIntArray(int packedColor) {
-        return unpackColorIntToIntArray(packedColor, ColorFormat.ARGB, ColorFormat.ARGB);
+        return unpackColorIntToIntArray(packedColor, ARGB, ARGB);
     }
 
     /**
@@ -54,7 +56,7 @@ public class UtilsFormat {
      * @return int array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..255 range).
      */
     public int @NotNull [] unpackColorIntToIntArray(int packedColor, @NotNull ColorFormat inFormat) {
-        return unpackColorIntToIntArray(packedColor, inFormat, ColorFormat.ARGB);
+        return unpackColorIntToIntArray(packedColor, inFormat, ARGB);
     }
 
     /**
@@ -83,7 +85,7 @@ public class UtilsFormat {
      * @return double array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..1 range).
      */
     public double @NotNull [] unpackColorIntToDoubleArray(int packedColor) {
-        return unpackColorIntToDoubleArray(packedColor, ColorFormat.ARGB, ColorFormat.ARGB);
+        return unpackColorIntToDoubleArray(packedColor, ARGB, ARGB);
     }
 
     /**
@@ -94,7 +96,7 @@ public class UtilsFormat {
      * @return double array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..1 range).
      */
     public double @NotNull [] unpackColorIntToDoubleArray(int packedColor, @NotNull ColorFormat inFormat) {
-        return unpackColorIntToDoubleArray(packedColor, inFormat, ColorFormat.ARGB);
+        return unpackColorIntToDoubleArray(packedColor, inFormat, ARGB);
     }
 
     /**
@@ -118,7 +120,7 @@ public class UtilsFormat {
      * @return float array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..1 range).
      */
     public float @NotNull [] unpackColorIntToFloatArray(int packedColor) {
-        return unpackColorIntToFloatArray(packedColor, ColorFormat.ARGB, ColorFormat.ARGB);
+        return unpackColorIntToFloatArray(packedColor, ARGB, ARGB);
     }
 
     /**
@@ -129,7 +131,7 @@ public class UtilsFormat {
      * @return float array of unpacked color in {@link ColorFormat#ARGB ARGB} (all channels in 0..1 range).
      */
     public float @NotNull [] unpackColorIntToFloatArray(int packedColor, @NotNull ColorFormat inFormat) {
-        return unpackColorIntToFloatArray(packedColor, inFormat, ColorFormat.ARGB);
+        return unpackColorIntToFloatArray(packedColor, inFormat, ARGB);
     }
 
     /**
@@ -160,7 +162,7 @@ public class UtilsFormat {
      * @see UtilsFormat#packToColorInt(float, float, float, float, ColorFormat)
      */
     public int packToColorInt(float a, float r, float g, float b) {
-        return packToColorInt((double) a, r, g, b, ColorFormat.ARGB);
+        return packToColorInt((double) a, r, g, b, ARGB);
     }
 
     /**
@@ -174,7 +176,12 @@ public class UtilsFormat {
      * @return packed color integer.
      */
     public int packToColorInt(float a, float r, float g, float b, @NotNull ColorFormat outFormat) {
-        return packToColorInt((double) a, r, g, b, outFormat);
+        if (!outFormat.hasAlpha) a = 0;
+        val aInt = ((int) (a * 0xFF) & 0xFF) << outFormat.aBytePos;
+        val rInt = ((int) (r * 0xFF) & 0xFF) << outFormat.rBytePos;
+        val gInt = ((int) (g * 0xFF) & 0xFF) << outFormat.gBytePos;
+        val bInt = ((int) (b * 0xFF) & 0xFF) << outFormat.bBytePos;
+        return aInt + rInt + gInt + bInt;
     }
 
     /**
@@ -188,7 +195,7 @@ public class UtilsFormat {
      * @see UtilsFormat#packToColorInt(double, double, double, double, ColorFormat)
      */
     public int packToColorInt(double a, double r, double g, double b) {
-        return packToColorInt(a, r, g, b, ColorFormat.ARGB);
+        return packToColorInt(a, r, g, b, ARGB);
     }
 
     /**
@@ -202,11 +209,11 @@ public class UtilsFormat {
      * @return packed color integer.
      */
     public int packToColorInt(double a, double r, double g, double b, @NotNull ColorFormat outFormat) {
-        if (outFormat.hasAlpha) a = 0;
-        val aInt = (((int) ((a * 255d) * 0xFF)) & 0xFF) << outFormat.aBytePos;
-        val rInt = (((int) ((r * 255d) * 0xFF)) & 0xFF) << outFormat.rBytePos;
-        val gInt = (((int) ((g * 255d) * 0xFF)) & 0xFF) << outFormat.gBytePos;
-        val bInt = (((int) ((b * 255d) * 0xFF)) & 0xFF) << outFormat.bBytePos;
+        if (!outFormat.hasAlpha) a = 0;
+        val aInt = ((int) (a * 0xFF) & 0xFF) << outFormat.aBytePos;
+        val rInt = ((int) (r * 0xFF) & 0xFF) << outFormat.rBytePos;
+        val gInt = ((int) (g * 0xFF) & 0xFF) << outFormat.gBytePos;
+        val bInt = ((int) (b * 0xFF) & 0xFF) << outFormat.bBytePos;
         return aInt + rInt + gInt + bInt;
     }
 
@@ -221,7 +228,7 @@ public class UtilsFormat {
      * @see UtilsFormat#packToColorInt(int, int, int, int, ColorFormat)
      */
     public int packToColorInt(int a, int r, int g, int b) {
-        return packToColorInt(a, r, g, b, ColorFormat.ARGB);
+        return packToColorInt(a, r, g, b, ARGB);
     }
 
     /**
@@ -235,12 +242,135 @@ public class UtilsFormat {
      * @return packed color integer.
      */
     public int packToColorInt(int a, int r, int g, int b, @NotNull ColorFormat outFormat) {
-        if (outFormat.hasAlpha) a = 0;
+        if (!outFormat.hasAlpha) a = 0;
         a = (a & 0xFF) << outFormat.aBytePos;
         r = (r & 0xFF) << outFormat.rBytePos;
         g = (g & 0xFF) << outFormat.gBytePos;
         b = (b & 0xFF) << outFormat.bBytePos;
         return a + r + g + b;
+    }
+
+    /**
+     * Pack int (in 0..255 range) color array to color int.
+     *
+     * @param unpacked  array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat  array color format.
+     * @param outFormat out color format.
+     * @return packed color integer.
+     */
+    public int packToColorInt(int @NotNull [] unpacked, @NotNull ColorFormat inFormat, @NotNull ColorFormat outFormat) {
+        if (inFormat.hasAlpha ? unpacked.length != 4 : (unpacked.length != 4 && unpacked.length != 3))
+            throw new IllegalArgumentException("unpacked array must be with size 3 or 4 if inFormat has alpha channel");
+        val a = (inFormat.hasAlpha ? (unpacked[inFormat.aArrayPos] & 0xFF) : 0) << outFormat.aBytePos;
+        val r = (unpacked[inFormat.rArrayPos] & 0xFF) << outFormat.rBytePos;
+        val g = (unpacked[inFormat.gArrayPos] & 0xFF) << outFormat.gBytePos;
+        val b = (unpacked[inFormat.bArrayPos] & 0xFF) << outFormat.bBytePos;
+        return a + r + g + b;
+    }
+
+    /**
+     * Pack int (in 0..255 range) color array to color int with {@link ColorFormat#ARGB ARGB} format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat array color format.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(int @NotNull [] unpacked, @NotNull ColorFormat inFormat) {
+        return packToColorInt(unpacked, inFormat, ARGB);
+    }
+
+    /**
+     * Pack int (in 0..255 range) color array with {@link ColorFormat#ARGB ARGB} format to color int with same format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(int @NotNull [] unpacked) {
+        return packToColorInt(unpacked, ARGB, ARGB);
+    }
+
+    /**
+     * Pack float (in 0..1 range) color array to color int.
+     *
+     * @param unpacked  array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat  array color format.
+     * @param outFormat out color format.
+     * @return packed color integer.
+     */
+    public int packToColorInt(float @NotNull [] unpacked, @NotNull ColorFormat inFormat, @NotNull ColorFormat outFormat) {
+        if (inFormat.hasAlpha ? unpacked.length != 4 : (unpacked.length != 4 && unpacked.length != 3))
+            throw new IllegalArgumentException("unpacked array must be with size 3 or 4 if inFormat has alpha channel");
+        val a = (inFormat.hasAlpha ? ((int) (unpacked[inFormat.aArrayPos] * 255F) & 0xFF) : 0) << outFormat.aBytePos;
+        val r = ((int) (unpacked[inFormat.rArrayPos] * 255F) & 0xFF) << outFormat.rBytePos;
+        val g = ((int) (unpacked[inFormat.gArrayPos] * 255F) & 0xFF) << outFormat.gBytePos;
+        val b = ((int) (unpacked[inFormat.bArrayPos] * 255F) & 0xFF) << outFormat.bBytePos;
+        return a + r + g + b;
+    }
+
+    /**
+     * Pack float (in 0..255 range) color array to color int with {@link ColorFormat#ARGB ARGB} format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat array color format.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(float @NotNull [] unpacked, @NotNull ColorFormat inFormat) {
+        return packToColorInt(unpacked, inFormat, ARGB);
+    }
+
+    /**
+     * Pack float (in 0..255 range) color array with {@link ColorFormat#ARGB ARGB} format to color int with same format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(float @NotNull [] unpacked) {
+        return packToColorInt(unpacked, ARGB, ARGB);
+    }
+
+    /**
+     * Pack double (in 0..1 range) color array to color int.
+     *
+     * @param unpacked  array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat  array color format.
+     * @param outFormat out color format.
+     * @return packed color integer.
+     */
+    public int packToColorInt(double @NotNull [] unpacked, @NotNull ColorFormat inFormat, @NotNull ColorFormat outFormat) {
+        if (inFormat.hasAlpha ? unpacked.length != 4 : (unpacked.length != 4 && unpacked.length != 3))
+            throw new IllegalArgumentException("unpacked array must be with size 3 or 4 if inFormat has alpha channel");
+        val a = (inFormat.hasAlpha ? ((int) (unpacked[inFormat.aArrayPos] * 255D) & 0xFF) : 0) << outFormat.aBytePos;
+        val r = ((int) (unpacked[inFormat.rArrayPos] * 255D) & 0xFF) << outFormat.rBytePos;
+        val g = ((int) (unpacked[inFormat.gArrayPos] * 255D) & 0xFF) << outFormat.gBytePos;
+        val b = ((int) (unpacked[inFormat.bArrayPos] * 255D) & 0xFF) << outFormat.bBytePos;
+        return a + r + g + b;
+    }
+
+    /**
+     * Pack double (in 0..1 range) color array to color int with {@link ColorFormat#ARGB ARGB} format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @param inFormat array color format.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(double @NotNull [] unpacked, @NotNull ColorFormat inFormat) {
+        return packToColorInt(unpacked, inFormat, ARGB);
+    }
+
+    /**
+     * Pack double (in 0..1 range) color array with {@link ColorFormat#ARGB ARGB} format to color int with same format.
+     *
+     * @param unpacked array with color channels, must contain 4 elements for alpha formats else can be 3.
+     * @return packed color integer.
+     * @see UtilsFormat#packToColorInt(int[], ColorFormat, ColorFormat)
+     */
+    public int packToColorInt(double @NotNull [] unpacked) {
+        return packToColorInt(unpacked, ARGB, ARGB);
     }
 
     /**
