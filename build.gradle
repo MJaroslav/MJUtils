@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+        classpath('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
             changing = true
         }
     }
@@ -40,7 +40,7 @@ group = buildprop.group
 archivesBaseName = project.name
 
 task devJar(type: Jar) {
-    classifier('dev')
+    archiveClassifier = 'dev'
     manifest { from project.tasks.jar.manifest }
     from sourceSets.main.output
 }
@@ -102,7 +102,7 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${buildprop.lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${buildprop.lombok_version}"
 
-	annotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
+    annotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
     testAnnotationProcessor "com.github.bsideup.jabel:jabel-javac-plugin:${buildprop.jabel_version}"
 
     testImplementation "junit:junit:${buildprop.junit_version}"
@@ -127,7 +127,7 @@ jar {
         manifest {
             // TODO: Don't forged about -Dfml.coreMods.load
             attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}" +
-                    ".asm.${project.name.replace(" ", "")}Plugin"
+                ".asm.${project.name.replace(" ", "")}Plugin"
             attributes "FMLCorePluginContainsFMLMod": "true"
         }
     configurations.shade.each { dep ->
@@ -138,22 +138,23 @@ jar {
 //
 // wtf why reobf leaves empty dirs in jar after package relocation
 //
-task prepareToFuckEmptyDirs(type: Copy, dependsOn: 'reobf') {
-    from tasks.jar.archiveFile
-    into new File(buildDir, "tmp/fuckEmptyDirs/")
-}
+//task prepareToFuckEmptyDirs(type: Copy, dependsOn: 'reobf') {
+//    from tasks.jar.archiveFile
+//    into new File(buildDir, "tmp/fuckEmptyDirs/")
+//}
 
-task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
-    from(zipTree(new File(buildDir, "tmp/fuckEmptyDirs/${tasks.jar.archiveName}")))
-    includeEmptyDirs = false
-}
+//task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
+//    from(zipTree(new File(buildDir, "tmp/fuckEmptyDirs/${tasks.jar.archiveName}")))
+//    includeEmptyDirs = false
+//}
 
-tasks.build.dependsOn(tasks.fuckEmptyDirs)
+//tasks.build.dependsOn(tasks.fuckEmptyDirs)
 
+project.afterEvaluate { p -> tasks.findByName('publishMavenJavaPublicationToMavenLocal').mustRunAfter('build') } // Bruh
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }

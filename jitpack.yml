@@ -1,5 +1,6 @@
-jdk:
-  - openjdk8
+before_install:
+  sdk install java 16.0.2.fx-zulu
+  sdk install java 8.0.345.fx-zulu
+  sdk use java 8.0.345.fx-zulu
 install:
-  - ./gradlew clean build publishToMavenLocal
-
+  - ./gradlew build publishToMavenLocal --info --stacktrace
