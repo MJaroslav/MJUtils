@@ -1,18 +1,17 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
-import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.val;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Getter
 @ToString
@@ -25,19 +24,15 @@ public class CachedImage {
 
     protected boolean loaded;
 
-    public CachedImage(ResourcePath path) {
-        this(path.getPath(), path.getPath(), path.getNamespace());
-    }
-
-    public CachedImage(String location, String texture, String modSourceId) {
+    public CachedImage(@NotNull ResourcePath path) {
         try {
-            BufferedImage image;
-            InputStream imageStream = UtilsMods.getResourceFromMod(UtilsMods.getContainer(modSourceId), texture, false);
-            image = ImageIO.read(imageStream);
+            var image = ImageIO.read(path.stream());
             if (image != null) {
                 dimensions = new Dimension(image.getWidth(), image.getHeight());
                 this.texture = new DynamicTexture(image);
-                this.location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(location, this.texture);
+                val location = path.makeUnique();
+                this.location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(path.getPath(),
+                    this.texture);
                 loaded = true;
             }
         } catch (IOException e) {
