@@ -135,26 +135,19 @@ jar {
     }
 }
 
-//
-// wtf why reobf leaves empty dirs in jar after package relocation
-//
-//task prepareToFuckEmptyDirs(type: Copy, dependsOn: 'reobf') {
-//    from tasks.jar.archiveFile
-//    into new File(buildDir, "tmp/fuckEmptyDirs/")
-//}
-
-//task fuckEmptyDirs(type: Jar, dependsOn: 'prepareToFuckEmptyDirs') {
-//    from(zipTree(new File(buildDir, "tmp/fuckEmptyDirs/${tasks.jar.archiveName}")))
-//    includeEmptyDirs = false
-//}
-
-//tasks.build.dependsOn(tasks.fuckEmptyDirs)
-
-project.afterEvaluate { p -> tasks.findByName('publishMavenJavaPublicationToMavenLocal').mustRunAfter('build') } // Bruh
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            // artifact(jar) { builtBy build }
+            // artifact(sourcesJar) { builtBy sourcesJar }
+            // artifact(devJar) { builtBy devJar }
+            pom {
+                name = "MJUtils"
+                description = "A set of tools to simplify writing mods. It contains a modular system for " +
+                    "initialization of mods and a system of configurations by annotations."
+            }
         }
     }
 }
+
