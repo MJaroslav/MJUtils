@@ -73,6 +73,7 @@ minecraft {
     runDir = buildprop.run_dir
     replace '@VERSION@', project.version
     srgExtra "PK: blue/endless/jankson io/github/mjaroslav/mjutils/library/blue/endless/jankson"
+    // srgExtra "PK: io/github/mjaroslav/sharedjava io/github/mjaroslav/mjutils/library/io/github/mjaroslav/sharedjava"
 }
 
 mixin {
@@ -81,6 +82,7 @@ mixin {
 
 dependencies {
     shade "blue.endless:jankson:${buildprop.jankson_version}"
+    shade "com.github.MJaroslav:Shared-Java:${buildprop.sharedjava_version}"
 
     // All mods versions hardcoded because it's 1.7.10, my dude
     implementation "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
