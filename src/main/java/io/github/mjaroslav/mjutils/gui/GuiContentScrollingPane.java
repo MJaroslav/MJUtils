@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.gui;
 
 import io.github.mjaroslav.mjutils.internal.lib.General.Debug;
-import io.github.mjaroslav.mjutils.util.object.Pair;
+import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import lombok.val;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.opengl.GL11;
@@ -27,7 +27,7 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
         if (isDrugged)
             return;
         ScrollingContentElement selected = null;
-        Pair<Boolean, Pair<Integer, Integer>> hoveredElement = new Pair<>();
+        Triplet<Boolean, Integer, Integer> hoveredElement = null;
         for (ScrollingContentElement element : contentList) {
             hoveredElement = element.isHovered(this, this.x, this.y + 4 - (int) scrollPosition, x, y);
             if (hoveredElement.getX()) {
@@ -38,8 +38,7 @@ public abstract class GuiContentScrollingPane extends GuiScrollingPane {
         if (selected != null) {
             ScrollingContentElement.OnMouseClickListener listener = selected.getOnMouseClickListener();
             if (listener != null)
-                listener.listen(selected, hoveredElement.getY().getX(),
-                    hoveredElement.getY().getY());
+                listener.listen(selected, hoveredElement.getY(), hoveredElement.getZ());
         }
 
     }

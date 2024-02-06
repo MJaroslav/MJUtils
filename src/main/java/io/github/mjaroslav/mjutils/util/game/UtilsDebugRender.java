@@ -2,10 +2,10 @@ package io.github.mjaroslav.mjutils.util.game;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.github.mjaroslav.mjutils.util.UtilsFormat;
-import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
 import io.github.mjaroslav.mjutils.util.object.game.BlockAABBSet;
 import io.github.mjaroslav.mjutils.util.object.game.Pos;
+import io.github.mjaroslav.sharedjava.format.ColorFormat;
+import io.github.mjaroslav.sharedjava.format.Colors;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.client.Minecraft;
@@ -89,7 +89,7 @@ public class UtilsDebugRender {
     }
 
     private void innerApplyCollisionColor(boolean inDeadZone) {
-        val color = UtilsFormat.unpackColorIntToDoubleArray(inDeadZone ? deadColor : colorCycle[colorCounter++],
+        val color = Colors.unpackColorIntToDoubleArray(inDeadZone ? deadColor : colorCycle[colorCounter++],
             ColorFormat.RGB, ColorFormat.RGB);
         colorCounter = colorCounter >= colorCycle.length ? 0 : colorCounter;
         glColor3d(color[0], color[1], color[2]);

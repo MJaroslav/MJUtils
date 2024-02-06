@@ -1,12 +1,11 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
-import io.github.mjaroslav.mjutils.util.object.DelegatingSet;
+import io.github.mjaroslav.sharedjava.util.DelegatingSet;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import static io.github.mjaroslav.mjutils.util.game.UtilsItemStack.*;
 
@@ -23,8 +22,9 @@ public class ItemStackSet extends DelegatingSet<ItemStack> {
     }
 
     public ItemStackSet(int params) {
-        super((stack, obj) -> UtilsItemStack.equals(stack, obj instanceof ItemStack second ? second : null, params),
-            stack -> UtilsItemStack.hashCode(stack, params), new HashSet<>());
+        super((unit, objUnit) -> UtilsItemStack.equals(unit.getX(),
+                objUnit != null && objUnit.getX() instanceof ItemStack second ? second : null, params),
+            unit -> UtilsItemStack.hashCode(unit.getX(), params), null);
     }
 
     public ItemStackSet(@NotNull Collection<ItemStack> stacks, int params) {

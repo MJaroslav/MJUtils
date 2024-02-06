@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
-import io.github.mjaroslav.mjutils.util.object.NumberTrio;
+import io.github.mjaroslav.sharedjava.tuple.triplet.DTriplet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
@@ -9,13 +9,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import static java.lang.Math.*;
 
-// TODO: Add Trio as methods
-public class Pos extends NumberTrio<Double> implements Comparable<Object> {
+public class Pos extends DTriplet implements Comparable<Object> {
     public static final Pos xyz = new Pos(-1, -1, -1);
     public static final Pos xy = new Pos(-1, -1, 0);
     public static final Pos xyZ = new Pos(-1, -1, 1);
@@ -45,7 +43,7 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     public static final Pos XYZ = new Pos(1, 1, 1);
 
     public Pos(@NotNull ChunkPosition position) {
-        super((double) position.chunkPosX, (double) position.chunkPosY, (double) position.chunkPosZ);
+        super(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
 
     public Pos(@NotNull Vec3 vec) {
@@ -53,11 +51,11 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
     }
 
     public Pos(@NotNull ForgeDirection direction) {
-        super((double) direction.offsetX, (double) direction.offsetY, (double) direction.offsetZ);
+        super(direction.offsetX, direction.offsetY, direction.offsetZ);
     }
 
     public Pos(@NotNull ChunkCoordinates coordinates) {
-        super((double) coordinates.posX, (double) coordinates.posY, (double) coordinates.posZ);
+        super(coordinates.posX, coordinates.posY, coordinates.posZ);
     }
 
     public Pos(@NotNull Pos pos) {
@@ -503,17 +501,12 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
             x = vec.xCoord;
             y = vec.yCoord;
             z = vec.zCoord;
-        } else if (o instanceof NumberTrio<?> trio) {
-            x = trio.getX().doubleValue();
-            y = trio.getY().doubleValue();
-            z = trio.getZ().doubleValue();
+        } else if (o instanceof DTriplet triplet) {
+            x = triplet.getX();
+            y = triplet.getY();
+            z = triplet.getZ();
         } else return 0;
         return (int) (getY() == y ? (getZ() == z ? getX() - x : getZ() - z) : getY() - y);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getX(), getY(), getZ());
     }
 
     @Override
@@ -528,8 +521,8 @@ public class Pos extends NumberTrio<Double> implements Comparable<Object> {
             return intX() == position.chunkPosX && intY() == position.chunkPosY && intZ() == position.chunkPosZ;
         else if (o instanceof Vec3 vec)
             return getX() == vec.xCoord && getY() == vec.yCoord && getZ() == vec.zCoord;
-        else if (o instanceof NumberTrio<?> trio)
-            return getX().equals(trio.getX()) && getY().equals(trio.getY()) && getZ().equals(trio.getZ());
+        else if (o instanceof DTriplet triplet)
+            return getX().equals(triplet.getX()) && getY().equals(triplet.getY()) && getZ().equals(triplet.getZ());
         else return super.equals(o);
     }
 

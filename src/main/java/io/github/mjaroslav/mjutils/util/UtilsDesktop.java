@@ -1,8 +1,9 @@
 package io.github.mjaroslav.mjutils.util;
 
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
-import io.github.mjaroslav.mjutils.util.object.Lazy;
-import io.github.mjaroslav.mjutils.util.object.Pair;
+import io.github.mjaroslav.sharedjava.function.LazySupplier;
+import io.github.mjaroslav.sharedjava.tuple.Pair;
+import io.github.mjaroslav.sharedjava.tuple.pair.SimplePair;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.crash.CrashReport;
@@ -18,12 +19,12 @@ import java.net.URI;
  */
 @UtilityClass
 public class UtilsDesktop {
-    private final Lazy<Pair<Method, Object>> DESKTOP = new Lazy<>(() -> {
+    private final LazySupplier<Pair<Method, Object>> DESKTOP = new LazySupplier<>(() -> {
         try {
             val clazz = Class.forName("java.awt.Desktop");
             val method = clazz.getMethod("browse", URI.class);
             val object = clazz.getMethod("getDesktop").invoke(null);
-            return new Pair<>(method, object);
+            return new SimplePair<>(method, object);
         } catch (Throwable e) {
             ModInfo.loggerLibrary.error("Desktop not available, HOW?", e);
             return null;

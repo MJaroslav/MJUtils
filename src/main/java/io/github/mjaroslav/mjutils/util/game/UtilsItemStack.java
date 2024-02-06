@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.util.UtilsFormat;
+import io.github.mjaroslav.sharedjava.format.Bits;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.Block;
@@ -167,21 +167,21 @@ public class UtilsItemStack {
      */
     public boolean equals(@Nullable ItemStack a, @Nullable ItemStack b, int params) {
         if (params == 0) return true;
-        if (a == null || b == null) return !UtilsFormat.isMaskAnd(params, STACK_STRONG) && a == b;
+        if (a == null || b == null) return !Bits.isMaskAnd(params, STACK_STRONG) && a == b;
         boolean flagItem = true, flagCount = true, flagMeta = true, flagNBT = true;
         Item aItem = a.getItem(), bItem = b.getItem();
-        if (UtilsFormat.isMaskAnd(params, ITEM_STRONG)) flagItem = aItem != null && aItem.equals(bItem);
-        else if (UtilsFormat.isMaskAnd(params, ITEM)) flagItem = Objects.equals(aItem, bItem);
+        if (Bits.isMaskAnd(params, ITEM_STRONG)) flagItem = aItem != null && aItem.equals(bItem);
+        else if (Bits.isMaskAnd(params, ITEM)) flagItem = Objects.equals(aItem, bItem);
         int aSize = a.stackSize, bSize = b.stackSize;
-        if (UtilsFormat.isMaskAnd(params, COUNT_STRONG)) flagCount = aSize == bSize;
-        else if (UtilsFormat.isMaskAnd(params, COUNT)) flagCount = aSize == bSize && aSize > 0;
+        if (Bits.isMaskAnd(params, COUNT_STRONG)) flagCount = aSize == bSize;
+        else if (Bits.isMaskAnd(params, COUNT)) flagCount = aSize == bSize && aSize > 0;
         int aMeta = a.getItemDamage(), bMeta = b.getItemDamage();
-        if (UtilsFormat.isMaskAnd(params, META_STRONG)) flagMeta = aMeta == bMeta;
-        else if (UtilsFormat.isMaskAnd(params, META))
+        if (Bits.isMaskAnd(params, META_STRONG)) flagMeta = aMeta == bMeta;
+        else if (Bits.isMaskAnd(params, META))
             flagMeta = aMeta == bMeta || aMeta == OreDictionary.WILDCARD_VALUE || bMeta == OreDictionary.WILDCARD_VALUE;
         NBTTagCompound aNBT = a.getTagCompound(), bNBT = b.getTagCompound();
-        if (UtilsFormat.isMaskAnd(params, NBT_STRONG)) flagNBT = aNBT != null && aNBT.equals(bNBT);
-        else if (UtilsFormat.isMaskAnd(params, NBT)) flagNBT = Objects.equals(aNBT, bNBT);
+        if (Bits.isMaskAnd(params, NBT_STRONG)) flagNBT = aNBT != null && aNBT.equals(bNBT);
+        else if (Bits.isMaskAnd(params, NBT)) flagNBT = Objects.equals(aNBT, bNBT);
         return flagItem && flagCount && flagMeta && flagNBT;
     }
 
@@ -241,14 +241,14 @@ public class UtilsItemStack {
     public int hashCode(@Nullable ItemStack stack, int params) {
         if (stack == null) return 0;
         var result = 1;
-        if (UtilsFormat.isMaskOr(params, STACK_STRONG | ITEM | ITEM_STRONG))
+        if (Bits.isMaskOr(params, STACK_STRONG | ITEM | ITEM_STRONG))
             result = 31 * result + (stack.getItem() == null ? 0 : Item.getIdFromItem(stack.getItem()));
-        if (UtilsFormat.isMaskOr(params, STACK_STRONG | COUNT | COUNT_STRONG))
-            result = 31 * result + (UtilsFormat.isMaskAnd(params, COUNT) && stack.stackSize < 1 ? 0 : stack.stackSize);
-        if (UtilsFormat.isMaskOr(params, STACK_STRONG | META | META_STRONG))
-            result = 31 * result + (UtilsFormat.isMaskAnd(params, META) && stack.getItemDamage() == WILDCARD_VALUE ? 0 : stack.getItemDamage());
-        if (UtilsFormat.isMaskOr(params, STACK_STRONG | NBT | NBT_STRONG))
-            result = 31 * result + (UtilsFormat.isMaskAnd(params, NBT) && !stack.hasTagCompound() ? 0 : stack.getTagCompound().hashCode());
+        if (Bits.isMaskOr(params, STACK_STRONG | COUNT | COUNT_STRONG))
+            result = 31 * result + (Bits.isMaskAnd(params, COUNT) && stack.stackSize < 1 ? 0 : stack.stackSize);
+        if (Bits.isMaskOr(params, STACK_STRONG | META | META_STRONG))
+            result = 31 * result + (Bits.isMaskAnd(params, META) && stack.getItemDamage() == WILDCARD_VALUE ? 0 : stack.getItemDamage());
+        if (Bits.isMaskOr(params, STACK_STRONG | NBT | NBT_STRONG))
+            result = 31 * result + (Bits.isMaskAnd(params, NBT) && !stack.hasTagCompound() ? 0 : stack.getTagCompound().hashCode());
         return result;
     }
 }

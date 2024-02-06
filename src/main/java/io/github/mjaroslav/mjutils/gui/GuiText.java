@@ -1,6 +1,7 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.util.object.Pair;
+import io.github.mjaroslav.sharedjava.tuple.Triplet;
+import io.github.mjaroslav.sharedjava.tuple.triplet.SimpleTriplet;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,8 +32,8 @@ public class GuiText implements ScrollingContentElement {
     protected final OnMouseClickListener onMouseClickListener;
 
     @Override
-    public Pair<Boolean, Pair<Integer, Integer>> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
-        return new Pair<>(false, null);
+    public Triplet<Boolean, Integer, Integer> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
+        return new SimpleTriplet<>(false, 0, 0);
     }
 
     @Override

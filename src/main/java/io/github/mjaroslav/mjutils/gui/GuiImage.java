@@ -1,8 +1,9 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.util.object.Pair;
 import io.github.mjaroslav.mjutils.util.object.game.CachedImage;
 import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
+import io.github.mjaroslav.sharedjava.tuple.Triplet;
+import io.github.mjaroslav.sharedjava.tuple.triplet.SimpleTriplet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class GuiImage implements ScrollingContentElement {
     protected final OnMouseClickListener onMouseClickListener;
 
     @Override
-    public Pair<Boolean, Pair<Integer, Integer>> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
-        val result = new Pair<Boolean, Pair<Integer, Integer>>();
+    public Triplet<Boolean, Integer, Integer> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY) {
+        val result = new SimpleTriplet<Boolean, Integer, Integer>();
         if (mouseX >= contentX + xBegin && mouseX <= contentX + xBegin + contentWidth &&
             mouseY >= contentY + yOffset && mouseY <= contentY + yOffset + contentHeight) {
             result.setX(true);
-            result.setY(new Pair<>((int) (contentX + xBegin + contentWidth - mouseX),
-                (int) (contentY + yOffset + contentHeight - mouseY)));
+            result.setY((int) (contentX + xBegin + contentWidth - mouseX));
+            result.setZ((int) (contentY + yOffset + contentHeight - mouseY));
         } else result.setX(false);
         return result;
     }

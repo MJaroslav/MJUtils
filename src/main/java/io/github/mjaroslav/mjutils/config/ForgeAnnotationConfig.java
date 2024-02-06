@@ -4,7 +4,7 @@ import io.github.mjaroslav.mjutils.config.annotations.*;
 import io.github.mjaroslav.mjutils.config.annotations.Restart.Value;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Color;
 import io.github.mjaroslav.mjutils.config.annotations.Values.Mod;
-import io.github.mjaroslav.mjutils.util.UtilsReflection;
+import io.github.mjaroslav.sharedjava.reflect.ReflectionHelper;
 import lombok.val;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
@@ -221,11 +221,11 @@ public class ForgeAnnotationConfig extends ForgeConfig {
                         property = config.properties.get(categoryName, propertyName, defaultValue.toString(),
                             propertyComment, parsedType);
                     if (isArray)
-                        field.set(null, Arrays.stream(property.getStringList()).map(l -> UtilsReflection
-                            .getEnumFromName(l, field.getType())).toArray(Enum<?>[]::new));
+                        field.set(null, Arrays.stream(property.getStringList()).map(l -> ReflectionHelper
+                            .getEnumFromName(field.getType(), l)).toArray(Enum<?>[]::new));
                     else
-                        field.set(null, UtilsReflection.getEnumFromName(property.getString(), field.getType()));
-                    property.setValidValues(Arrays.stream(UtilsReflection.getEnumValues(type)).map(Enum::name)
+                        field.set(null, ReflectionHelper.getEnumFromName(field.getType(), property.getString()));
+                    property.setValidValues(Arrays.stream((Enum<?>[]) type.getEnumConstants()).map(Enum::name)
                         .toArray(String[]::new));
                 } else {
                     property = isArray ? config.properties.get(categoryName, propertyName, (String[]) defaultValue,

@@ -6,8 +6,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.github.mjaroslav.mjutils.modular.ModuleLoader;
 import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.mjutils.modular.SubscribeLoader;
-import io.github.mjaroslav.mjutils.util.UtilsFiles;
-import io.github.mjaroslav.mjutils.util.UtilsReflection;
+import io.github.mjaroslav.sharedjava.io.PathFiles;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +28,8 @@ import java.util.*;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
+
+import static io.github.mjaroslav.sharedjava.reflect.ReflectionHelper.*;
 
 @Log4j2
 @UtilityClass
@@ -93,7 +94,8 @@ public class UtilsMods {
                 if (field.isAnnotationPresent(SubscribeLoader.class)) {
                     String packageName = field.getAnnotation(SubscribeLoader.class).value();
                     if (packageName.isEmpty())
-                        packageName = UtilsReflection.getPackageFromClass(modInstance);
+                        // ReflectionHelper from Forge and Shared-Java with same name and in one place, I'm megamind
+                        packageName = getPackage(modInstance);
                     val isStatic = Modifier.isStatic(field.getModifiers());
                     ModuleLoader loader = new ModuleLoader(container.getModId(), modInstance, packageName);
                     try {
@@ -207,12 +209,12 @@ public class UtilsMods {
     }
 
     public void init() {
-        val modsDir = UtilsFiles.get(getMinecraftDir(), "mods");
+        val modsDir = PathFiles.get(getMinecraftDir(), "mods");
         val versionModsDir = modsDir.resolve(Loader.MC_VERSION);
 
-        val disabledMods = UtilsFiles.list(modsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
+        val disabledMods = PathFiles.list(modsDir).filter(checkPath -> PathFiles.isExtension(checkPath,
             "disabled")).collect(Collectors.toSet());
-        disabledMods.addAll(UtilsFiles.list(versionModsDir).filter(checkPath -> UtilsFiles.isExtension(checkPath,
+        disabledMods.addAll(PathFiles.list(versionModsDir).filter(checkPath -> PathFiles.isExtension(checkPath,
             "disabled")).collect(Collectors.toSet()));
 
         Loader.instance().getModList().forEach(container -> {
@@ -220,14 +222,14 @@ public class UtilsMods {
                 val location = ((InjectedModContainer) container).wrappedContainer
                     .getClass().getProtectionDomain().getCodeSource().getLocation();
                 if (location.getProtocol().equals("jar") || location.getProtocol().equals("file")) {
-                    val file = UtilsFiles.normalizePath(location);
+                    val file = PathFiles.normalizePath(location);
                     if (file != null) {
                         containerSource.put(container, file);
                         states.put(container, file.startsWith(modsDir) ? ModState.ENABLED : ModState.INTERNAL);
                     }
                 }
             } else if (container instanceof FMLModContainer) {
-                val location = UtilsFiles.normalizePath(container.getSource());
+                val location = PathFiles.normalizePath(container.getSource());
                 containerSource.put(container, location);
                 states.put(container, location.startsWith(modsDir) ? ModState.ENABLED : ModState.INTERNAL);
             }
@@ -243,9 +245,9 @@ public class UtilsMods {
             if (state.isScheduled()) {
                 val path = containerSource.get(container);
                 if (state.isEnabled())
-                    UtilsFiles.replaceExtension(path, "jar");
+                    PathFiles.replaceExtension(path, "jar");
                 else
-                    UtilsFiles.replaceExtension(path, "disabled");
+                    PathFiles.replaceExtension(path, "disabled");
             }
             openedZips.values().forEach(zip -> {
                 try {

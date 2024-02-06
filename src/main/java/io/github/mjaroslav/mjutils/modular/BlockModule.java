@@ -5,7 +5,7 @@ import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
-import io.github.mjaroslav.mjutils.util.UtilsReflection;
+import io.github.mjaroslav.sharedjava.reflect.ReflectionHelper;
 import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
@@ -25,7 +25,7 @@ public class BlockModule {
     protected String rootPackage;
 
     public String getBlocksRootPackage() {
-        if (rootPackage == null) rootPackage = UtilsReflection.getPackageFromClass(this);
+        if (rootPackage == null) rootPackage = ReflectionHelper.getPackage(this);
         return rootPackage;
     }
 

@@ -6,8 +6,8 @@ import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.FMLLog;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
-import io.github.mjaroslav.mjutils.util.UtilsFormat;
-import io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat;
+import io.github.mjaroslav.sharedjava.format.ColorFormat;
+import io.github.mjaroslav.sharedjava.format.Colors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
@@ -29,7 +29,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.util.UtilsFormat.ColorFormat.*;
+import static io.github.mjaroslav.sharedjava.format.ColorFormat.*;
 import static org.lwjgl.opengl.GL11.*;
 
 @Log4j2
@@ -85,8 +85,8 @@ public class UtilsGUI {
 
     public void drawGradientRect(int left, int top, int right, int bottom, int firstColor, int secondColor,
                                  @NotNull ColorFormat colorFormat) {
-        val first = UtilsFormat.unpackColorIntToFloatArray(firstColor, colorFormat, ARGB);
-        val second = UtilsFormat.unpackColorIntToFloatArray(secondColor, colorFormat, ARGB);
+        val first = Colors.unpackColorIntToFloatArray(firstColor, colorFormat, ARGB);
+        val second = Colors.unpackColorIntToFloatArray(secondColor, colorFormat, ARGB);
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glDisable(GL_ALPHA_TEST);

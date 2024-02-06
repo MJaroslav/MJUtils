@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.gui;
 
-import io.github.mjaroslav.mjutils.util.object.Pair;
+import io.github.mjaroslav.sharedjava.tuple.Triplet;
 
 import javax.annotation.Nullable;
 
@@ -11,7 +11,7 @@ public interface ScrollingContentElement {
 
     int getContentHeight();
 
-    Pair<Boolean, Pair<Integer, Integer>> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY);
+    Triplet<Boolean, Integer, Integer> isHovered(GuiContentScrollingPane parent, int xBegin, int yOffset, int mouseX, int mouseY);
 
     @Nullable
     OnMouseClickListener getOnMouseClickListener();

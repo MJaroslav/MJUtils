@@ -1,10 +1,8 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
-import io.github.mjaroslav.mjutils.util.object.DelegatingMap;
+import io.github.mjaroslav.sharedjava.util.DelegatingMap;
 import net.minecraft.item.ItemStack;
-
-import java.util.HashMap;
 
 import static io.github.mjaroslav.mjutils.util.game.UtilsItemStack.*;
 
@@ -22,7 +20,8 @@ public class ItemStackMap<V> extends DelegatingMap<ItemStack, V> {
     }
 
     public ItemStackMap(int params) {
-        super((stack, obj) -> UtilsItemStack.equals(stack, obj instanceof ItemStack second ? second : null, params),
-            stack -> UtilsItemStack.hashCode(stack, params), new HashMap<>());
+        super((unit, objUnit) -> UtilsItemStack.equals(unit.getX(),
+                objUnit != null && objUnit.getX() instanceof ItemStack second ? second : null, params),
+            unit -> UtilsItemStack.hashCode(unit.getX(), params), null);
     }
 }
