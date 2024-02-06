@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -31,7 +32,7 @@ public class TestInGamePropertiesConfig {
 
     @BeforeEach
     void before() throws IOException {
-        Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
+        Files.copy(Objects.requireNonNull(resourcePath.stream()), path, StandardCopyOption.REPLACE_EXISTING);
         config = new PropertiesConfig("test", path);
         config.load();
     }

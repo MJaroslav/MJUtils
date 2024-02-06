@@ -24,7 +24,8 @@ public class TestInGameForgeAnnotationConfig {
     private ForgeAnnotationConfig config;
 
     @BeforeEach
-    void before() {
+    void before() throws IOException {
+        Files.deleteIfExists(path);
         config = new ForgeAnnotationConfig("test", path, MockCategory.class);
         config.load();
     }

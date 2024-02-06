@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 @Common(when = LoaderState.CONSTRUCTING)
@@ -33,7 +34,7 @@ public class TestInGameJson5Config {
 
     @BeforeEach
     void before() throws IOException {
-        Files.copy(Objects.requireNonNull(resourcePath.stream()), path);
+        Files.copy(Objects.requireNonNull(resourcePath.stream()), path, StandardCopyOption.REPLACE_EXISTING);
         config = new Json5Config("test", path);
         config.load();
     }

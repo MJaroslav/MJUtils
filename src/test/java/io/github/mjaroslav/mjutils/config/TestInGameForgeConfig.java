@@ -20,7 +20,8 @@ public class TestInGameForgeConfig {
     private ForgeConfig config;
 
     @BeforeEach
-    void before() {
+    void before() throws IOException {
+        Files.deleteIfExists(path);
         config = new ForgeConfig("test", path);
         config.setShouldFailOnError(true);
         config.load();
