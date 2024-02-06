@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.asm.mixin.AccessorEntityPigZombie;
+import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorEntityPigZombie;
 import io.github.mjaroslav.mjutils.util.object.game.DropChanceExplosion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

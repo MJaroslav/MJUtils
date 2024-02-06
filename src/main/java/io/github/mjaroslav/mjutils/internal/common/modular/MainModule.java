@@ -24,19 +24,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 
-@SubscribeModule(priority = -1)
+@SubscribeModule
 public class MainModule {
     public static final ForgeAnnotationConfig config = new ForgeAnnotationConfig(ModInfo.modId,
         Paths.get("config", ModInfo.modId + ".cfg"), "1", General.class);
 
     public void listen(@NotNull FMLInitializationEvent event) {
-        config.registerSyncCallback(() -> {
-            UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Blocks.quartz_ore,
-                General.quartzCausePigsGreedAttack);
-            System.out.println("Synced");
-            System.out.println(General.quartzCausePigsGreedAttack);
-        });
-        config.load();
+        config.registerSyncCallback(() -> UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Blocks.quartz_ore,
+            General.quartzCausePigsGreedAttack));
+        config.sync();
         FMLCommonHandler.instance().bus().register(ForgeConfigEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(BlockEventListener.INSTANCE);
         MinecraftForge.EVENT_BUS.register(TooltipEventListener.instance);

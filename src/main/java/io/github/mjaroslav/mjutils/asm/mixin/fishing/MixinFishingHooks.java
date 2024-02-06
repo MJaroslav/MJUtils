@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.asm.mixin;
+package io.github.mjaroslav.mjutils.asm.mixin.fishing;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

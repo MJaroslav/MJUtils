@@ -1,0 +1,19 @@
+{
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "required": true,
+  "target": "@env(DEFAULT)",
+  "package": "io.github.mjaroslav.mjutils.asm.mixin.fishing",
+  "refmap": "mixin.mjutils.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "MixinEntityFishHook",
+    "MixinFishingHooks"
+  ],
+  "client": [
+  ],
+  "server": [
+  ]
+}

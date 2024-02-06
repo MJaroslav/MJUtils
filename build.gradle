@@ -89,11 +89,8 @@ dependencies {
     implementation "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
     implementation "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
     implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
-    compileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
-    compileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
-
-    testCompileOnly "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
-    testCompileOnly "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
+    implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
+    implementation "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
 
     compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
     testCompileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"

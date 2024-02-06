@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
-import io.github.mjaroslav.mjutils.asm.mixin.AccessorExplosion;
+import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorExplosion;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;

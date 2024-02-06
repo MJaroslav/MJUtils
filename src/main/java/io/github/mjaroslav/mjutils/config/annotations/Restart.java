@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @see io.github.mjaroslav.mjutils.config.ForgeAnnotationConfig ForgeAnnotationConfig
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Restart {
     @NotNull Value value() default Value.GAME;
 

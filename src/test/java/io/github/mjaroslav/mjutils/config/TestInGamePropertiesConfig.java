@@ -43,8 +43,8 @@ public class TestInGamePropertiesConfig {
 
     @Test
     void test$getString() {
-        assertEquals("String value comment", "String value comment", config.getComment("value.string"));
-        assertEquals("String value", "String value", config.getString("value.string"));
+        assertEquals("Get value with comment", "String value comment", config.getComment("value.string"));
+        assertEquals("Get string value", "String value", config.get("value.string"));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class TestInGamePropertiesConfig {
     void test$setValue() {
         config.setValue("set.string", "String value", "Test comment");
         assertEquals("Set string value comment", "Test comment", config.getComment("set.string"));
-        assertEquals("Set string value", "String value", config.getString("set.string"));
+        assertEquals("Set string value", "String value", config.get("set.string"));
         config.setValue("set.double.array", new Object[]{5.1d, -6.123d, 0.0d}, "Test multiline\nComment");
         assertArrayEquals("Set double array value comment", new String[]{"Test multiline", "Comment"},
             Objects.requireNonNull(config.getComment("set.double.array")).split(System.lineSeparator()));

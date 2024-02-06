@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.asm.mixin;
+package io.github.mjaroslav.mjutils.asm.mixin.accessors;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityPigZombie;

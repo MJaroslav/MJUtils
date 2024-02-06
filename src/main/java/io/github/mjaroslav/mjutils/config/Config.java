@@ -6,6 +6,7 @@ import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -100,7 +101,8 @@ public abstract class Config {
     public final void load() {
         try {
             loadFile();
-            if (getVersion() != null && !getVersion().equals(getLoadedVersion())) {
+            val version = getVersion();
+            if (StringUtils.isNotEmpty(version) && !version.equals(getLoadedVersion())) {
                 restoreDefaultFile();
                 saveFile();
             }

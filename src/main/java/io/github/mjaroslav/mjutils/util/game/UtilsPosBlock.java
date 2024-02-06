@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.util.game;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.github.mjaroslav.mjutils.asm.mixin.AccessorBlock;
+import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorBlock;
 import io.github.mjaroslav.mjutils.util.object.NumberTrio;
 import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import lombok.experimental.UtilityClass;

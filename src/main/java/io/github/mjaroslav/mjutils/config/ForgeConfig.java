@@ -95,7 +95,7 @@ public class ForgeConfig extends Config {
     @Override
     protected void restoreDefaultFile() throws IOException {
         Files.deleteIfExists(getFile());
-        loadFile();
+        properties.load();
         sync();
     }
 

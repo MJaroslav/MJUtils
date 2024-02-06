@@ -103,7 +103,10 @@ public class Json5Config extends Config {
 
     @Override
     protected void loadFile() throws Exception {
-        value = jankson.load(file.toFile());
+        val file = getFile();
+        if (Files.isRegularFile(file))
+            value = jankson.load(file.toFile());
+        else restoreDefaultFile();
     }
 
     @Override
@@ -119,8 +122,9 @@ public class Json5Config extends Config {
         if (defaultValue instanceof String string)
             defaultValue = Config.resolveDefaultFileResourcePath(getModId(), Paths.get(string));
         if (defaultValue instanceof ResourcePath path) {
-            Files.copy(path.stream(), getFile(), StandardCopyOption.REPLACE_EXISTING);
-            loadFile();
+            val file = getFile();
+            Files.copy(path.stream(), file, StandardCopyOption.REPLACE_EXISTING);
+            value = jankson.load(file.toFile());
         } else if (defaultValue instanceof JsonObject object) value = object.clone();
         else throw new IllegalStateException("Not supported defaultValues format: " + defaultValue);
         saveFile();

@@ -1,5 +1,7 @@
-package io.github.mjaroslav.mjutils.asm.mixin;
+package io.github.mjaroslav.mjutils.asm.mixin.potions;
 
+import io.github.mjaroslav.mjutils.internal.common.modular.IDManagerModule;
+import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.NotNull;
@@ -8,8 +10,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Arrays;
@@ -24,20 +27,17 @@ public abstract class MixinPotion {
     @Shadow
     public @Final int id;
 
-    // Cause crash when something trying register potion with already registered id.
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/potion/Potion;id:I",
-        ordinal = 0))
-    private void injected(@NotNull Potion p, int id) {
-        if (potionTypes[id] != null)
-            throw new IllegalArgumentException("Duplicate potion id! " + getClass() + " and " +
-                potionTypes[id].getClass() + " Enchantment ID:" + id);
-        this.id = id;
+    // Handle ID duplicates
+    @ModifyVariable(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/potion/Potion;id:I",
+        shift = Shift.BEFORE, ordinal = 0), ordinal = 0)
+    private int init(int original) {
+        return IDManagerModule.POTIONS.registerID(getClass(), original);
     }
 
     // Extends potions array.
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void cinit(@NotNull CallbackInfo ci) {
-        potionTypes = Arrays.copyOf(potionTypes, 1024);
-        ModInfo.loggerLibrary.debug("Potions array size changed to 1024");
+        potionTypes = Arrays.copyOf(potionTypes, Potions.newArraySize);
+        ModInfo.loggerLibrary.debug("Potions array size changed to " + Potions.newArraySize);
     }
 }

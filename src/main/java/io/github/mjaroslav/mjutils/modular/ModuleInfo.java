@@ -5,7 +5,7 @@ import cpw.mods.fml.common.LoaderState.ModState;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLStateEvent;
-import io.github.mjaroslav.mjutils.asm.mixin.AccessorFMLModContainer;
+import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorFMLModContainer;
 import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.AccessLevel;

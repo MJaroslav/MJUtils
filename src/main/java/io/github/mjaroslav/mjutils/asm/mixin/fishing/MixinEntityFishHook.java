@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.asm.mixin;
+package io.github.mjaroslav.mjutils.asm.mixin.fishing;
 
 import io.github.mjaroslav.mjutils.event.FishingSuccessEvent;
 import lombok.val;
@@ -14,6 +14,7 @@ import net.minecraftforge.common.FishingHooks;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -25,7 +26,8 @@ public abstract class MixinEntityFishHook extends Entity {
         super(world);
     }
 
-    private FishingSuccessEvent fishingSuccessEvent;
+    @Unique
+    private FishingSuccessEvent mjutils$fishingSuccessEvent;
 
     // Replace drop by event
     @Redirect(method = "func_146034_e",
@@ -33,8 +35,8 @@ public abstract class MixinEntityFishHook extends Entity {
             target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
             ordinal = 0))
     private boolean injectedEntityItem(World world, Entity entity) {
-        if (fishingSuccessEvent != null && !fishingSuccessEvent.isCanceled() && fishingSuccessEvent.caughtItem != null)
-            world.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, fishingSuccessEvent.caughtItem));
+        if (mjutils$fishingSuccessEvent != null && !mjutils$fishingSuccessEvent.isCanceled() && mjutils$fishingSuccessEvent.caughtItem != null)
+            world.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, mjutils$fishingSuccessEvent.caughtItem));
         return false;
     }
 
@@ -44,15 +46,15 @@ public abstract class MixinEntityFishHook extends Entity {
             target = "Lnet/minecraft/world/World;spawnEntityInWorld(Lnet/minecraft/entity/Entity;)Z",
             ordinal = 1))
     private boolean injectedEntityXPOrb(World world, Entity entity) {
-        if (fishingSuccessEvent != null) {
-            if (!fishingSuccessEvent.isCanceled() && fishingSuccessEvent.caughtExperience > 0)
-                world.spawnEntityInWorld(new EntityXPOrb(worldObj, fishingSuccessEvent.fishman.posX,
-                    fishingSuccessEvent.fishman.posY, fishingSuccessEvent.fishman.posZ,
-                    fishingSuccessEvent.caughtExperience));
-            if (fishingSuccessEvent.increaseStatistic && fishingSuccessEvent.caughtCategory != null)
-                fishingSuccessEvent.fishman.addStat(fishingSuccessEvent.caughtCategory.stat, 1);
+        if (mjutils$fishingSuccessEvent != null) {
+            if (!mjutils$fishingSuccessEvent.isCanceled() && mjutils$fishingSuccessEvent.caughtExperience > 0)
+                world.spawnEntityInWorld(new EntityXPOrb(worldObj, mjutils$fishingSuccessEvent.fishman.posX,
+                    mjutils$fishingSuccessEvent.fishman.posY, mjutils$fishingSuccessEvent.fishman.posZ,
+                    mjutils$fishingSuccessEvent.caughtExperience));
+            if (mjutils$fishingSuccessEvent.increaseStatistic && mjutils$fishingSuccessEvent.caughtCategory != null)
+                mjutils$fishingSuccessEvent.fishman.addStat(mjutils$fishingSuccessEvent.caughtCategory.stat, 1);
         }
-        fishingSuccessEvent = null;
+        mjutils$fishingSuccessEvent = null;
         return false;
     }
 
@@ -65,9 +67,9 @@ public abstract class MixinEntityFishHook extends Entity {
         val lure = EnchantmentHelper.func_151387_h(((EntityFishHook) (Object) this).field_146042_b);
         val category = net.minecraftforge.common.FishingHooks.getFishableCategory(chance, luck, lure);
         val catchStack = FishingHooks.getRandomFishable(rand, chance, luck, lure);
-        fishingSuccessEvent = new FishingSuccessEvent(((EntityFishHook) (Object) this).field_146042_b,
+        mjutils$fishingSuccessEvent = new FishingSuccessEvent(((EntityFishHook) (Object) this).field_146042_b,
             (EntityFishHook) (Object) this, category, catchStack, rand.nextInt(6) + 1, chance, luck, lure, true);
-        MinecraftForge.EVENT_BUS.post(fishingSuccessEvent);
+        MinecraftForge.EVENT_BUS.post(mjutils$fishingSuccessEvent);
         ci.setReturnValue(new ItemStack(Blocks.air));
     }
 }

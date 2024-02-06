@@ -9,21 +9,11 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AccessorBlock",
-    "AccessorEntityPigZombie",
-    "AccessorExplosion",
-    "AccessorFishingHooks",
-    "AccessorFMLModContainer",
-    "AccessorWeightedRandomFishable",
-    "MixinEnchantment",
     "MixinEntityCreeper",
-    "MixinEntityFishHook",
     "MixinEntityPigZombie",
     "MixinEntityTNTPrimed",
-    "MixinFishingHooks",
     "MixinFMLModContainer",
-    "MixinForgeHooks",
-    "MixinPotion"
+    "MixinForgeHooks"
   ],
   "client": [
     "MixinGuiButton",

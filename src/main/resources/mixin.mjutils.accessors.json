@@ -1,0 +1,23 @@
+{
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "required": true,
+  "target": "@env(DEFAULT)",
+  "package": "io.github.mjaroslav.mjutils.asm.mixin.accessors",
+  "refmap": "mixin.mjutils.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AccessorBlock",
+    "AccessorEntityPigZombie",
+    "AccessorExplosion",
+    "AccessorFishingHooks",
+    "AccessorFMLModContainer",
+    "AccessorWeightedRandomFishable"
+  ],
+  "client": [
+  ],
+  "server": [
+  ]
+}

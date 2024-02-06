@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.asm.mixin;
+package io.github.mjaroslav.mjutils.asm.mixin.accessors;
 
 import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.LoadController;
