@@ -38,6 +38,6 @@ public abstract class MixinPotion {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void cinit(@NotNull CallbackInfo ci) {
         potionTypes = Arrays.copyOf(potionTypes, Potions.newArraySize);
-        ModInfo.loggerLibrary.debug("Potions array size changed to " + Potions.newArraySize);
+        ModInfo.LOG_LIB.debug("Potions array size changed to " + Potions.newArraySize);
     }
 }

@@ -3,9 +3,7 @@ package io.github.mjaroslav.mjutils.util.game;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import io.github.mjaroslav.mjutils.modular.ModuleLoader;
 import io.github.mjaroslav.mjutils.modular.Proxy;
-import io.github.mjaroslav.mjutils.modular.SubscribeLoader;
 import io.github.mjaroslav.sharedjava.io.PathFiles;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -19,7 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +26,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
-import static io.github.mjaroslav.sharedjava.reflect.ReflectionHelper.*;
+import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
 
 @Log4j2
 @UtilityClass
@@ -55,58 +52,25 @@ public class UtilsMods {
         return optional.orElse(null);
     }
 
-    public @Nullable Proxy getProxyModuleFromMod(@NotNull Object modInstance) {
-        return (Proxy) getProxyObjectFromMod(modInstance);
+    public @Nullable Proxy getProxyFromMod(@NotNull Object modInstance) {
+        val obj = UtilsMods.getProxyObjectFromMod(modInstance);
+        return obj instanceof Proxy proxy ? proxy : null;
     }
-
 
     public @Nullable Object getProxyObjectFromMod(@NotNull Object modInstance) {
         int mods;
-        for (Field field : modInstance.getClass().getFields()) {
+        val className = modInstance.getClass().getName();
+        for (val field : modInstance.getClass().getFields()) {
             mods = field.getModifiers();
             if (Modifier.isStatic(mods) && Modifier.isPublic(mods) && field.isAnnotationPresent(SidedProxy.class)) {
                 try {
                     return field.get(null);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    LOG_LIB.error(String.format("Can't get proxy object from %s#%s field", className, field.getName()), e);
                     return null;
                 }
-            }
-        }
-        return null;
-    }
-
-    private final Map<ModContainer, ModuleLoader> loaders = new HashMap<>();
-
-
-    public @Nullable ModuleLoader getActiveLoader() {
-        ModContainer mc = Loader.instance().activeModContainer();
-        return mc instanceof FMLModContainer ? getOrTryCreateModuleLoader(mc, false) : null;
-    }
-
-
-    public @Nullable ModuleLoader getOrTryCreateModuleLoader(@NotNull ModContainer container, boolean create) {
-        if (loaders.containsKey(container))
-            return loaders.get(container);
-        else if (create) {
-            Object modInstance = container.getMod();
-            for (Field field : modInstance.getClass().getFields())
-                if (field.isAnnotationPresent(SubscribeLoader.class)) {
-                    String packageName = field.getAnnotation(SubscribeLoader.class).value();
-                    if (packageName.isEmpty())
-                        // ReflectionHelper from Forge and Shared-Java with same name and in one place, I'm megamind
-                        packageName = getPackage(modInstance);
-                    val isStatic = Modifier.isStatic(field.getModifiers());
-                    ModuleLoader loader = new ModuleLoader(container.getModId(), modInstance, packageName);
-                    try {
-                        field.set(isStatic ? null : modInstance, loader);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e); // TODO: Add something for warning or else.
-                    }
-                    loaders.put(container, loader);
-                    return loader;
-                }
-            loaders.put(container, null);
+            } else LOG_LIB.warn(String.format("Ignoring %s#%s field as proxy object because its must be " +
+                "public and static", className, field.getName()));
         }
         return null;
     }

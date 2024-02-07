@@ -53,9 +53,9 @@ public class MainModule {
                     else if (message.isStringMessage())
                         ClientWorldEventListener.INSTANCE.extraDisabledForCreativeDestroying
                             .add(UtilsItemStack.newStack(message.key));
-                    else ModInfo.logger.error("IMC@disable_block_destroying_in_creative: value must be ItemStack " +
+                    else ModInfo.LOG_IMC.error("IMC@disable_block_destroying_in_creative: value must be ItemStack " +
                             "or registry name.");
-                } else ModInfo.logger.warn(String.format("Unknown IMC message: %s", message.key));
+                } else ModInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
             } else {
                 if ("make_block_treasure_for_pig_zombies".equals(message.key)) {
                     if (message.isStringMessage())
@@ -63,9 +63,9 @@ public class MainModule {
                             .newStack(message.getStringValue()), true);
                     else if (message.isItemStackMessage())
                         UtilsInteractions.configureBlockAsPigZombieGreedTrigger(message.getItemStackValue(), true);
-                    else ModInfo.logger.error("IMC@make_block_treasure_for_pig_zombies: value must be ItemStack " +
+                    else ModInfo.LOG_IMC.error("IMC@make_block_treasure_for_pig_zombies: value must be ItemStack " +
                             "or registry name.");
-                } else ModInfo.logger.warn(String.format("Unknown IMC message: %s", message.key));
+                } else ModInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
             }
     }
 }

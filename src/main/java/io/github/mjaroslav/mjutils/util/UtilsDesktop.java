@@ -26,7 +26,7 @@ public class UtilsDesktop {
             val object = clazz.getMethod("getDesktop").invoke(null);
             return new SimplePair<>(method, object);
         } catch (Throwable e) {
-            ModInfo.loggerLibrary.error("Desktop not available, HOW?", e);
+            ModInfo.LOG_LIB.error("Desktop not available, HOW?", e);
             return null;
         }
     });
@@ -41,7 +41,7 @@ public class UtilsDesktop {
             try {
                 pair.getX().invoke(pair.getY(), uri);
             } catch (Throwable e) {
-                ModInfo.loggerLibrary.error("Couldn't open link", e);
+                ModInfo.LOG_LIB.error("Couldn't open link", e);
             }
         });
     }

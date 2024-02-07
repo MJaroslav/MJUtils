@@ -95,6 +95,8 @@ public class General {
 
     @Comment("Cosmetic options, not make changes on server.")
     public static class Client {
+        @Comment("Overrides change of showing Minceraft logo in 0-1 range. Vanilla change is 0.0001")
+        public static double overrideMinceraftChance = 1.0E-1;
 
         @Comment("Show ore dict names in tooltip (in advanced tooltip mode).")
         public static boolean showOreDictNames = true;

@@ -1,9 +1,8 @@
 package io.github.mjaroslav.mjutils.internal.lib;
 
-import io.github.mjaroslav.mjutils.util.logging.ModLogger;
-import io.github.mjaroslav.mjutils.util.logging.UtilsLogger;
-import io.github.mjaroslav.mjutils.util.logging.impl.Log4j2ModLogger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestModInfo {
-    public static final ModLogger testLogger = UtilsLogger.getLoggerWithLevel(Log4j2ModLogger.class, "tests").wrapLevel(false);
+    public static final Logger LOG = LogManager.getLogger(ModInfo.name + "/tests");
 }

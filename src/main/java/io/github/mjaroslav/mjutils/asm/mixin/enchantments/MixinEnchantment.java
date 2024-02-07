@@ -39,6 +39,6 @@ public abstract class MixinEnchantment {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void mjtuils$cinit(@NotNull CallbackInfo ci) {
         enchantmentsList = Arrays.copyOf(enchantmentsList, Enchantments.newArraySize);
-        ModInfo.loggerLibrary.debug("Enchantments array size changed to " + Enchantments.newArraySize);
+        ModInfo.LOG_LIB.debug("Enchantments array size changed to " + Enchantments.newArraySize);
     }
 }

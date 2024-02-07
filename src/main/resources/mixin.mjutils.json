@@ -18,6 +18,7 @@
   "client": [
     "MixinGuiButton",
     "MixinGuiButtonExt",
+    "MixinGuiMainMenu",
     "MixinGuiTextField",
     "MixinPlayerControllerMP"
   ],
