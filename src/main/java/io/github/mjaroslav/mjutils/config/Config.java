@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.config;
 
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;

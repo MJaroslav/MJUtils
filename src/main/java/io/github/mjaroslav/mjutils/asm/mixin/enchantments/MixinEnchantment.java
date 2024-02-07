@@ -1,8 +1,8 @@
 package io.github.mjaroslav.mjutils.asm.mixin.enchantments;
 
+import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.internal.common.modular.IDManagerModule;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Enchantments;
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import net.minecraft.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;

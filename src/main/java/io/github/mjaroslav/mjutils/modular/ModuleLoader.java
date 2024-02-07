@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 import static io.github.mjaroslav.sharedjava.reflect.ReflectionHelper.*;
 
 @Getter
@@ -48,7 +48,7 @@ public final class ModuleLoader {
         return LOADERS_CACHE.get(Loader.instance().activeModContainer());
     }
 
-    public static @Nullable ModuleLoader getOrTryCreateLoader(@NotNull ModContainer container) {
+    public static @Nullable ModuleLoader getOrCreate(@NotNull ModContainer container) {
         val modName = container.getName();
         val modId = container.getModId();
         if (LOADERS_CACHE.containsKey(container)) {

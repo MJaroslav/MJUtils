@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 
 @Getter
 public class ItemModule {

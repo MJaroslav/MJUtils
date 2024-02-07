@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
-import io.github.mjaroslav.mjutils.internal.lib.General.Client.GuiReplacements;
+import io.github.mjaroslav.mjutils.lib.General.Client.GuiReplacements;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import org.spongepowered.asm.mixin.Mixin;

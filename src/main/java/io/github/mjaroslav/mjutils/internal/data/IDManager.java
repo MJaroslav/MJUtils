@@ -1,8 +1,8 @@
 package io.github.mjaroslav.mjutils.internal.data;
 
+import io.github.mjaroslav.mjutils.asm.MixinPatches.OccupiedPolicy;
 import io.github.mjaroslav.mjutils.config.PropertiesConfig;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.OccupiedPolicy;
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public class IDManager {
         this.arraySize = arraySize;
         this.vanillaIndexes = vanillaIndexes;
         this.policy = policy;
-        config = new PropertiesConfig(ModInfo.modId, configPath);
+        config = new PropertiesConfig(ModInfo.MOD_ID, configPath);
         config.setComment(String.format("""
                 MJUtils provides ID array size extension and adds ID occupied strategy.
                 This file used for "AUTO" strategy, then means that all %1$s registrations

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(PotionEffect.class)
 public class MixinPotionEffect {
     @Redirect(method = "writeCustomPotionEffectToNBT", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/nbt/NBTTagCompound;setByte(Ljava/lang/String;B)V", ordinal = 1))
+        target = "Lnet/minecraft/nbt/NBTTagCompound;setByte(Ljava/lang/String;B)V", ordinal = 0))
     private void writeCustomPotionEffectToNBT(@NotNull NBTTagCompound instance, @NotNull String name, byte value) {
         instance.setInteger(name, ((PotionEffect) (Object) this).getPotionID());
     }

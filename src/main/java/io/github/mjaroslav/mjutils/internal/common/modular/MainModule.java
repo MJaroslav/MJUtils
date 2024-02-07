@@ -11,8 +11,8 @@ import io.github.mjaroslav.mjutils.internal.client.listener.ClientWorldEventList
 import io.github.mjaroslav.mjutils.internal.common.listener.BlockEventListener;
 import io.github.mjaroslav.mjutils.internal.common.listener.FuelHandler;
 import io.github.mjaroslav.mjutils.internal.common.listener.TooltipEventListener;
-import io.github.mjaroslav.mjutils.internal.lib.General;
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.General;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
@@ -26,13 +26,13 @@ import java.nio.file.Paths;
 
 @SubscribeModule
 public class MainModule {
-    public static final ForgeAnnotationConfig config = new ForgeAnnotationConfig(ModInfo.modId,
-        Paths.get("config", ModInfo.modId + ".cfg"), "1", General.class);
+    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(ModInfo.MOD_ID,
+        Paths.get("config", ModInfo.MOD_ID, "general.cfg"), "2.0.0", General.class);
 
     public void listen(@NotNull FMLInitializationEvent event) {
-        config.registerSyncCallback(() -> UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Blocks.quartz_ore,
+        CONFIG.registerSyncCallback(() -> UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Blocks.quartz_ore,
             General.quartzCausePigsGreedAttack));
-        config.sync();
+        CONFIG.load();
         FMLCommonHandler.instance().bus().register(ForgeConfigEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(BlockEventListener.INSTANCE);
         MinecraftForge.EVENT_BUS.register(TooltipEventListener.instance);

@@ -109,7 +109,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         var categoryName = !StringUtils.isNotBlank(parentCategoryName) ? Configuration.CATEGORY_GENERAL
             : String.format("%s.%s", parentCategoryName, formatName(categoryClass.getSimpleName()));
         val name = categoryClass.getAnnotation(Name.class);
-        if (name != null) categoryName = !StringUtils.isNotBlank(parentCategoryName) ? Configuration.CATEGORY_GENERAL
+        if (name != null) categoryName = !StringUtils.isNotBlank(parentCategoryName) ? name.value()
             : String.format("%s.%s", parentCategoryName, name.value());
         val comment = categoryClass.getAnnotation(Comment.class);
         if (comment != null) config.properties.setCategoryComment(categoryName, comment.value());
@@ -117,7 +117,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         if (langKey != null) config.properties.setCategoryLanguageKey(categoryName, langKey.value());
         else
             config.properties.setCategoryLanguageKey(categoryName, "config.category." + config.modId + ":"
-                + categoryName + ".name");
+                + categoryName);
         val restart = categoryClass.getAnnotation(Restart.class);
         if (restart != null) {
             if (restart.value() == Value.GAME || restart.value() == Value.BOTH)
@@ -130,6 +130,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         for (var field : categoryClass.getDeclaredFields()) {
             mods = field.getModifiers();
             if (Modifier.isPublic(mods) && Modifier.isStatic(mods)) {
+                if (field.isAnnotationPresent(Ignore.class)) continue;
                 type = parseType(field.getType());
                 if (type != null) parseField(config, field, categoryName, type, field.getType().isArray());
             }
@@ -250,7 +251,7 @@ public class ForgeAnnotationConfig extends ForgeConfig {
         val langKey = field.getDeclaredAnnotation(LangKey.class);
         if (langKey != null) property.setLanguageKey(langKey.value());
         else property.setLanguageKey("config.property." + config.getModId() + ":" + categoryName + "."
-            + propertyName + ".name");
+            + propertyName);
         if (property.getType() == Type.COLOR) property.setValidValues(COLOR_VALID_VALUES);
         val pattern = field.getAnnotation(Pattern.class);
         if (pattern != null) property.setValidationPattern(java.util.regex.Pattern.compile(pattern.value()));

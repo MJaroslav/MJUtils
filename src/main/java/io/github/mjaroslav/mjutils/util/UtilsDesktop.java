@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util;
 
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import io.github.mjaroslav.sharedjava.function.LazySupplier;
 import io.github.mjaroslav.sharedjava.tuple.Pair;
 import io.github.mjaroslav.sharedjava.tuple.pair.SimplePair;

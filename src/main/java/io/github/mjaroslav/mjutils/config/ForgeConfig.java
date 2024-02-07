@@ -3,12 +3,13 @@ package io.github.mjaroslav.mjutils.config;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import io.github.mjaroslav.mjutils.util.object.game.config.FileAsCategoryElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.val;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 
 /**
  * {@link Config} implementation for forge {@link Configuration} with manually property handling by sync callbacks.
@@ -130,7 +133,20 @@ public class ForgeConfig extends Config {
      */
     @SuppressWarnings("rawtypes")
     public @NotNull List<IConfigElement> getElementList() {
-        return new ConfigElement<>(properties.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements();
+        return getElementList(Configuration.CATEGORY_GENERAL);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public @NotNull List<IConfigElement> getElementList(@NotNull String rootCategory) {
+        return new ConfigElement<>(properties.getCategory(rootCategory)).getChildElements();
+    }
+
+    public @NotNull FileAsCategoryElement getCategoryElement() {
+        return getCategoryElement(Configuration.CATEGORY_GENERAL);
+    }
+
+    public @NotNull FileAsCategoryElement getCategoryElement(@NotNull String rootCategory) {
+        return new FileAsCategoryElement(properties, rootCategory, getConfigId());
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -145,8 +161,11 @@ public class ForgeConfig extends Config {
 
         @SubscribeEvent
         public void onConfigChangedEvent(@NotNull OnConfigChangedEvent event) {
-            val config = CONFIGURATIONS.get(event.configID);
-            if (config != null) config.sync();
+            CONFIGURATIONS.entrySet().stream().filter(entry -> entry.getKey().startsWith(event.configID)
+                && StringUtils.equals(entry.getValue().getModId(), event.modID)).forEach(entry -> {
+                entry.getValue().sync();
+                LOG_LIB.info("Configuration {} synced", event.configID);
+            });
         }
     }
 }

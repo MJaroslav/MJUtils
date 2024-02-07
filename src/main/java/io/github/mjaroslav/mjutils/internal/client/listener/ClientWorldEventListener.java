@@ -2,8 +2,8 @@ package io.github.mjaroslav.mjutils.internal.client.listener;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import io.github.mjaroslav.mjutils.event.BlockDestroyedInCreativeEvent;
-import io.github.mjaroslav.mjutils.internal.lib.General.Creative.BlockBreaking;
-import io.github.mjaroslav.mjutils.internal.lib.General.Debug.BlockCollisionHighlighting;
+import io.github.mjaroslav.mjutils.lib.General.Creative.BlockBreaking;
+import io.github.mjaroslav.mjutils.lib.General.Debug.BlockCollisionHighlighting;
 import io.github.mjaroslav.mjutils.util.game.UtilsDebugRender;
 import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
 import io.github.mjaroslav.mjutils.util.object.game.ItemStackSet;

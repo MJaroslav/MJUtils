@@ -6,7 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.mjaroslav.mjutils.internal.client.gui.replace.modlist.GuiModListReplacer;
-import io.github.mjaroslav.mjutils.internal.lib.General.Client.GuiReplacements;
+import io.github.mjaroslav.mjutils.lib.General.Client.GuiReplacements;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;

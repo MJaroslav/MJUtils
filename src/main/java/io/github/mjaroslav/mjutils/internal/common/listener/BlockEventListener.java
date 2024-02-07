@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.internal.common.listener;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import io.github.mjaroslav.mjutils.event.PigZombiesGreedEvent;
-import io.github.mjaroslav.mjutils.internal.lib.General;
+import io.github.mjaroslav.mjutils.lib.General;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
 import io.github.mjaroslav.mjutils.util.game.UtilsWorld;
 import lombok.AccessLevel;

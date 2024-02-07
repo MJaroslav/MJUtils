@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
-import io.github.mjaroslav.mjutils.internal.lib.General;
+import io.github.mjaroslav.mjutils.lib.General;
 import io.github.mjaroslav.mjutils.util.game.UtilsWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;

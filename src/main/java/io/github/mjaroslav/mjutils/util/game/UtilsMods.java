@@ -26,7 +26,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
-import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 
 @Log4j2
 @UtilityClass

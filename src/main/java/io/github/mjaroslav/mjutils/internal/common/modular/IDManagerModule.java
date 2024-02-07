@@ -2,9 +2,9 @@ package io.github.mjaroslav.mjutils.internal.common.modular;
 
 import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
+import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.internal.data.IDManager;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Enchantments;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
 import lombok.val;
 import net.minecraft.potion.Potion;

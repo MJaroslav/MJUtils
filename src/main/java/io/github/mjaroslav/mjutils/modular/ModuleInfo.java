@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 
 @Getter
 public final class ModuleInfo {

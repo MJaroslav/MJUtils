@@ -3,21 +3,24 @@ package io.github.mjaroslav.mjutils.asm;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
-import io.github.mjaroslav.mjutils.internal.common.modular.MainModule;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Enchantments;
-import io.github.mjaroslav.mjutils.internal.lib.General.MixinPatches.Potions;
-import io.github.mjaroslav.mjutils.internal.lib.ModInfo;
+import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
+import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
+import io.github.mjaroslav.mjutils.config.ForgeAnnotationConfig;
+import io.github.mjaroslav.mjutils.lib.ModInfo;
 import io.github.tox1cozz.mixinbooterlegacy.IEarlyMixinLoader;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @MCVersion("1.7.10")
-@Name(ModInfo.modId)
+@Name(ModInfo.MOD_ID)
 public class MJUtilsPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
+    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(ModInfo.MOD_ID,
+        Paths.get("config", ModInfo.MOD_ID, "mixins.cfg"), "2.0.0", MixinPatches.class);
+
     @Override
     public String[] getASMTransformerClass() {
         return null;
@@ -35,7 +38,7 @@ public class MJUtilsPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public void injectData(Map<String, Object> map) {
-
+        CONFIG.load();
     }
 
     @Override
@@ -58,9 +61,5 @@ public class MJUtilsPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
             case "mixin.mjutils.enchantments.json" -> Enchantments.enable;
             default -> true; // All other configurations are not optional
         };
-    }
-
-    static {
-        MainModule.config.load();
     }
 }

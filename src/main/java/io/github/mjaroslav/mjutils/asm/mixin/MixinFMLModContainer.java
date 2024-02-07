@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.internal.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
 
 @Mixin(value = FMLModContainer.class, remap = false)
 public abstract class MixinFMLModContainer implements ModContainer {
@@ -42,7 +42,7 @@ public abstract class MixinFMLModContainer implements ModContainer {
         val modName = getName();
         val modId = getModId();
         try {
-            val loader = ModuleLoader.getOrTryCreateLoader(this);
+            val loader = ModuleLoader.getOrCreate(this);
             if (loader == null)
                 return;
             if (event instanceof FMLConstructionEvent cons) {
