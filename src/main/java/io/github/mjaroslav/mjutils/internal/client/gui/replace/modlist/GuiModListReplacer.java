@@ -18,6 +18,7 @@ import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
 import lombok.val;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -39,15 +40,16 @@ public class GuiModListReplacer extends GuiScreen {
     protected GuiSlotModListReplacer modList;
     protected GuiModInfoPane modInfo;
 
-    protected int selected = -1;
     protected ModContainer selectedMod;
 
     protected int modListWidth;
     protected final ArrayList<ModContainer> mods;
+    protected final ArrayList<ModContainer> modsSorted = new ArrayList<>();
 
     protected GuiButton configModButton;
     protected GuiButton disableModButton;
     protected GuiButton urlModButton;
+    protected GuiTextField searchTextField;
 
     public GuiModListReplacer(GuiScreen parentScreen) {
         this.parentScreen = parentScreen;
@@ -67,27 +69,56 @@ public class GuiModListReplacer extends GuiScreen {
             mods.add(mod);
         }
         mods.addAll(UtilsMods.getDisabledMods());
+        modsSorted.addAll(mods);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initGui() {
-        modListWidth = (int) (width * 0.3f);
-
-        buttonList.add(new GuiButton(6, width - modListWidth - 10, height - 38, modListWidth, 20, I18n.format("gui.done")));
-
-        configModButton = new GuiButton(20, 10, height - 60, modListWidth, 20, I18n.format("gui.modlist.button.config"));
-        disableModButton = new GuiButton(21, 10, height - 38, modListWidth, 20, "");
-        urlModButton = new GuiButton(22, width - modListWidth - 10, height - 60, modListWidth, 20, I18n.format("gui.modlist.button.openurl"));
-
-        modList = new GuiSlotModListReplacer(this, mods, modListWidth);
-        modInfo = new GuiModInfoPane(this, modListWidth + 15, 32, width - modListWidth - 25, height - 94, 30);
-
-        buttonList.add(configModButton);
-        buttonList.add(disableModButton);
-        buttonList.add(urlModButton);
+    public void drawScreen(int mouseX, int mouseY, float floatTicks) {
+        drawDefaultBackground();
+        modList.drawScreen(mouseX, mouseY, floatTicks);
+        modInfo.drawScreen(mouseX, mouseY, floatTicks);
+        drawCenteredString(fontRendererObj, I18n.format("gui.modlist.text.modlist"), width / 2, 16, 0xFFFFFF);
 
         updateElementsAttributes();
+
+        super.drawScreen(mouseX, mouseY, floatTicks);
+
+        if (selectedMod != null) {
+            int hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, disableModButton, false);
+            if (hoverState == 2 && !disableModButton.enabled)
+                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.internal")), mouseX, mouseY, fontRendererObj);
+
+            hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, configModButton, false);
+            if (hoverState == 2 && !configModButton.enabled)
+                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.noguiconfig")), mouseX, mouseY, fontRendererObj);
+
+            hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, urlModButton, false);
+            if (hoverState == 2 && !urlModButton.enabled)
+                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.nourl")), mouseX, mouseY, fontRendererObj);
+        }
+        searchTextField.drawTextBox();
+    }
+
+    @Override
+    protected void keyTyped(char key, int keyCode) {
+        if (searchTextField.textboxKeyTyped(key, keyCode)) {
+            modsSorted.clear();
+            mods.stream().filter(mod -> {
+                var request = searchTextField.getText();
+                if (StringUtils.isEmpty(request)) return true;
+                request = request.toLowerCase();
+                val name = mod.getName();
+                val modId = mod.getModId();
+                return name != null && name.toLowerCase().contains(request) ||
+                    modId != null && modId.toLowerCase().contains(request);
+            }).forEach(modsSorted::add);
+        } else super.keyTyped(key, keyCode);
+    }
+
+    @Override
+    protected void mouseClicked(int x, int y, int event) {
+        super.mouseClicked(x, y, event);
+        searchTextField.mouseClicked(x, y, event);
     }
 
     @Override
@@ -137,36 +168,31 @@ public class GuiModListReplacer extends GuiScreen {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void drawScreen(int mouseX, int mouseY, float floatTicks) {
-        drawDefaultBackground();
-        modList.drawScreen(mouseX, mouseY, floatTicks);
-        modInfo.drawScreen(mouseX, mouseY, floatTicks);
-        drawCenteredString(fontRendererObj, I18n.format("gui.modlist.text.modlist"), width / 2, 16, 0xFFFFFF);
+    public void initGui() {
+        modListWidth = (int) (width * 0.3f);
+
+        buttonList.add(new GuiButton(6, width - modListWidth - 10, height - 38, modListWidth, 20, I18n.format("gui.done")));
+
+        configModButton = new GuiButton(20, 10, height - 60, modListWidth, 20, I18n.format("gui.modlist.button.config"));
+        disableModButton = new GuiButton(21, 10, height - 38, modListWidth, 20, "");
+        urlModButton = new GuiButton(22, width - modListWidth - 10, height - 60, modListWidth, 20, I18n.format("gui.modlist.button.openurl"));
+        searchTextField = new GuiTextField(fontRendererObj, 20 + modListWidth, height - 38, width - 40 - modListWidth * 2, 20);
+
+        modList = new GuiSlotModListReplacer(this, modsSorted, modListWidth);
+        modInfo = new GuiModInfoPane(this, modListWidth + 15, 32, width - modListWidth - 25, height - 94, 30);
+
+        buttonList.add(configModButton);
+        buttonList.add(disableModButton);
+        buttonList.add(urlModButton);
 
         updateElementsAttributes();
-
-        super.drawScreen(mouseX, mouseY, floatTicks);
-
-        if (selectedMod != null) {
-            int hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, disableModButton, false);
-            if (hoverState == 2 && !disableModButton.enabled)
-                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.internal")), mouseX, mouseY, fontRendererObj);
-
-            hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, configModButton, false);
-            if (hoverState == 2 && !configModButton.enabled)
-                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.noguiconfig")), mouseX, mouseY, fontRendererObj);
-
-            hoverState = UtilsGUI.getButtonHoverState(mouseX, mouseY, urlModButton, false);
-            if (hoverState == 2 && !urlModButton.enabled)
-                drawHoveringText(Lists.newArrayList(I18n.format("gui.modlist.text.nourl")), mouseX, mouseY, fontRendererObj);
-        }
     }
 
     public void selectModIndex(int index) {
-        selected = index;
-        if (index >= 0 && index <= mods.size()) {
-            selectedMod = mods.get(selected);
+        if (index >= 0 && index <= modsSorted.size()) {
+            selectedMod = modsSorted.get(index);
             modInfo.init();
         } else
             selectedMod = null;
@@ -175,7 +201,7 @@ public class GuiModListReplacer extends GuiScreen {
     }
 
     public boolean modIndexSelected(int index) {
-        return index == selected;
+        return index > -1 && index < modsSorted.size() && modsSorted.get(index) == selectedMod;
     }
 
     @Override
@@ -359,5 +385,4 @@ public class GuiModListReplacer extends GuiScreen {
             }
         }
     }
-
 }
