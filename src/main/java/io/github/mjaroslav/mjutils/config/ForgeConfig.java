@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 
 /**
  * {@link Config} implementation for forge {@link Configuration} with manually property handling by sync callbacks.

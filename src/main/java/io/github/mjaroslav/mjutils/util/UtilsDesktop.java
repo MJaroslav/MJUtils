@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.util;
 
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.sharedjava.function.LazySupplier;
 import io.github.mjaroslav.sharedjava.tuple.Pair;
 import io.github.mjaroslav.sharedjava.tuple.pair.SimplePair;
@@ -26,7 +26,7 @@ public class UtilsDesktop {
             val object = clazz.getMethod("getDesktop").invoke(null);
             return new SimplePair<>(method, object);
         } catch (Throwable e) {
-            ModInfo.LOG_LIB.error("Desktop not available, HOW?", e);
+            MJUtilsInfo.LOG_LIB.error("Desktop not available, HOW?", e);
             return null;
         }
     });
@@ -41,7 +41,7 @@ public class UtilsDesktop {
             try {
                 pair.getX().invoke(pair.getY(), uri);
             } catch (Throwable e) {
-                ModInfo.LOG_LIB.error("Couldn't open link", e);
+                MJUtilsInfo.LOG_LIB.error("Couldn't open link", e);
             }
         });
     }

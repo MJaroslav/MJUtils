@@ -6,8 +6,6 @@ import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.internal.data.IDManager;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
-import lombok.val;
-import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
@@ -33,10 +31,5 @@ public class IDManagerModule {
     public void listen(@NotNull FMLLoadCompleteEvent event) {
         POTIONS.saveIDsToFileIfEnabled();
         ENCHANTMENTS.saveIDsToFileIfEnabled();
-        for (var i = 0; i < 51; i++) {
-            val id = Potion.potionTypes[i] != null ? Potion.potionTypes[i].id : -1;
-            val name = Potion.potionTypes[i] != null ? Potion.potionTypes[i].getClass().getName() : "null";
-            System.out.printf("%s: %s %s%n", i, id, name);
-        }
     }
 }

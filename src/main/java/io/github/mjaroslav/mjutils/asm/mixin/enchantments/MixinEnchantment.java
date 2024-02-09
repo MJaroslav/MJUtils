@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.asm.mixin.enchantments;
 
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.internal.common.modular.IDManagerModule;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import net.minecraft.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -39,6 +39,6 @@ public abstract class MixinEnchantment {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void mjtuils$cinit(@NotNull CallbackInfo ci) {
         enchantmentsList = Arrays.copyOf(enchantmentsList, Enchantments.newArraySize);
-        ModInfo.LOG_LIB.debug("Enchantments array size changed to " + Enchantments.newArraySize);
+        MJUtilsInfo.LOG_LIB.debug("Enchantments array size changed to " + Enchantments.newArraySize);
     }
 }

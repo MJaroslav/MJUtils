@@ -12,7 +12,7 @@ import io.github.mjaroslav.mjutils.internal.common.listener.BlockEventListener;
 import io.github.mjaroslav.mjutils.internal.common.listener.FuelHandler;
 import io.github.mjaroslav.mjutils.internal.common.listener.TooltipEventListener;
 import io.github.mjaroslav.mjutils.lib.General;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
@@ -26,8 +26,8 @@ import java.nio.file.Paths;
 
 @SubscribeModule
 public class MainModule {
-    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(ModInfo.MOD_ID,
-        Paths.get("config", ModInfo.MOD_ID, "general.cfg"), "2.0.0", General.class);
+    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(MJUtilsInfo.MOD_ID,
+        Paths.get("config", MJUtilsInfo.MOD_ID, "general.cfg"), "2.0.0", General.class);
 
     public void listen(@NotNull FMLInitializationEvent event) {
         CONFIG.registerSyncCallback(() -> UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Blocks.quartz_ore,
@@ -53,9 +53,10 @@ public class MainModule {
                     else if (message.isStringMessage())
                         ClientWorldEventListener.INSTANCE.extraDisabledForCreativeDestroying
                             .add(UtilsItemStack.newStack(message.key));
-                    else ModInfo.LOG_IMC.error("IMC@disable_block_destroying_in_creative: value must be ItemStack " +
+                    else
+                        MJUtilsInfo.LOG_IMC.error("IMC@disable_block_destroying_in_creative: value must be ItemStack " +
                             "or registry name.");
-                } else ModInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
+                } else MJUtilsInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
             } else {
                 if ("make_block_treasure_for_pig_zombies".equals(message.key)) {
                     if (message.isStringMessage())
@@ -63,9 +64,9 @@ public class MainModule {
                             .newStack(message.getStringValue()), true);
                     else if (message.isItemStackMessage())
                         UtilsInteractions.configureBlockAsPigZombieGreedTrigger(message.getItemStackValue(), true);
-                    else ModInfo.LOG_IMC.error("IMC@make_block_treasure_for_pig_zombies: value must be ItemStack " +
+                    else MJUtilsInfo.LOG_IMC.error("IMC@make_block_treasure_for_pig_zombies: value must be ItemStack " +
                             "or registry name.");
-                } else ModInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
+                } else MJUtilsInfo.LOG_IMC.warn(String.format("Unknown IMC message: %s", message.key));
             }
     }
 }

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.config.ForgeAnnotationConfig;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.tox1cozz.mixinbooterlegacy.IEarlyMixinLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 @MCVersion("1.7.10")
-@Name(ModInfo.MOD_ID)
+@Name(MJUtilsInfo.MOD_ID)
 public class MJUtilsPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
-    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(ModInfo.MOD_ID,
-        Paths.get("config", ModInfo.MOD_ID, "mixins.cfg"), "2.0.0", MixinPatches.class);
+    public static final ForgeAnnotationConfig CONFIG = new ForgeAnnotationConfig(MJUtilsInfo.MOD_ID,
+        Paths.get("config", MJUtilsInfo.MOD_ID, "mixins.cfg"), "2.0.0", MixinPatches.class);
 
     @Override
     public String[] getASMTransformerClass() {

@@ -15,6 +15,7 @@ gui.modlist.text.authors=Authors: %s
 gui.modlist.text.url=URL: %s
 gui.modlist.text.nochild=No child mods for this mod
 gui.modlist.text.child=Child mods: %s
+gui.modlist.text.modules=Modules: %s
 gui.modlist.text.noinfo=No mod information found
 gui.modlist.text.askinfo=Ask your mod author to provide a mod mcmod.info file
 gui.modlist.text.screens=Screenshots

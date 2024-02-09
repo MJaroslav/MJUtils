@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.config;
 
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.object.game.ResourcePath;
@@ -109,7 +109,7 @@ public abstract class Config {
             loadCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
             if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + "can't be load");
-            else ModInfo.LOG_LIB.error("Configuration %s can't be load", e, getFile());
+            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be load", e, getFile());
         }
     }
 
@@ -122,7 +122,7 @@ public abstract class Config {
             saveCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
             if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be saved");
-            else ModInfo.LOG_LIB.error("Configuration %s can't be saved", e, getFile());
+            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be saved", e, getFile());
         }
     }
 
@@ -135,7 +135,7 @@ public abstract class Config {
         } catch (Exception e) {
             if (isShouldFailOnError())
                 UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be restored to default values");
-            else ModInfo.LOG_LIB.error("Configuration %s can't be restored to default values", e, getFile());
+            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be restored to default values", e, getFile());
         }
     }
 

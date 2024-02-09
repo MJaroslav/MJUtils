@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 
 @Getter
 public class BlockModule {

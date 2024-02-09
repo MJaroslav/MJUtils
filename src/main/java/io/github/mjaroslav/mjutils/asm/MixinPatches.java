@@ -2,6 +2,7 @@ package io.github.mjaroslav.mjutils.asm;
 
 import io.github.mjaroslav.mjutils.config.annotations.*;
 import io.github.mjaroslav.mjutils.config.annotations.Restart.Value;
+import io.github.mjaroslav.mjutils.internal.data.IDManager.OccupiedPolicy;
 import org.jetbrains.annotations.NotNull;
 
 @Name(MixinPatches.CATEGORY_MIXINS)
@@ -14,9 +15,19 @@ public class MixinPatches {
     @Comment("Patches of FishingHooks and EntityFishHook for manipulating with fishing items, fishing categories and fix null fishing result crash, also adds FishingSuccessEvent")
     public static boolean fishing = true;
 
-    @Ignore
-    public enum OccupiedPolicy {
-        IGNORE, CRASH, AUTO
+    @Comment("Other mod extra patches")
+    public static class Compatibility {
+        @Comment("Enable mod patching")
+        public static boolean enable = true;
+
+        @Comment("Thaumcraft mod patches")
+        public static class Thaumcraft {
+            @Comment("Enable Thaumcraft patching")
+            public static boolean enable = true;
+
+            @Comment("Patches Thaumcraft#GuiResearchPopup for not showing popups of research copies")
+            public static boolean hidePopupsOfResearchCopies = true;
+        }
     }
 
     @Comment("Enchantment array extension")

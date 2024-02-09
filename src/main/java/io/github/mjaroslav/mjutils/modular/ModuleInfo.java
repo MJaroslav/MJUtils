@@ -7,15 +7,20 @@ import cpw.mods.fml.common.event.FMLEvent;
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorFMLModContainer;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.sharedjava.function.LazySupplier;
+import io.github.mjaroslav.sharedjava.reflect.ReflectionHelper;
 import lombok.Getter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Comparator;
+import java.util.Objects;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 
 @Getter
-public final class ModuleInfo {
+public final class ModuleInfo implements Comparable<ModuleInfo> {
     private final @NotNull String @NotNull [] modDependencies;
     private final int priority;
     private final @NotNull ModState loadOn;
@@ -23,9 +28,9 @@ public final class ModuleInfo {
     private final @NotNull LazySupplier<Object> lazyModule;
     private final @NotNull LazySupplier<Boolean> lazyIsAllRequiredModsLoaded;
 
-    ModuleInfo(@NotNull Object proxy) {
+    ModuleInfo(@NotNull Object proxy, int priority) {
         modDependencies = new String[0];
-        priority = Integer.MAX_VALUE;
+        this.priority = priority;
         loadOn = ModState.CONSTRUCTED;
         moduleClassName = proxy.getClass().getName();
         lazyModule = new LazySupplier<>(() -> proxy);
@@ -71,5 +76,28 @@ public final class ModuleInfo {
                     "syntax, them must be non-static and public", event.getEventType(), moduleClassName));
             }
         });
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getModuleClassName());
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ModuleInfo that)) return false;
+        return Objects.equals(getModuleClassName(), that.getModuleClassName());
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return ReflectionHelper.getSimpleClassName(getModuleClassName());
+    }
+
+    @Override
+    public int compareTo(@NotNull ModuleInfo o) {
+        val priorityCompare = Comparator.comparingInt(ModuleInfo::getPriority).compare(this, o);
+        return priorityCompare != 0 ? priorityCompare : Comparator.comparing(ModuleInfo::getModuleClassName).compare(this, o);
     }
 }

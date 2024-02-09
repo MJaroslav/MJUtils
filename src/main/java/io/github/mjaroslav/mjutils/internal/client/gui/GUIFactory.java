@@ -5,7 +5,7 @@ import cpw.mods.fml.client.config.GuiConfig;
 import io.github.mjaroslav.mjutils.asm.MJUtilsPlugin;
 import io.github.mjaroslav.mjutils.asm.MixinPatches;
 import io.github.mjaroslav.mjutils.internal.common.modular.MainModule;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,9 +36,9 @@ public class GUIFactory implements IModGuiFactory {
     public static class MJUtilsGUIConfig extends GuiConfig {
         public MJUtilsGUIConfig(GuiScreen parentScreen) {
             super(parentScreen, Arrays.asList(MJUtilsPlugin.CONFIG.getCategoryElement(MixinPatches.CATEGORY_MIXINS),
-                    MainModule.CONFIG.getCategoryElement()), ModInfo.MOD_ID, ModInfo.MOD_ID + "@", false, false,
+                    MainModule.CONFIG.getCategoryElement()), MJUtilsInfo.MOD_ID, MJUtilsInfo.MOD_ID + "@", false, false,
                 MJUtilsGUIConfig.getAbridgedConfigPath(UtilsMods.getMinecraftDir().toPath().resolve("config")
-                    .resolve(ModInfo.MOD_ID).toAbsolutePath().normalize() + "/"));
+                    .resolve(MJUtilsInfo.MOD_ID).toAbsolutePath().normalize() + "/"));
         }
     }
 }

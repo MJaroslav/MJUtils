@@ -1,8 +1,7 @@
 package io.github.mjaroslav.mjutils.internal.data;
 
-import io.github.mjaroslav.mjutils.asm.MixinPatches.OccupiedPolicy;
 import io.github.mjaroslav.mjutils.config.PropertiesConfig;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,25 +27,24 @@ public class IDManager {
         this.arraySize = arraySize;
         this.vanillaIndexes = vanillaIndexes;
         this.policy = policy;
-        config = new PropertiesConfig(ModInfo.MOD_ID, configPath);
+        config = new PropertiesConfig(MJUtilsInfo.MOD_ID, configPath);
         config.setComment(String.format("""
-                MJUtils provides ID array size extension and adds ID occupied strategy.
-                This file used for "AUTO" strategy, then means that all %1$s registrations
+                %1$s provides ID array size extension and adds ID occupied strategy.
+                This file used for "AUTO" strategy, then means that all %2$s registrations
                 will take new free ID if desired was occupied.
                             
-                You can use this for overrides all added %1$s IDs,
+                You can use this for overrides all added %2$s IDs,
                 but notice that it will not work for vanilla IDs.
                             
                 Pattern: className=ID
                             
-                %1$s array extended to %2$s, you can change it in configuration
+                %2$s array extended to %3$s, you can change it in configuration
                 This comment will automatically regenerate on each game load with "AUTO" strategy.""",
-            classSimpleName, arraySize
+            MJUtilsInfo.NAME, classSimpleName, arraySize
         ));
     }
 
     public int registerID(@NotNull Class<?> type, int desiredId) {
-        System.out.printf("Trying register %s %s with ID %s%n", classSimpleName, type.getName(), desiredId);
         if (policy == OccupiedPolicy.IGNORE || vanillaIndexes.contains(desiredId)) return desiredId; // Vanilla IDs
         val name = type.getName();
         if (policy == OccupiedPolicy.AUTO) {
@@ -57,7 +55,6 @@ public class IDManager {
     }
 
     public int verifyID(@NotNull String type, int desiredId, boolean throwException, boolean dryRun) {
-        System.out.printf("Trying verify %s %s with ID %s%n", classSimpleName, type, desiredId);
         if (cache.containsKey(desiredId)) {
             if (policy == OccupiedPolicy.AUTO) {
                 val id = getNextAvailableID();
@@ -73,7 +70,6 @@ public class IDManager {
     }
 
     public int getNextAvailableID() {
-        System.out.printf("Trying get next available ID for %s%n", classSimpleName);
         for (var id = 0; id < arraySize; id++) if (!vanillaIndexes.contains(id) && !cache.containsKey(id)) return id;
         throw new ArrayIndexOutOfBoundsException(String.format("Can't generate ID for %1$s: out of free ids", classSimpleName));
     }
@@ -86,5 +82,9 @@ public class IDManager {
     public void saveIDsToFileIfEnabled() {
         if (!enabled || policy != OccupiedPolicy.AUTO) return;
         config.save();
+    }
+
+    public enum OccupiedPolicy {
+        IGNORE, CRASH, AUTO
     }
 }

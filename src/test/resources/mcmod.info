@@ -1,0 +1,13 @@
+[
+  {
+    "modid": "mjutils_test",
+    "name": "MJUtilsTest",
+    "description": "Internal test-namespace part of MJUtils",
+    "version": "${version}-test",
+    "mcversion": "${mcversion}",
+    "url": "https://minecraft.curseforge.com/projects/mjutils",
+    "authorList": [
+      "MJaroslav"
+    ]
+  }
+]

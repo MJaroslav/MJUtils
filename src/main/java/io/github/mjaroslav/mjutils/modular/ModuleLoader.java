@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 import static io.github.mjaroslav.sharedjava.reflect.ReflectionHelper.*;
 
 @Getter
@@ -46,6 +46,10 @@ public final class ModuleLoader {
 
     public static @Nullable ModuleLoader getActiveLoader() {
         return LOADERS_CACHE.get(Loader.instance().activeModContainer());
+    }
+
+    public static @Nullable ModuleLoader get(@NotNull ModContainer container) {
+        return LOADERS_CACHE.get(container);
     }
 
     public static @Nullable ModuleLoader getOrCreate(@NotNull ModContainer container) {
@@ -120,13 +124,15 @@ public final class ModuleLoader {
         foundModulesCount++;
     }
 
-    public void tryFindAndAddProxy() {
-        val proxy = UtilsMods.getProxyObjectFromMod(modInstance);
-        if (proxy != null) {
-            modules.add(new ModuleInfo(proxy));
+    public void tryFindAndAddSidedProxies() {
+        UtilsMods.getSidedOnlyObjectsFromMod(modInstance).stream().filter(pair -> pair.getY()
+            .isAnnotationPresent(SubscribeSidedOnlyModule.class)).forEach(pair -> {
+            val priority = pair.getY().getAnnotation(SubscribeSidedOnlyModule.class).priority();
+            modules.add(new ModuleInfo(pair.getX(), priority));
             foundModulesCount++;
-            LOG_MODULES.debug(String.format("Found proxy for %s (%s) mod", modName, modId));
-        }
+            LOG_MODULES.debug("Found SidedProxy object annotated with SubscribeSidedOnlyModule for {} ({}) mod",
+                modName, modId);
+        });
     }
 
     public void completeConstruction() {

@@ -5,6 +5,8 @@ import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.sharedjava.io.PathFiles;
+import io.github.mjaroslav.sharedjava.tuple.Pair;
+import io.github.mjaroslav.sharedjava.tuple.pair.SimplePair;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -17,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,7 +29,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 
 @Log4j2
 @UtilityClass
@@ -52,27 +55,37 @@ public class UtilsMods {
         return optional.orElse(null);
     }
 
-    public @Nullable Proxy getProxyFromMod(@NotNull Object modInstance) {
-        val obj = UtilsMods.getProxyObjectFromMod(modInstance);
-        return obj instanceof Proxy proxy ? proxy : null;
+    public @Nullable Pair<Proxy, Field> getFirstProxyObjectFromMod(@NotNull Object modInstance) {
+        return getProxyObjectsFromMod(modInstance).stream().findFirst().orElse(null);
     }
 
-    public @Nullable Object getProxyObjectFromMod(@NotNull Object modInstance) {
+    public @NotNull List<Pair<Proxy, Field>> getProxyObjectsFromMod(@NotNull Object modInstance) {
+        return getSidedOnlyObjectsFromMod(modInstance).stream().filter(pair -> pair.getX() instanceof Proxy)
+            .map(pair -> new SimplePair<>((Proxy) pair.getX(), pair.getY()))
+            .collect(Collectors.toList());
+    }
+
+    public @Nullable Pair<Object, Field> getFirstSidedOnlyObjectFromMod(@NotNull Object modInstance) {
+        return getSidedOnlyObjectsFromMod(modInstance).stream().findFirst().orElse(null);
+    }
+
+    public @NotNull List<Pair<Object, Field>> getSidedOnlyObjectsFromMod(@NotNull Object modInstance) {
         int mods;
         val className = modInstance.getClass().getName();
+        val result = new ArrayList<Pair<Object, Field>>();
         for (val field : modInstance.getClass().getFields()) {
             mods = field.getModifiers();
-            if (Modifier.isStatic(mods) && Modifier.isPublic(mods) && field.isAnnotationPresent(SidedProxy.class)) {
-                try {
-                    return field.get(null);
-                } catch (IllegalAccessException e) {
-                    LOG_LIB.error(String.format("Can't get proxy object from %s#%s field", className, field.getName()), e);
-                    return null;
-                }
-            } else LOG_LIB.warn(String.format("Ignoring %s#%s field as proxy object because its must be " +
-                "public and static", className, field.getName()));
+            if (field.isAnnotationPresent(SidedProxy.class))
+                if (Modifier.isStatic(mods) && Modifier.isPublic(mods)) {
+                    try {
+                        result.add(new SimplePair<>(field.get(null), field));
+                    } catch (IllegalAccessException e) {
+                        LOG_LIB.error(String.format("Can't get SidedOnly object from %s#%s field", className, field.getName()), e);
+                    }
+                } else LOG_LIB.warn(String.format("Ignoring %s#%s field as SidedOnly object because its must be " +
+                    "public and static", className, field.getName()));
         }
-        return null;
+        return result;
     }
 
     public @Nullable InputStream getResourceFromModIgnored(@Nullable ModContainer container, @NotNull String path,

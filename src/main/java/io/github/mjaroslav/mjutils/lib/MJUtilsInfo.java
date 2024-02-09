@@ -3,10 +3,11 @@ package io.github.mjaroslav.mjutils.lib;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ModInfo {
+public class MJUtilsInfo {
     public static final String MOD_ID = "mjutils";
     public static final String NAME = "MJUtils";
     public static final String VERSION = "@VERSION@";
+    public static final String DEPENDENCIES = "after:Thaumcraft;";
     public static final String GUI_FACTORY = "io.github.mjaroslav.mjutils.internal.client.gui.GUIFactory";
 
     public static final String CLIENT_PROXY = "io.github.mjaroslav.mjutils.internal.client.ClientProxy";

@@ -15,6 +15,7 @@ gui.modlist.text.authors=Авторы: %s
 gui.modlist.text.url=URL: %s
 gui.modlist.text.nochild=Для этого мода не найдены дочерние моды
 gui.modlist.text.child=Дочерние моды: %s
+gui.modlist.text.modules=Модули: %s
 gui.modlist.text.noinfo=Информация о моде не найдена
 gui.modlist.text.askinfo=Попросите автора мода предоставить файл mcmod.info
 gui.modlist.text.screens=Скриншоты

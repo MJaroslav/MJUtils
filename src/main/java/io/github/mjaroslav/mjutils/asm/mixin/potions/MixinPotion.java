@@ -2,7 +2,7 @@ package io.github.mjaroslav.mjutils.asm.mixin.potions;
 
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.internal.common.modular.IDManagerModule;
-import io.github.mjaroslav.mjutils.lib.ModInfo;
+import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -38,6 +38,6 @@ public abstract class MixinPotion {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void cinit(@NotNull CallbackInfo ci) {
         potionTypes = Arrays.copyOf(potionTypes, Potions.newArraySize);
-        ModInfo.LOG_LIB.debug("Potions array size changed to " + Potions.newArraySize);
+        MJUtilsInfo.LOG_LIB.debug("Potions array size changed to " + Potions.newArraySize);
     }
 }

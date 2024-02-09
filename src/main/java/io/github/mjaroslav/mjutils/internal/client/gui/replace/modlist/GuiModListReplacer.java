@@ -11,6 +11,7 @@ import io.github.mjaroslav.mjutils.gui.GuiImage;
 import io.github.mjaroslav.mjutils.gui.GuiScrollingPaneList;
 import io.github.mjaroslav.mjutils.gui.GuiText;
 import io.github.mjaroslav.mjutils.gui.GuiText.GuiTextBuilder;
+import io.github.mjaroslav.mjutils.modular.ModuleLoader;
 import io.github.mjaroslav.mjutils.util.game.UtilsGUI;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import io.github.mjaroslav.mjutils.util.game.UtilsTextures;
@@ -273,6 +274,11 @@ public class GuiModListReplacer extends GuiScreen {
                     text.setTranslated("gui.modlist.text.nochild");
                 else
                     text.setTranslated("gui.modlist.text.child", meta.childMods);
+
+                val loader = ModuleLoader.get(mod);
+                if (loader != null)
+                    text.append("\n").appendTranslatedLine("gui.modlist.text.modules", loader.getModules());
+
                 contentList.add(text.setExtraYOffset(10).build());
                 contentList.add(text.set(meta.description).setColor(0xDDDDDD).build());
                 if (meta.screenshots != null && meta.screenshots.length > 0) {

@@ -1,13 +1,25 @@
 package io.github.mjaroslav.mjutils.util.game;
 
 import baubles.api.BaublesApi;
+import cpw.mods.fml.common.Loader;
+import io.github.mjaroslav.mjutils.util.object.game.ResearchItemShadow;
+import io.github.mjaroslav.sharedjava.function.LazySupplier;
+import lombok.experimental.UtilityClass;
+import lombok.val;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
+import org.jetbrains.annotations.NotNull;
 import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.research.ResearchCategories;
+import thaumcraft.api.research.ResearchItem;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.network.PacketHandler;
 import thaumcraft.common.lib.network.playerdata.PacketSyncResearch;
+
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static thaumcraft.common.lib.events.EventHandlerRunic.*;
 
@@ -15,24 +27,22 @@ import static thaumcraft.common.lib.events.EventHandlerRunic.*;
  * Utilities for Thaumcraft internal integration. It works
  * only when Thaumcraft is loaded.
  */
+@UtilityClass
 public class UtilsThaumcraft {
-    private static boolean thaumcraftExist = false;
-
-    /**
-     * Activate this integration. Needed for the library.
-     * Please do not use.
-     */
-    public static void activate() {
-        thaumcraftExist = true;
-    }
+    private final Pattern COPY_PATTERN = Pattern.compile("^_COPY_\\d+$");
+    private final LazySupplier<Boolean> thaumcraftExist = new LazySupplier<>(() -> Loader.isModLoaded("Thaumcraft"));
 
     /**
      * Thaumcraft is loaded.
      *
      * @return True if loaded.
      */
-    public static boolean exist() {
-        return thaumcraftExist;
+    public boolean exist() {
+        return thaumcraftExist.orElse(false);
+    }
+
+    public void checkAndThrow() {
+        if (!exist()) throw new IllegalStateException("Thaumcraft not installed");
     }
 
     /**
@@ -41,9 +51,8 @@ public class UtilsThaumcraft {
      * @param player player to check.
      * @return Total player's warp or 0 if thaumcraft not loaded.
      */
-    public static int getWarpTotal(EntityPlayer player) {
-        if (!thaumcraftExist)
-            return 0;
+    public int getWarpTotal(EntityPlayer player) {
+        checkAndThrow();
         return getWarpInventory(player) + getWarpPerm(player) + getWarpSticky(player) + getWarpTemp(player);
     }
 
@@ -53,9 +62,8 @@ public class UtilsThaumcraft {
      * @param player player to check.
      * @return Total player's sticky warp or 0 if thaumcraft not loaded.
      */
-    public static int getWarpSticky(EntityPlayer player) {
-        if (!thaumcraftExist)
-            return 0;
+    public int getWarpSticky(EntityPlayer player) {
+        checkAndThrow();
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpSticky(player.getCommandSenderName());
     }
 
@@ -65,9 +73,8 @@ public class UtilsThaumcraft {
      * @param player player to check.
      * @return Total player's temporal warp or 0 if thaumcraft not loaded.
      */
-    public static int getWarpTemp(EntityPlayer player) {
-        if (!thaumcraftExist)
-            return 0;
+    public int getWarpTemp(EntityPlayer player) {
+        checkAndThrow();
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpTemp(player.getCommandSenderName());
     }
 
@@ -77,9 +84,8 @@ public class UtilsThaumcraft {
      * @param player player to check.
      * @return Total player's permanent warp or 0 if thaumcraft not loaded.
      */
-    public static int getWarpPerm(EntityPlayer player) {
-        if (!thaumcraftExist)
-            return 0;
+    public int getWarpPerm(EntityPlayer player) {
+        checkAndThrow();
         return Thaumcraft.proxy.getPlayerKnowledge().getWarpPerm(player.getCommandSenderName());
     }
 
@@ -90,9 +96,8 @@ public class UtilsThaumcraft {
      * @param player player to check.
      * @return Total player's inventory warp or 0 if thaumcraft not loaded.
      */
-    public static int getWarpInventory(EntityPlayer player) {
-        if (!thaumcraftExist)
-            return 0;
+    public int getWarpInventory(EntityPlayer player) {
+        checkAndThrow();
         int warp = 0;
         warp += getFinalWarp(player.getCurrentEquippedItem(), player);
         for (int a = 0; a < 4; ++a)
@@ -109,9 +114,8 @@ public class UtilsThaumcraft {
      * @param player   player for knowledge modification.
      * @param research specified research.
      */
-    public static void complete(EntityPlayer player, String research) {
-        if (!thaumcraftExist)
-            return;
+    public void complete(EntityPlayer player, String research) {
+        checkAndThrow();
         if (isComplete(player, research))
             return;
         Thaumcraft.proxy.getResearchManager().completeResearch(player, research);
@@ -127,9 +131,29 @@ public class UtilsThaumcraft {
      * @param research research to check.
      * @return True if player knowledge has this research.
      */
-    public static boolean isComplete(EntityPlayer player, String research) {
-        if (!thaumcraftExist)
-            return false;
+    public boolean isComplete(EntityPlayer player, String research) {
+        checkAndThrow();
         return ThaumcraftApiHelper.isResearchComplete(player.getCommandSenderName(), research);
+    }
+
+    public @NotNull String getNextCopyResearchKey(@NotNull String originalResearchKey) {
+        checkAndThrow();
+        val research = ResearchCategories.getResearch(originalResearchKey);
+        if (research == null)
+            throw new IllegalArgumentException("No one research with key " + originalResearchKey + " found");
+        val siblings = research.siblings;
+        if (siblings == null || siblings.length == 0) return originalResearchKey + "_COPY_0";
+        return originalResearchKey + "_COPY_" + Arrays.stream(siblings).map(key -> key.replace(originalResearchKey, ""))
+            .map(COPY_PATTERN::matcher).filter(Matcher::matches).count();
+    }
+
+    public @NotNull ResearchItem createCopyResearch(@NotNull String originalResearchKey, @NotNull String category,
+                                                    int col, int row) {
+        checkAndThrow();
+        val research = ResearchCategories.getResearch(originalResearchKey);
+        if (research == null)
+            throw new IllegalArgumentException("No one research with key " + originalResearchKey + " found");
+        return research.icon_item != null ? new ResearchItemShadow(originalResearchKey, category, col, row, research.icon_item) :
+            new ResearchItemShadow(originalResearchKey, category, col, row, research.icon_resource);
     }
 }

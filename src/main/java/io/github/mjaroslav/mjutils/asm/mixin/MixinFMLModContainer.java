@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Set;
 
-import static io.github.mjaroslav.mjutils.lib.ModInfo.*;
+import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 
 @Mixin(value = FMLModContainer.class, remap = false)
 public abstract class MixinFMLModContainer implements ModContainer {
@@ -53,7 +53,7 @@ public abstract class MixinFMLModContainer implements ModContainer {
                         StringUtils.equals(loader.getModId(), (String) data.getAnnotationInfo().get("value")))
                     .forEach(loader::parseModule);
                 LOG_MODULES.debug(String.format("Trying find Proxy for %s (%s) mod", modName, modId));
-                loader.tryFindAndAddProxy();
+                loader.tryFindAndAddSidedProxies();
                 loader.completeConstruction();
             }
             //noinspection DataFlowIssue
