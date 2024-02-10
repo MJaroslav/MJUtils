@@ -5,13 +5,13 @@ import com.github.mjaroslav.mcingametester.api.BeforeClass;
 import com.github.mjaroslav.mcingametester.api.Common;
 import com.github.mjaroslav.mcingametester.api.Test;
 import cpw.mods.fml.common.LoaderState;
-import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import lombok.val;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import static io.github.mjaroslav.mjutils.util.game.UtilsItemStack.*;
+import static io.github.mjaroslav.mjutils.item.Stacks.*;
 
 @Common(when = LoaderState.INITIALIZATION)
 public class TestInGameUtilsItemStack {
@@ -34,13 +34,13 @@ public class TestInGameUtilsItemStack {
     public void test$requireNonNullStackOrElse() {
         val expected = testStackStick;
         val expectedElse = testStackDiamond;
-        val actual = requireNonNullStackOrElse(testStackStick, expectedElse);
-        val actualNull = requireNonNullStackOrElse(testStackNull, expectedElse);
-        val actualItemNull = requireNonNullStackOrElse(testStackItemNull, expectedElse);
-        val actualSizeZero = requireNonNullStackOrElse(testStackSizeZero, expectedElse);
-        Assert.isTrue(UtilsItemStack.equals(expected, actual), "Normal stack");
-        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualNull), "Null stack");
-        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualItemNull), "Item null stack");
-        Assert.isTrue(UtilsItemStack.equals(expectedElse, actualSizeZero), "Zero size stack");
+        val actual = anotherIfEmpty(testStackStick, expectedElse);
+        val actualNull = anotherIfEmpty(testStackNull, expectedElse);
+        val actualItemNull = anotherIfEmpty(testStackItemNull, expectedElse);
+        val actualSizeZero = anotherIfEmpty(testStackSizeZero, expectedElse);
+        Assert.isTrue(Stacks.equals(expected, actual), "Normal stack");
+        Assert.isTrue(Stacks.equals(expectedElse, actualNull), "Null stack");
+        Assert.isTrue(Stacks.equals(expectedElse, actualItemNull), "Item null stack");
+        Assert.isTrue(Stacks.equals(expectedElse, actualSizeZero), "Zero size stack");
     }
 }

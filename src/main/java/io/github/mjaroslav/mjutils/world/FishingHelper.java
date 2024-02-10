@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.world;
 import cpw.mods.fml.common.registry.GameRegistry;
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorFishingHooks;
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorWeightedRandomFishable;
-import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -37,7 +37,7 @@ public class FishingHelper {
 
     public void removeFishable(@NotNull ItemStack itemStack, @NotNull FishableCategory category, boolean enchantable,
                                boolean damageable) {
-        removeFishable(itemStack, category, UtilsItemStack.ITEM_STRONG | UtilsItemStack.META, enchantable, damageable);
+        removeFishable(itemStack, category, Stacks.ITEM | Stacks.META_WILDCARD, enchantable, damageable);
     }
 
     public void removeFishable(@Nullable ItemStack itemStack, @NotNull FishableCategory category, int mask,
@@ -47,7 +47,7 @@ public class FishingHelper {
             category);
         internal$removeFishable(wrf -> {
             val accessor = ((AccessorWeightedRandomFishable) wrf);
-            return UtilsItemStack.equals(accessor.getFishableStack(), itemStack, mask) && accessor.getEnchantable()
+            return Stacks.equals(accessor.getFishableStack(), itemStack, mask) && accessor.getEnchantable()
                 == enchantable && (!damageable || accessor.getRandomDamage() > 0.0F);
         }, category);
     }

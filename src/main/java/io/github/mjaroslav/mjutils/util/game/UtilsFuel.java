@@ -1,6 +1,7 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.util.object.game.ItemStackMap;
+import io.github.mjaroslav.mjutils.item.ItemStackMap;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,7 @@ import java.util.Map;
 @UtilityClass
 public class UtilsFuel {
     @Getter
-    private final Map<ItemStack, Integer> fuelMap = new ItemStackMap<>(UtilsItemStack.META | UtilsItemStack.ITEM);
+    private final Map<ItemStack, Integer> fuelMap = new ItemStackMap<>(Stacks.META_WILDCARD | Stacks.ITEM_NULLABLE);
 
     // Furnace store burn/cook time in short
     public void addFuel(@NotNull ItemStack itemStack, @Range(from = 0, to = Short.MAX_VALUE) int burnTime) {

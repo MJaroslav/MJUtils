@@ -2,8 +2,8 @@ package io.github.mjaroslav.mjutils.internal.common.listener;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.lib.General.Client;
-import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -20,7 +20,7 @@ public class TooltipEventListener {
     @SubscribeEvent
     public void itemTooltipEvent(ItemTooltipEvent event) {
         if (((event.showAdvancedItemTooltips && Client.showOreDictNames) ||
-            Client.alwaysShowOreDictNames) && UtilsItemStack.isNotEmpty(event.itemStack)
+            Client.alwaysShowOreDictNames) && Stacks.isNotEmpty(event.itemStack)
             && OreDictionary.getOreIDs(event.itemStack).length > 0) {
             List<String> lines = new ArrayList<>();
             StringBuilder line = new StringBuilder();

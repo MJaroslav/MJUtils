@@ -1,6 +1,7 @@
 package io.github.mjaroslav.mjutils.util.game;
 
-import io.github.mjaroslav.mjutils.util.object.game.ItemStackSet;
+import io.github.mjaroslav.mjutils.item.ItemStackSet;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.Block;
@@ -25,10 +26,10 @@ import javax.annotation.Nullable;
 
 @UtilityClass
 public class UtilsInteractions {
-    private final ItemStackSet PIG_ZOMBIE_GREED_BLOCKS = new ItemStackSet(UtilsItemStack.ITEM | UtilsItemStack.META);
+    private final ItemStackSet PIG_ZOMBIE_GREED_BLOCKS = new ItemStackSet(Stacks.ITEM_NULLABLE | Stacks.META_WILDCARD);
 
     public void configureBlockAsPigZombieGreedTrigger(@NotNull Object block, boolean value) {
-        val blockStack = UtilsItemStack.newStack(block);
+        val blockStack = Stacks.make(block);
         if (value) PIG_ZOMBIE_GREED_BLOCKS.add(blockStack);
         else PIG_ZOMBIE_GREED_BLOCKS.remove(blockStack);
     }

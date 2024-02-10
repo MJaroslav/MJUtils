@@ -2,11 +2,11 @@ package io.github.mjaroslav.mjutils.internal.client.listener;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import io.github.mjaroslav.mjutils.event.player.PlayerDestroyBlockInCreativeEvent;
+import io.github.mjaroslav.mjutils.item.ItemStackSet;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.lib.General.Creative.BlockBreaking;
 import io.github.mjaroslav.mjutils.lib.General.Debug.BlockCollisionHighlighting;
 import io.github.mjaroslav.mjutils.util.game.UtilsDebugRender;
-import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
-import io.github.mjaroslav.mjutils.util.object.game.ItemStackSet;
 import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 public class ClientWorldEventListener {
     public static final ClientWorldEventListener INSTANCE = new ClientWorldEventListener();
 
-    public final ItemStackSet extraDisabledForCreativeDestroying = new ItemStackSet(UtilsItemStack.META
-        | UtilsItemStack.ITEM);
+    public final ItemStackSet extraDisabledForCreativeDestroying = new ItemStackSet(Stacks.META_WILDCARD
+        | Stacks.ITEM_NULLABLE);
 
     @SubscribeEvent
     public void onRenderWorldLastEvent(@NotNull RenderWorldLastEvent event) {

@@ -11,12 +11,12 @@ import io.github.mjaroslav.mjutils.internal.client.listener.ClientWorldEventList
 import io.github.mjaroslav.mjutils.internal.common.listener.BlockEventListener;
 import io.github.mjaroslav.mjutils.internal.common.listener.FuelHandler;
 import io.github.mjaroslav.mjutils.internal.common.listener.TooltipEventListener;
+import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.lib.General;
 import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.mjutils.modular.Proxy;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
 import io.github.mjaroslav.mjutils.util.game.UtilsInteractions;
-import io.github.mjaroslav.mjutils.util.game.UtilsItemStack;
 import io.github.mjaroslav.mjutils.util.game.UtilsMods;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,7 +52,7 @@ public class MainModule {
                             .add(message.getItemStackValue());
                     else if (message.isStringMessage())
                         ClientWorldEventListener.INSTANCE.extraDisabledForCreativeDestroying
-                            .add(UtilsItemStack.newStack(message.key));
+                            .add(Stacks.make(message.key));
                     else
                         MJUtilsInfo.LOG_IMC.error("IMC@disable_block_destroying_in_creative: value must be ItemStack " +
                             "or registry name.");
@@ -60,8 +60,8 @@ public class MainModule {
             } else {
                 if ("make_block_treasure_for_pig_zombies".equals(message.key)) {
                     if (message.isStringMessage())
-                        UtilsInteractions.configureBlockAsPigZombieGreedTrigger(UtilsItemStack
-                            .newStack(message.getStringValue()), true);
+                        UtilsInteractions.configureBlockAsPigZombieGreedTrigger(Stacks
+                            .make(message.getStringValue()), true);
                     else if (message.isItemStackMessage())
                         UtilsInteractions.configureBlockAsPigZombieGreedTrigger(message.getItemStackValue(), true);
                     else MJUtilsInfo.LOG_IMC.error("IMC@make_block_treasure_for_pig_zombies: value must be ItemStack " +
