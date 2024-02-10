@@ -34,6 +34,11 @@ import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
 @Log4j2
 @UtilityClass
 public class UtilsMods {
+    public @NotNull String getActiveModNameFormatted() {
+        val mod = getActiveMod();
+        return String.format("%s (%s) mod", mod.getName(), mod.getModId());
+    }
+
     public @NotNull ModContainer getActiveMod() {
         return Loader.instance().activeModContainer();
     }

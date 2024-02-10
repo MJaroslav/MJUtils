@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.internal.client.listener;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import io.github.mjaroslav.mjutils.event.BlockDestroyedInCreativeEvent;
+import io.github.mjaroslav.mjutils.event.player.PlayerDestroyBlockInCreativeEvent;
 import io.github.mjaroslav.mjutils.lib.General.Creative.BlockBreaking;
 import io.github.mjaroslav.mjutils.lib.General.Debug.BlockCollisionHighlighting;
 import io.github.mjaroslav.mjutils.util.game.UtilsDebugRender;
@@ -37,7 +37,7 @@ public class ClientWorldEventListener {
     }
 
     @SubscribeEvent
-    public void onBlockDestroyedInCreativeEvent(@NotNull BlockDestroyedInCreativeEvent event) {
+    public void onBlockDestroyedInCreativeEvent(@NotNull PlayerDestroyBlockInCreativeEvent event) {
         boolean cancel = false;
         val item = event.heldItem.getItem();
         if (BlockBreaking.swords && item instanceof ItemSword) cancel = true;

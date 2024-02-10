@@ -1,6 +1,6 @@
 package io.github.mjaroslav.mjutils.asm.mixin;
 
-import io.github.mjaroslav.mjutils.event.BlockDestroyedInCreativeEvent;
+import io.github.mjaroslav.mjutils.event.player.PlayerDestroyBlockInCreativeEvent;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,7 +18,7 @@ public abstract class MixinPlayerControllerMP {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;",
             ordinal = 2))
     private @NotNull Item injected(@NotNull ItemStack stack) {
-        return MinecraftForge.EVENT_BUS.post(new BlockDestroyedInCreativeEvent(stack)) ?
+        return MinecraftForge.EVENT_BUS.post(new PlayerDestroyBlockInCreativeEvent(stack)) ?
             Items.diamond_sword : Items.stick;
     }
 }

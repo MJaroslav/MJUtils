@@ -1,13 +1,13 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
-import io.github.mjaroslav.mjutils.util.game.UtilsFishing;
+import io.github.mjaroslav.mjutils.world.FishingHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 /**
- * Constants for {@link UtilsFishing UtilsFishing}.
+ * Constants for {@link FishingHelper UtilsFishing}.
  *
- * @see UtilsFishing
+ * @see FishingHelper
  */
 public class ConstantsFishing {
     /**

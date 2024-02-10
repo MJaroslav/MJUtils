@@ -16,12 +16,11 @@ import java.util.Random;
 
 @Mixin(FishingHooks.class)
 public abstract class MixinFishingHooks {
-    // Empty list exception dodging
     @SuppressWarnings("rawtypes")
-    @Redirect(method = "getRandomFishable(Ljava/util/Random;FII)Lnet/minecraft/item/ItemStack;",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/WeightedRandom;getRandomItem(Ljava/util/Random;" +
-            "Ljava/util/Collection;)Lnet/minecraft/util/WeightedRandom$Item;"))
-    private static Item injectedGetRandomFishable(Random rand, @NotNull Collection list) {
+    @Redirect(method = "getRandomFishable(Ljava/util/Random;FII)Lnet/minecraft/item/ItemStack;", at = @At(value =
+        "INVOKE", target = "Lnet/minecraft/util/WeightedRandom;getRandomItem(Ljava/util/Random;" +
+        "Ljava/util/Collection;)Lnet/minecraft/util/WeightedRandom$Item;"))
+    private static @NotNull Item fixNPEWhenListIsEmpty(@NotNull Random rand, @NotNull Collection list) {
         if (list.isEmpty()) return new WeightedRandomFishable(new ItemStack(Blocks.air), 0);
         else return WeightedRandom.getRandomItem(rand, list);
     }
