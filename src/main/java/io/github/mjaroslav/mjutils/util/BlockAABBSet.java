@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.object.game;
+package io.github.mjaroslav.mjutils.util;
 
 import lombok.*;
 import net.minecraft.entity.Entity;

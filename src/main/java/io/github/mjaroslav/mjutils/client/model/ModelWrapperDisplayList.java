@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.object.game;
+package io.github.mjaroslav.mjutils.client.model;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,7 +30,7 @@ public class ModelWrapperDisplayList implements IModelCustom {
     public ModelWrapperDisplayList(@NotNull WavefrontObject model) {
         type = model.getType();
         var list = glGenLists(model.groupObjects.size());
-        for (var obj : model.groupObjects) {
+        for (val obj : model.groupObjects) {
             glNewList(list, GL11.GL_COMPILE);
             model.renderPart(obj.name);
             glEndList();
@@ -41,7 +41,7 @@ public class ModelWrapperDisplayList implements IModelCustom {
 
     private @NotNull IntBuffer initBuffer() {
         val buf = BufferUtils.createIntBuffer(lists.size());
-        for (var i : lists.values()) buf.put(i);
+        for (val i : lists.values()) buf.put(i);
         buf.flip();
         return buf;
     }
@@ -58,8 +58,8 @@ public class ModelWrapperDisplayList implements IModelCustom {
 
     @Override
     public void renderOnly(@NotNull String... groupNames) {
-        if (groupNames == null || groupNames.length == 0) return;
-        for (String group : groupNames) renderPart(group);
+        if (groupNames == null) return;
+        for (val group : groupNames) renderPart(group);
     }
 
     @Override
@@ -74,8 +74,7 @@ public class ModelWrapperDisplayList implements IModelCustom {
             renderAll();
             return;
         }
-        for (var entry : lists.entrySet())
-            if (Arrays.binarySearch(groupNames, entry.getKey(), String::compareTo) < 0)
-                glCallList(entry.getValue());
+        for (val entry : lists.entrySet())
+            if (Arrays.binarySearch(groupNames, entry.getKey(), String::compareTo) < 0) glCallList(entry.getValue());
     }
 }

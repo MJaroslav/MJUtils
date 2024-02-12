@@ -1,12 +1,12 @@
 package io.github.mjaroslav.mjutils.internal.client.listener;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import io.github.mjaroslav.mjutils.client.DebugRenderer;
 import io.github.mjaroslav.mjutils.event.player.PlayerDestroyBlockInCreativeEvent;
 import io.github.mjaroslav.mjutils.item.ItemStackSet;
 import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.lib.General.Creative.BlockBreaking;
 import io.github.mjaroslav.mjutils.lib.General.Debug.BlockCollisionHighlighting;
-import io.github.mjaroslav.mjutils.util.game.UtilsDebugRender;
 import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,7 +33,7 @@ public class ClientWorldEventListener {
             && !player.isSneaking())) return;
         val pos = BlockCollisionHighlighting.enable.isCursor() ? new Pos(mov.blockX, mov.blockY, mov.blockZ) :
             new Pos(player.posX, player.posY, player.posZ);
-        UtilsDebugRender.renderBlocksCollisions(pos, BlockCollisionHighlighting.range - 1);
+        DebugRenderer.renderBlocksCollisions(pos, BlockCollisionHighlighting.range - 1);
     }
 
     @SubscribeEvent
