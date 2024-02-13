@@ -66,134 +66,29 @@ public class Pos extends DTriplet implements Comparable<Object> {
         this(0d, 0d, 0d); // I'm very careful
     }
 
-    //region Mutable creation
+    //region Immutable ban
     //------------------------------------
-    @Contract(" -> new")
-    public static @NotNull Mutable mutable() {
-        return new Mutable();
+    @Override
+    public void setX(@Nullable Double x) {
+        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
+        else super.setX(x);
     }
 
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull Pos pos) {
-        return mutableOf(pos.getX(), pos.getY(), pos.getZ());
+    @Override
+    public void setY(@Nullable Double y) {
+        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
+        else super.setY(y);
     }
 
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull ChunkPosition position) {
-        return mutableOf(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
-    }
-    //------------------------------------
-    //endregion
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull ChunkCoordinates coordinates) {
-        return mutableOf(coordinates.posX, coordinates.posY, coordinates.posZ);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull ForgeDirection direction) {
-        return mutableOf(direction.offsetX, direction.offsetY, direction.offsetZ);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull Vec3 vec3) {
-        return mutableOf(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOf(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
-        return mutableOf(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
-    }
-
-    @Contract("_, _, _ -> new")
-    public static @NotNull Pos mutableOf(double x, double y, double z) {
-        return new Mutable(x, y, z);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOfFloor(@NotNull Pos pos) {
-        return mutableOfFloor(pos.getX(), pos.getY(), pos.getZ());
+    @Override
+    public void setZ(@Nullable Double z) {
+        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
+        else super.setZ(z);
     }
     //------------------------------------
     //endregion
 
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOfFloor(@NotNull Vec3 vec3) {
-        return mutableOfFloor(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos mutableOfFloor(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
-        return mutableOfFloor(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
-    }
-
-    @Contract("_, _, _ -> new")
-    public static @NotNull Pos mutableOfFloor(double x, double y, double z) {
-        return mutableOf(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-    }
-
-    //region Immutable creation
-    //------------------------------------
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull Pos pos) {
-        return of(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull ChunkPosition position) {
-        return of(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull ChunkCoordinates coordinates) {
-        return of(coordinates.posX, coordinates.posY, coordinates.posZ);
-    }
-    //------------------------------------
-    //endregion
-
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull ForgeDirection direction) {
-        return of(direction.offsetX, direction.offsetY, direction.offsetZ);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull Vec3 vec3) {
-        return of(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos of(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
-        return of(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
-    }
-
-    @Contract("_, _, _ -> new")
-    public static @NotNull Pos of(double x, double y, double z) {
-        return new Pos(x, y, z);
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos ofFloor(@NotNull Pos pos) {
-        return ofFloor(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull Pos ofFloor(@NotNull Vec3 vec3) {
-        return ofFloor(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-    }
-    //------------------------------------
-    //endregion
-
-    @Contract("_ -> new")
-    public static @NotNull Pos ofFloor(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
-        return ofFloor(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
-    }
-
-    @Contract("_, _, _ -> new")
-    public static @NotNull Pos ofFloor(double x, double y, double z) {
-        return of(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-    }
-
-    //region Plus/minus one by axis
+    //region Plus and minus one by axis
     //------------------------------------
     @Contract(" -> new")
     public @NotNull Pos plusX() {
@@ -224,15 +119,15 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos minusZ() {
         return new Pos(getX(), getY(), getZ() - 1);
     }
+    //------------------------------------
+    //endregion
 
-    //region Plus/minus distance by axis
+    //region Plus and minus distance by axis
     //------------------------------------
     public @NotNull Pos plusX(double distance) {
         if (distance == 0) return this;
         return new Pos(getX() + distance, getY(), getZ());
     }
-    //------------------------------------
-    //endregion
 
     public @NotNull Pos plusY(double distance) {
         if (distance == 0) return this;
@@ -258,6 +153,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         if (distance == 0) return this;
         return new Pos(getX(), getY(), getZ() - distance);
     }
+    //------------------------------------
+    //endregion
 
     //region Multiple/Division by axis
     //------------------------------------
@@ -280,8 +177,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
         if (distance == 1) return this;
         return new Pos(getX() / distance, getY(), getZ());
     }
-    //------------------------------------
-    //endregion
 
     public @NotNull Pos divY(double distance) {
         if (distance == 1) return this;
@@ -292,6 +187,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         if (distance == 1) return this;
         return new Pos(getX(), getY(), getZ() / distance);
     }
+    //------------------------------------
+    //endregion
 
     //region Addition
     //------------------------------------
@@ -318,8 +215,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos add(@NotNull Pos pos) {
         return add(pos.getX(), pos.getY(), pos.getZ());
     }
-    //------------------------------------
-    //endregion
 
     public @NotNull Pos add(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
         return add(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
@@ -333,6 +228,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         if (x == 0 && y == 0 && z == 0) return this;
         return new Pos(getX() + x, getY() + y, getZ() + z);
     }
+    //------------------------------------
+    //endregion
 
     //region Subtraction
     //------------------------------------
@@ -355,8 +252,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos sub(@NotNull ForgeDirection direction, double term) {
         return sub(direction.offsetX * term, direction.offsetY * term, direction.offsetZ * term);
     }
-    //------------------------------------
-    //endregion
 
     public @NotNull Pos sub(@NotNull Pos pos) {
         return sub(pos.getX(), pos.getY(), pos.getZ());
@@ -374,6 +269,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         if (x == 0 && y == 0 && z == 0) return this;
         return new Pos(getX() - x, getY() - y, getZ() - z);
     }
+    //------------------------------------
+    //endregion
 
     //region Multiple
     //------------------------------------
@@ -405,12 +302,13 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos mul(double factor) {
         return mul(factor, factor, factor);
     }
-    //endregion
 
     public @NotNull Pos mul(double x, double y, double z) {
         return x == 0 && y == 0 && z == 0 ? ORIGIN : x == 1 && y == 1 && z == 1 ? this
             : new Pos(getX() * x, getY() * y, getZ() * z);
     }
+    //------------------------------------
+    //endregion
 
     //region Division
     //------------------------------------
@@ -435,12 +333,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
         return div(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public double distanceQrt(double x, double y, double z) {
-        return pow(getX() - x, 2) + pow(getY() - y, 2) + pow(getZ() - z, 2);
-    }
-    //------------------------------------
-    //endregion
-
     public @NotNull Pos div(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
         return mul(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
     }
@@ -453,6 +345,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos div(double x, double y, double z) {
         return x == 1 && y == 1 && z == 1 ? this : new Pos(getX() / x, getY() / y, getZ() / z);
     }
+    //------------------------------------
+    //endregion
 
     //region Math
     //------------------------------------
@@ -485,8 +379,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
         val nZ = z / len;
         return new Pos(nX, nY, nZ);
     }
-    //------------------------------------
-    //endregion
 
     //region Distance
     //------------------------------------
@@ -520,13 +412,14 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //------------------------------------
     //endregion
 
-    //------------------------------------
-    //endregion
-
     //region Square distance
     //------------------------------------
     public double distanceQrt(@NotNull ChunkPosition position) {
         return distanceQrt(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
+    }
+
+    public double distanceQrt(double x, double y, double z) {
+        return pow(getX() - x, 2) + pow(getY() - y, 2) + pow(getZ() - z, 2);
     }
 
     public double distanceQrt(@NotNull Vec3 vec) {
@@ -548,6 +441,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public double distanceQrt(@NotNull Pos pos) {
         return distanceQrt(pos.getX(), pos.getY(), pos.getZ());
     }
+    //------------------------------------
+    //endregion
 
     //region Scalar
     //------------------------------------
@@ -578,6 +473,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public double scalar(double x, double y, double z) {
         return getX() * x + getY() * y + getZ() + z;
     }
+    //------------------------------------
+    //endregion
 
     //region Cross
     //------------------------------------
@@ -588,8 +485,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Pos cross(@NotNull ChunkPosition position) {
         return cross(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
-    //------------------------------------
-    //endregion
 
     public @NotNull Pos cross(@NotNull Vec3 vec) {
         return cross(vec.xCoord, vec.yCoord, vec.zCoord);
@@ -616,6 +511,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
         val cZ = ownX * y - ownY * x;
         return new Pos(cX, cY, cZ);
     }
+    //------------------------------------
+    //endregion
+
+    //------------------------------------
+    //endregion
 
     //region x, y, z conversions
     //------------------------------------
@@ -647,8 +547,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public byte bX() {
         return getX().byteValue();
     }
-    //------------------------------------
-    //endregion
 
     public byte bY() {
         return getY().byteValue();
@@ -681,6 +579,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public long lZ() {
         return getZ().longValue();
     }
+    //------------------------------------
+    //endregion
 
     //region x, y, z floored conversions
     //------------------------------------
@@ -691,8 +591,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public int fIY() {
         return MathHelper.floor_double(getY());
     }
-    //------------------------------------
-    //endregion
 
     public int fIZ() {
         return MathHelper.floor_double(getZ());
@@ -774,8 +672,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public float @NotNull [] asFloatArray() {
         return new float[]{fX(), fY(), fZ()};
     }
-    //------------------------------------
-    //endregion
 
     @Contract(" -> new")
     public byte @NotNull [] asByteArray() {
@@ -791,6 +687,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public short @NotNull [] asShortArray() {
         return new short[]{sX(), sY(), sZ()};
     }
+    //------------------------------------
+    //endregion
 
     //region Type floored conversions
     //------------------------------------
@@ -815,8 +713,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
                 return direction;
         return ForgeDirection.UNKNOWN;
     }
-    //------------------------------------
-    //endregion
 
     @Contract(" -> new")
     public double[] asFlooredArray() {
@@ -847,6 +743,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public short[] asFlooredShortArray() {
         return new short[]{(short) fIX(), (short) fIY(), (short) fIZ()};
     }
+    //------------------------------------
+    //endregion
 
     //region Relative AABB creation
     //------------------------------------
@@ -854,8 +752,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull AxisAlignedBB createAABB(@NotNull ChunkPosition position) {
         return createAABB(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
-    //------------------------------------
-    //endregion
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABB(@NotNull Vec3 vec) {
@@ -892,6 +788,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         return AxisAlignedBB.getBoundingBox(min(ownX, ownX + x), min(ownY, ownY + y), min(ownZ, ownZ + z),
             max(ownX, ownX + x), max(ownY, ownY + y), max(ownZ, ownZ + z));
     }
+    //------------------------------------
+    //endregion
 
     //region Absolute AABB creation
     //------------------------------------
@@ -904,8 +802,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull Vec3 vec) {
         return createAABB(vec.xCoord, vec.yCoord, vec.zCoord);
     }
-    //------------------------------------
-    //endregion
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull ChunkCoordinates coordinates) {
@@ -934,6 +830,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         return AxisAlignedBB.getBoundingBox(min(getX(), x), min(getY(), y), min(getZ(), z), max(getX(), x),
             max(getY(), y), max(getZ(), z));
     }
+    //------------------------------------
+    //endregion
 
     //region Box iterates
     //------------------------------------
@@ -946,13 +844,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Iterable<Mutable> iterateBox(@NotNull ChunkCoordinates coordinates) {
         return iterateBox(coordinates.posX, coordinates.posY, coordinates.posZ);
     }
-
-    @Override
-    public String toString() {
-        return "Pos(x = " + getX() + ", y = " + getY() + ", z = " + getZ() + ")";
-    }
-    //------------------------------------
-    //endregion
 
     @Contract("_ -> new")
     public @NotNull Iterable<Mutable> iterateBox(@NotNull Vec3 vec) {
@@ -1002,6 +893,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
             }
         };
     }
+    //------------------------------------
+    //endregion
 
     //region Box streams
     //------------------------------------
@@ -1040,8 +933,6 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public @NotNull Stream<Mutable> streamBox(int oppositeCornerX, int oppositeCornerY, int oppositeCornerZ) {
         return StreamSupport.stream(iterateBox(oppositeCornerX, oppositeCornerY, oppositeCornerZ).spliterator(), false);
     }
-    //------------------------------------
-    //endregion
 
     @Contract("_, _ -> new")
     public @NotNull Stream<Pos> streamBox(@NotNull Pos oppositeCorner, double step) {
@@ -1055,6 +946,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
                     builder.accept(new Pos(x, y, z));
         return builder.build();
     }
+    //------------------------------------
+    //endregion
 
     //region Object utility
     //------------------------------------
@@ -1063,7 +956,7 @@ public class Pos extends DTriplet implements Comparable<Object> {
         return Stream.of(this);
     }
 
-    public void forEachBox(@NotNull Pos oppositeCorner, @NotNull Consumer<Pos> action) {
+    public void forEachBox(@NotNull Pos oppositeCorner, @NotNull Consumer<Mutable> action) {
         val temp = new Mutable();
         val stopX = Math.max(iX(), oppositeCorner.iX()) + 1;
         val stopY = Math.max(iY(), oppositeCorner.iY()) + 1;
@@ -1137,24 +1030,132 @@ public class Pos extends DTriplet implements Comparable<Object> {
         else return super.equals(o);
     }
 
-    //region Immutable ban
+    @Override
+    public String toString() {
+        return "Pos(x = " + getX() + ", y = " + getY() + ", z = " + getZ() + ")";
+    }
     //------------------------------------
-    @Override
-    public void setX(@Nullable Double x) {
-        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
-        else super.setX(x);
+    //endregion
+
+    //region Mutable creation
+    //------------------------------------
+    @Contract(" -> new")
+    public static @NotNull Mutable mutable() {
+        return new Mutable();
     }
 
-    @Override
-    public void setY(@Nullable Double y) {
-        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
-        else super.setY(y);
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull Pos pos) {
+        return mutableOf(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    @Override
-    public void setZ(@Nullable Double z) {
-        if (immutable) throw new IllegalArgumentException("This Pos is immutable");
-        else super.setZ(z);
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull ChunkPosition position) {
+        return mutableOf(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull ChunkCoordinates coordinates) {
+        return mutableOf(coordinates.posX, coordinates.posY, coordinates.posZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull ForgeDirection direction) {
+        return mutableOf(direction.offsetX, direction.offsetY, direction.offsetZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull Vec3 vec3) {
+        return mutableOf(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
+        return mutableOf(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
+    }
+
+    @Contract("_, _, _ -> new")
+    public static @NotNull Pos mutableOf(double x, double y, double z) {
+        return new Mutable(x, y, z);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOfFloor(@NotNull Pos pos) {
+        return mutableOfFloor(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOfFloor(@NotNull Vec3 vec3) {
+        return mutableOfFloor(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOfFloor(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
+        return mutableOfFloor(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
+    }
+
+    @Contract("_, _, _ -> new")
+    public static @NotNull Pos mutableOfFloor(double x, double y, double z) {
+        return mutableOf(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
+    }
+    //------------------------------------
+    //endregion
+
+    //region Immutable creation
+    //------------------------------------
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull Pos pos) {
+        return of(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull ChunkPosition position) {
+        return of(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull ChunkCoordinates coordinates) {
+        return of(coordinates.posX, coordinates.posY, coordinates.posZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull ForgeDirection direction) {
+        return of(direction.offsetX, direction.offsetY, direction.offsetZ);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull Vec3 vec3) {
+        return of(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
+        return of(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
+    }
+
+    @Contract("_, _, _ -> new")
+    public static @NotNull Pos of(double x, double y, double z) {
+        return new Pos(x, y, z);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos ofFloor(@NotNull Pos pos) {
+        return ofFloor(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos ofFloor(@NotNull Vec3 vec3) {
+        return ofFloor(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos ofFloor(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> triplet) {
+        return ofFloor(triplet.getX().doubleValue(), triplet.getY().doubleValue(), triplet.getZ().doubleValue());
+    }
+
+    @Contract("_, _, _ -> new")
+    public static @NotNull Pos ofFloor(double x, double y, double z) {
+        return of(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
     }
     //------------------------------------
     //endregion
