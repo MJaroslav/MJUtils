@@ -1,6 +1,7 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorExplosion;
+import io.github.mjaroslav.mjutils.util.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -17,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 import static io.github.mjaroslav.mjutils.util.game.UtilsPosBlock.*;
 import static io.github.mjaroslav.mjutils.util.game.UtilsPosWorld.*;
 
+@Getter
+@Setter
 public class DropChanceExplosion extends Explosion {
-    @Getter
-    @Setter
     protected float dropChance;
 
     public DropChanceExplosion(@NotNull World world, @Nullable Entity placer, @NotNull Pos pos, float strength,
@@ -35,26 +36,26 @@ public class DropChanceExplosion extends Explosion {
 
     @Override
     public void doExplosionB(boolean addEffects) {
-        val expPos = new Pos(explosionX, explosionY, explosionZ);
+        val expPos = Pos.of(explosionX, explosionY, explosionZ);
         val world = ((AccessorExplosion) this).getWorldObj();
         playSoundEffect(world, expPos, "random.explode", 4F, (1F + (world.rand.nextFloat() - world.rand.nextFloat())
             * 0.2F) * 0.7F);
         if (explosionSize >= 2.0F && isSmoking) spawnParticle(world, "hugeexplosion", expPos, Pos.X);
         else spawnParticle(world, "largeexplode", expPos, Pos.X);
-        var temp = new Pos();
+        val temp = Pos.mutable();
         Block block;
         if (isSmoking)
-            for (var affectedBlockPosition : affectedBlockPositions) {
+            for (val affectedBlockPosition : affectedBlockPositions) {
                 temp.set((ChunkPosition) affectedBlockPosition);
                 block = getBlock(world, temp);
                 if (addEffects) {
-                    temp = temp.add(world.rand.nextFloat(), world.rand.nextFloat(), world.rand.nextFloat());
-                    var velocity = temp.sub(explosionX, explosionY, explosionZ);
-                    val diameter = velocity.diameter();
-                    velocity = velocity.div(diameter).mul(0.5D / (diameter / explosionSize + 0.1D)).mul(
-                        world.rand.nextFloat() * world.rand.nextFloat() + 0.3F);
-                    spawnParticle(world, "explode", temp.add(explosionX, explosionY, explosionZ).div(2d), velocity);
-                    spawnParticle(world, "smoke", temp, velocity);
+                    val rand = temp.add(world.rand.nextFloat(), world.rand.nextFloat(), world.rand.nextFloat());
+                    var velocity = rand.sub(explosionX, explosionY, explosionZ);
+                    val len = velocity.length();
+                    velocity = velocity.div(len).mul(0.5D / (len / explosionSize + 0.1D)).mul(world.rand.nextFloat() *
+                        world.rand.nextFloat() + 0.3F);
+                    spawnParticle(world, "explode", rand.add(explosionX, explosionY, explosionZ).div(2d), velocity);
+                    spawnParticle(world, "smoke", rand, velocity);
                 }
                 temp.set((ChunkPosition) affectedBlockPosition); // Reset of .part
                 if (block.getMaterial() != Material.air) {
@@ -64,7 +65,7 @@ public class DropChanceExplosion extends Explosion {
                 }
             }
         if (isFlaming)
-            for (var affectedBlockPosition : affectedBlockPositions) {
+            for (val affectedBlockPosition : affectedBlockPositions) {
                 temp.set((ChunkPosition) affectedBlockPosition);
                 block = getBlock(world, temp);
                 val underBlock = getBlock(world, temp.minusY());

@@ -3,7 +3,7 @@ package io.github.mjaroslav.mjutils.util.game;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorBlock;
-import io.github.mjaroslav.mjutils.util.object.game.Pos;
+import io.github.mjaroslav.mjutils.util.Pos;
 import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
@@ -374,7 +374,7 @@ public class UtilsPosBlock {
     @Contract("_, _, _, _ -> new")
     public Pos getBedSpawnPosition(@NotNull Block owner, @NotNull IBlockAccess world, @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
                                    @NotNull EntityPlayer player) {
-        return new Pos(owner.getBedSpawnPosition(world, pos.getX().intValue(), pos.getY().intValue(),
+        return Pos.of(owner.getBedSpawnPosition(world, pos.getX().intValue(), pos.getY().intValue(),
             pos.getZ().intValue(), player));
     }
 

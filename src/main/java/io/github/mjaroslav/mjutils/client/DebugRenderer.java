@@ -3,9 +3,9 @@ package io.github.mjaroslav.mjutils.client;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.mjaroslav.mjutils.util.BlockAABBSet;
+import io.github.mjaroslav.mjutils.util.Pos;
 import io.github.mjaroslav.mjutils.util.game.UtilsPosBlock;
 import io.github.mjaroslav.mjutils.util.game.UtilsPosWorld;
-import io.github.mjaroslav.mjutils.util.object.game.Pos;
 import io.github.mjaroslav.sharedjava.format.ColorFormat;
 import io.github.mjaroslav.sharedjava.format.Colors;
 import lombok.experimental.UtilityClass;
@@ -34,9 +34,9 @@ public class DebugRenderer {
         glBegin(GL_LINES);
         val min = pos.sub(blockRadius);
         val max = pos.add(blockRadius + 1);
-        val mask = min.toAABB(max);
+        val mask = min.createAABB(max);
         val list = new ArrayList<AxisAlignedBB>();
-        Pos.forEachInBox(min, max, i -> {
+        min.forEachBox(max, i -> {
             list.clear();
             colorCounter = 0;
             UtilsPosBlock.addCollisionBoxesToList(UtilsPosWorld.getBlock(world, i), world, i, mask, list, null);

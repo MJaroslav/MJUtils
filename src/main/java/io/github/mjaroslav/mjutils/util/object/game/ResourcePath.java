@@ -22,6 +22,7 @@ import java.util.Objects;
 /**
  * Special wrapper for working with resources. This allows you get input stream or reader from this path.
  */
+// TODO: Add resource pack support for clients
 @Getter
 @ToString
 public final class ResourcePath {

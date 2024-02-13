@@ -7,7 +7,8 @@ import io.github.mjaroslav.mjutils.item.ItemStackSet;
 import io.github.mjaroslav.mjutils.item.Stacks;
 import io.github.mjaroslav.mjutils.lib.General.Creative.BlockBreaking;
 import io.github.mjaroslav.mjutils.lib.General.Debug.BlockCollisionHighlighting;
-import io.github.mjaroslav.mjutils.util.object.game.Pos;
+import io.github.mjaroslav.mjutils.util.Pos;
+import io.github.mjaroslav.mjutils.util.Pos.Mutable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -23,6 +24,8 @@ public class ClientWorldEventListener {
     public final ItemStackSet extraDisabledForCreativeDestroying = new ItemStackSet(Stacks.META_WILDCARD
         | Stacks.ITEM_NULLABLE);
 
+    private final Mutable temp = Pos.mutable();
+
     @SubscribeEvent
     public void onRenderWorldLastEvent(@NotNull RenderWorldLastEvent event) {
         if (!BlockCollisionHighlighting.enable.isEnabled()) return;
@@ -31,9 +34,9 @@ public class ClientWorldEventListener {
         val player = Minecraft.getMinecraft().thePlayer;
         if (mov == null || world == null || player == null || (BlockCollisionHighlighting.enable.isShift()
             && !player.isSneaking())) return;
-        val pos = BlockCollisionHighlighting.enable.isCursor() ? new Pos(mov.blockX, mov.blockY, mov.blockZ) :
-            new Pos(player.posX, player.posY, player.posZ);
-        DebugRenderer.renderBlocksCollisions(pos, BlockCollisionHighlighting.range - 1);
+        val flag = BlockCollisionHighlighting.enable.isCursor();
+        DebugRenderer.renderBlocksCollisions(temp.set(flag ? mov.blockX : player.posX, flag ? mov.blockX : player.posX,
+            flag ? mov.blockX : player.posX), BlockCollisionHighlighting.range - 1);
     }
 
     @SubscribeEvent
