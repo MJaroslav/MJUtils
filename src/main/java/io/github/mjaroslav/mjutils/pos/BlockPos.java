@@ -2,16 +2,17 @@ package io.github.mjaroslav.mjutils.pos;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorBlock;
+import io.github.mjaroslav.mjutils.asm.mixin.accessors.*;
 import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import lombok.experimental.UtilityClass;
-import net.minecraft.block.Block;
-import net.minecraft.block.IGrowable;
+import lombok.val;
+import net.minecraft.block.*;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -180,16 +181,16 @@ public class BlockPos {
 
     public boolean canReplace(@NotNull Block owner, @NotNull World world,
                               @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                              @NotNull ForgeDirection direction, @NotNull ItemStack stack) {
+                              @NotNull ForgeDirection side, @NotNull ItemStack stack) {
         return owner.canReplace(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal(), stack);
+            side.ordinal(), stack);
     }
 
     public boolean canPlaceBlockOnSide(@NotNull Block owner, @NotNull World world,
                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                       @NotNull ForgeDirection direction) {
+                                       @NotNull ForgeDirection side) {
         return owner.canPlaceBlockOnSide(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal());
+            side.ordinal());
     }
 
     public boolean canPlaceBlockAt(@NotNull Block owner, @NotNull World world,
@@ -199,10 +200,10 @@ public class BlockPos {
 
     public boolean onBlockActivated(@NotNull Block owner, @NotNull World world,
                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                    @NotNull EntityPlayer player, @NotNull ForgeDirection direction,
+                                    @NotNull EntityPlayer player, @NotNull ForgeDirection side,
                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> hit) {
         return owner.onBlockActivated(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            player, direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue());
+            player, side.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue());
     }
 
     public void onEntityWalking(@NotNull Block owner, @NotNull World world,
@@ -213,10 +214,10 @@ public class BlockPos {
 
     public int onBlockPlaced(@NotNull Block owner, @NotNull World world,
                              @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                             @NotNull ForgeDirection direction,
+                             @NotNull ForgeDirection side,
                              @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> hit, int meta) {
         return owner.onBlockPlaced(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue(), meta);
+            side.ordinal(), hit.getX().floatValue(), hit.getY().floatValue(), hit.getZ().floatValue(), meta);
     }
 
     public void onBlockClicked(@NotNull Block owner, @NotNull World world,
@@ -247,9 +248,9 @@ public class BlockPos {
 
     public int isProvidingWeakPower(@NotNull Block owner, @NotNull IBlockAccess world,
                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                    @NotNull ForgeDirection direction) {
+                                    @NotNull ForgeDirection side) {
         return owner.isProvidingWeakPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal());
+            side.ordinal());
     }
 
     public void onEntityCollidedWithBlock(@NotNull Block owner, @NotNull World world,
@@ -261,9 +262,9 @@ public class BlockPos {
 
     public int isProvidingStrongPower(@NotNull Block owner, @NotNull IBlockAccess world,
                                       @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                      @NotNull ForgeDirection direction) {
+                                      @NotNull ForgeDirection side) {
         return owner.isProvidingStrongPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal());
+            side.ordinal());
     }
 
     public void harvestBlock(@NotNull Block owner, @NotNull World world, @NotNull EntityPlayer player,
@@ -333,9 +334,9 @@ public class BlockPos {
 
     public int getComparatorInputOverride(@NotNull Block owner, @NotNull World world,
                                           @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                          @NotNull ForgeDirection direction) {
+                                          @NotNull ForgeDirection side) {
         return owner.getComparatorInputOverride(world, pos.getX().intValue(), pos.getY().intValue(),
-            pos.getZ().intValue(), direction.ordinal());
+            pos.getZ().intValue(), side.ordinal());
     }
 
     public int getLightValue(@NotNull Block owner, @NotNull IBlockAccess world,
@@ -356,8 +357,8 @@ public class BlockPos {
 
     public boolean isSideSolid(@NotNull Block owner, @NotNull IBlockAccess world,
                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                               @NotNull ForgeDirection direction) {
-        return owner.isSideSolid(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), direction);
+                               @NotNull ForgeDirection side) {
+        return owner.isSideSolid(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), side);
     }
 
     public boolean isReplaceable(@NotNull Block owner, @NotNull IBlockAccess world,
@@ -439,11 +440,14 @@ public class BlockPos {
         return owner.isBed(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), player);
     }
 
-    public @UnknownNullability Pos getBedSpawnPosition(@NotNull Block owner, @NotNull IBlockAccess world,
-                                                       @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                                       @NotNull EntityPlayer player) {
-        return Pos.of(owner.getBedSpawnPosition(world, pos.getX().intValue(), pos.getY().intValue(),
-            pos.getZ().intValue(), player));
+    public @Nullable Pos getBedSpawnPosition(@NotNull Block owner, @NotNull IBlockAccess world,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos,
+                                             @NotNull EntityPlayer player) {
+        val coordinates = owner.getBedSpawnPosition(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), player);
+        if (coordinates != null) return Pos.of(coordinates);
+        return null;
     }
 
     public void setBedOccupied(@NotNull Block owner, @NotNull IBlockAccess world,
@@ -512,9 +516,9 @@ public class BlockPos {
 
     public boolean canConnectRedstone(@NotNull Block owner, @NotNull IBlockAccess world,
                                       @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                      @NotNull ForgeDirection direction) {
+                                      @NotNull ForgeDirection side) {
         return owner.canConnectRedstone(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal());
+            side.ordinal());
     }
 
     public boolean canPlaceTorchOnTop(@NotNull Block owner, @NotNull World world,
@@ -550,9 +554,9 @@ public class BlockPos {
 
     public boolean canSustainPlant(@NotNull Block owner, @NotNull IBlockAccess world,
                                    @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                   @NotNull ForgeDirection direction, @NotNull IPlantable plantable) {
+                                   @NotNull ForgeDirection side, @NotNull IPlantable plantable) {
         return owner.canSustainPlant(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction, plantable);
+            side, plantable);
     }
 
     public void onPlantGrow(@NotNull Block owner, @NotNull World world,
@@ -618,9 +622,9 @@ public class BlockPos {
 
     public boolean shouldCheckWeakPower(@NotNull Block owner, @NotNull IBlockAccess world,
                                         @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
-                                        @NotNull ForgeDirection direction) {
+                                        @NotNull ForgeDirection side) {
         return owner.shouldCheckWeakPower(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
-            direction.ordinal());
+            side.ordinal());
     }
 
     public boolean getWeakChanges(@NotNull Block owner, @NotNull IBlockAccess world,
@@ -630,10 +634,177 @@ public class BlockPos {
     //--------------------------
     //endregion
 
+    //region BlockBasePressurePlate
+    //--------------------------
+    public int pressurePlate$getRedstonePowerByCollidedEntities(@NotNull BlockBasePressurePlate owner,
+                                                                @NotNull World world,
+                                                                @NotNull Triplet<? extends Number,
+                                                                    ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockBasePressurePlate) owner).getRedstonePowerByCollidedEntities(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public void pressurePlate$updateAndPlayEffects(@NotNull BlockBasePressurePlate owner, @NotNull World world,
+                                                   @NotNull Triplet<? extends Number, ? extends Number,
+                                                       ? extends Number> pos, int meta) {
+        ((AccessorBlockBasePressurePlate) owner).updateAndPlayEffects(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), meta);
+    }
+
+    public void pressurePlate$notifyBlocksOfNeighborChange(@NotNull BlockBasePressurePlate owner, @NotNull World world,
+                                                           @NotNull Triplet<? extends Number, ? extends Number,
+                                                               ? extends Number> pos) {
+        ((AccessorBlockBasePressurePlate) owner).notifyBlocksOfNeighborChange(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockBed
+    //--------------------------
+    public void bed$updateBedOccupied(@NotNull World world,
+                                      @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                      boolean occupied) {
+        BlockBed.func_149979_a(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), occupied);
+    }
+
+    public @Nullable Pos getBedSpawnPosition(@NotNull World world,
+                                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                             int attempts) {
+        val coordinates = BlockBed.func_149977_a(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), attempts);
+        if (coordinates != null) return Pos.of(coordinates);
+        return null;
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockBush
+    //--------------------------
+    public void bush$checkAndDropBlock(@NotNull BlockBush owner, @NotNull World world,
+                                       @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockBush) owner).checkAndDropBlock(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockButton
+    //--------------------------
+    public int button$getRotatedMetaByNeighbors(@NotNull BlockButton owner, @NotNull World world,
+                                                @NotNull Triplet<? extends Number, ? extends Number,
+                                                    ? extends Number> pos) {
+        return ((AccessorBlockButton) owner).getRotatedMetaByNeighbors(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public boolean button$checkAndDropBlock(@NotNull BlockButton owner, @NotNull World world,
+                                            @NotNull Triplet<? extends Number, ? extends Number,
+                                                ? extends Number> pos) {
+        return ((AccessorBlockButton) owner).checkAndDropBlock(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void button$updateAndPlayEffects(@NotNull BlockButton owner, @NotNull World world,
+                                            @NotNull Triplet<? extends Number, ? extends Number,
+                                                ? extends Number> pos) {
+        ((AccessorBlockButton) owner).updateAndPlayEffects(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void button$notifyBlocksOfNeighborChange(@NotNull BlockButton owner, @NotNull World world,
+                                                    @NotNull Triplet<? extends Number, ? extends Number,
+                                                        ? extends Number> pos, int meta) {
+        ((AccessorBlockButton) owner).notifyBlocksOfNeighborChange(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), meta);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockCake
+    //--------------------------
+    public void cake$eatCake(@NotNull BlockCake owner, @NotNull World world,
+                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                             @NotNull EntityPlayer eater) {
+        ((AccessorBlockCake) owner).eatCake(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
+            eater);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockCauldron
+    //--------------------------
+    public void cauldron$setFluidAmount(@NotNull BlockCauldron owner, @NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                        int amount) {
+        owner.func_150024_a(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), amount);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockChest
+    //--------------------------
+    public void chest$rotateAndConnect(@NotNull BlockChest owner, @NotNull World world,
+                                       @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockChest) owner).rotateAndConnect(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public boolean chest$isSameBlockAround(@NotNull BlockChest owner, @NotNull World world,
+                                           @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockChest) owner).isSameBlockAround(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public @Nullable IInventory chest$getInventory(@NotNull BlockChest owner, @NotNull World world,
+                                                   @NotNull Triplet<? extends Number, ? extends Number,
+                                                       ? extends Number> pos) {
+        return ((AccessorBlockChest) owner).getInventory(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public boolean chest$isOcelotSittingOnChest(@NotNull World world,
+                                                @NotNull Triplet<? extends Number, ? extends Number,
+                                                    ? extends Number> pos) {
+        return AccessorBlockChest.isOcelotSittingOnChest(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockCrops
+    //--------------------------
+    public float crops$calculateGrowthChance(@NotNull BlockCrops owner, @NotNull World world,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos) {
+        return ((AccessorBlockCrops) owner).calculateGrowthChance(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void crops$tryGrowth(@NotNull BlockCrops owner, @NotNull World world,
+                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockCrops) owner).tryGrowth(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockDispenser
+    //--------------------------
+    public void dispenser$updateAndPlayEffects(@NotNull BlockDispenser owner, @NotNull World world,
+                                               @NotNull Triplet<? extends Number, ? extends Number,
+                                                   ? extends Number> pos) {
+        ((AccessorBlockDispenser) owner).updateAndPlayEffects(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
     //region IGrowable
     //--------------------------
     public boolean growable$canGrowthByBoneMeal(@NotNull IGrowable owner, @NotNull World world,
-                                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                                @NotNull Triplet<? extends Number, ? extends Number,
+                                                    ? extends Number> pos,
                                                 boolean isClient) {
         return owner.func_149851_a(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
             isClient);
@@ -653,21 +824,21 @@ public class BlockPos {
 
     //region IPlantable
     //--------------------------
-    public @NotNull EnumPlantType getPlantType(@NotNull IPlantable owner, @NotNull IBlockAccess world,
-                                               @NotNull Triplet<? extends Number, ? extends Number,
-                                                   ? extends Number> pos) {
+    public @NotNull EnumPlantType plantable$getPlantType(@NotNull IPlantable owner, @NotNull IBlockAccess world,
+                                                         @NotNull Triplet<? extends Number, ? extends Number,
+                                                             ? extends Number> pos) {
         return owner.getPlantType(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }
 
-    public @NotNull Block getPlant(@NotNull IPlantable owner, @NotNull IBlockAccess world,
-                                   @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+    public @NotNull Block plantable$getPlant(@NotNull IPlantable owner, @NotNull IBlockAccess world,
+                                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
         return owner.getPlant(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }
 
-    public @Range(from = 0, to = 16) int getPlantMetadata(@NotNull IPlantable owner,
-                                                          @NotNull IBlockAccess world,
-                                                          @NotNull Triplet<? extends Number, ? extends Number,
-                                                              ? extends Number> pos) {
+    public @Range(from = 0, to = 16) int plantable$getPlantMetadata(@NotNull IPlantable owner,
+                                                                    @NotNull IBlockAccess world,
+                                                                    @NotNull Triplet<? extends Number, ? extends Number,
+                                                                        ? extends Number> pos) {
         return owner.getPlantMetadata(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }
     //--------------------------

@@ -10,6 +10,13 @@
   },
   "mixins": [
     "AccessorBlock",
+    "AccessorBlockBasePressurePlate",
+    "AccessorBlockBush",
+    "AccessorBlockButton",
+    "AccessorBlockCake",
+    "AccessorBlockChest",
+    "AccessorBlockCrops",
+    "AccessorBlockDispenser",
     "AccessorEntityPigZombie",
     "AccessorEnumHolder",
     "AccessorExplosion",
