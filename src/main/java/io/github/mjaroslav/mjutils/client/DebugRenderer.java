@@ -2,10 +2,10 @@ package io.github.mjaroslav.mjutils.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.github.mjaroslav.mjutils.pos.BlockPos;
+import io.github.mjaroslav.mjutils.pos.Pos;
+import io.github.mjaroslav.mjutils.pos.WorldPos;
 import io.github.mjaroslav.mjutils.util.BlockAABBSet;
-import io.github.mjaroslav.mjutils.util.Pos;
-import io.github.mjaroslav.mjutils.util.game.UtilsPosBlock;
-import io.github.mjaroslav.mjutils.util.game.UtilsPosWorld;
 import io.github.mjaroslav.sharedjava.format.ColorFormat;
 import io.github.mjaroslav.sharedjava.format.Colors;
 import lombok.experimental.UtilityClass;
@@ -39,7 +39,7 @@ public class DebugRenderer {
         min.forEachBox(max, i -> {
             list.clear();
             colorCounter = 0;
-            UtilsPosBlock.addCollisionBoxesToList(UtilsPosWorld.getBlock(world, i), world, i, mask, list, null);
+            BlockPos.addCollisionBoxesToList(WorldPos.getBlock(world, i), world, i, mask, list, null);
             list.forEach(box -> {
                 cycleDebugLinesColor(BlockAABBSet.isDeadZoned(box, i.getX().intValue(), i.getY().intValue(),
                     i.getZ().intValue()));

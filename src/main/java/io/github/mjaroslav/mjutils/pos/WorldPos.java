@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util.game;
+package io.github.mjaroslav.mjutils.pos;
 
 import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import lombok.experimental.UtilityClass;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 // TODO: MAKE DOCS AND MAKE FULL IT
 @UtilityClass
-public class UtilsPosWorld {
+public class WorldPos {
     public Block getBlock(@NotNull IBlockAccess owner, @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
         return owner.getBlock(pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
     }

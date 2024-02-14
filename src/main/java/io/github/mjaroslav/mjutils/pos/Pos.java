@@ -1,4 +1,4 @@
-package io.github.mjaroslav.mjutils.util;
+package io.github.mjaroslav.mjutils.pos;
 
 import com.google.common.collect.AbstractIterator;
 import io.github.mjaroslav.sharedjava.tuple.Triplet;

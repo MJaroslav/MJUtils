@@ -1,7 +1,7 @@
 package io.github.mjaroslav.mjutils.util.object.game;
 
 import io.github.mjaroslav.mjutils.asm.mixin.accessors.AccessorExplosion;
-import io.github.mjaroslav.mjutils.util.Pos;
+import io.github.mjaroslav.mjutils.pos.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static io.github.mjaroslav.mjutils.util.game.UtilsPosBlock.*;
-import static io.github.mjaroslav.mjutils.util.game.UtilsPosWorld.*;
+import static io.github.mjaroslav.mjutils.pos.BlockPos.*;
+import static io.github.mjaroslav.mjutils.pos.WorldPos.*;
 
 @Getter
 @Setter
