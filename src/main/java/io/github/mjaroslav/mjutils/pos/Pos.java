@@ -4,6 +4,8 @@ import com.google.common.collect.AbstractIterator;
 import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import io.github.mjaroslav.sharedjava.tuple.triplet.DTriplet;
 import lombok.val;
+import net.minecraft.dispenser.IPosition;
+import net.minecraft.dispenser.PositionImpl;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -192,6 +194,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Addition
     //------------------------------------
+    public @NotNull Pos add(@NotNull IPosition position) {
+        return add(position.getX(), position.getY(), position.getZ());
+    }
+
     public @NotNull Pos add(@NotNull ChunkPosition position) {
         return add(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -233,6 +239,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Subtraction
     //------------------------------------
+    public @NotNull Pos sub(@NotNull IPosition position) {
+        return sub(position.getX(), position.getY(), position.getZ());
+    }
+
     public @NotNull Pos sub(@NotNull ChunkPosition position) {
         return sub(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -274,6 +284,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Multiple
     //------------------------------------
+    public @NotNull Pos mul(@NotNull IPosition position) {
+        return mul(position.getX(), position.getY(), position.getZ());
+    }
+
     public @NotNull Pos mul(@NotNull ChunkPosition position) {
         return mul(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -312,6 +326,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Division
     //------------------------------------
+    public @NotNull Pos div(@NotNull IPosition position) {
+        return div(position.getX(), position.getY(), position.getZ());
+    }
+
     public @NotNull Pos div(@NotNull ChunkPosition position) {
         return div(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -382,6 +400,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Distance
     //------------------------------------
+    public double distance(@NotNull IPosition position) {
+        return distance(position.getX(), position.getY(), position.getZ());
+    }
+
     public double distance(@NotNull ChunkPosition position) {
         return distance(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -414,6 +436,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Square distance
     //------------------------------------
+    public double distanceQrt(@NotNull IPosition position) {
+        return distanceQrt(position.getX(), position.getY(), position.getZ());
+    }
+
     public double distanceQrt(@NotNull ChunkPosition position) {
         return distanceQrt(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -446,6 +472,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Scalar
     //------------------------------------
+    public double scalar(@NotNull IPosition position) {
+        return scalar(position.getX(), position.getY(), position.getZ());
+    }
+
     public double scalar(@NotNull ChunkCoordinates coordinates) {
         return scalar(coordinates.posX, coordinates.posY, coordinates.posZ);
     }
@@ -478,6 +508,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Cross
     //------------------------------------
+    public @NotNull Pos cross(@NotNull IPosition position) {
+        return cross(position.getX(), position.getY(), position.getZ());
+    }
+
     public @NotNull Pos cross(@NotNull ChunkCoordinates coordinates) {
         return cross(coordinates.posX, coordinates.posY, coordinates.posZ);
     }
@@ -584,6 +618,18 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region x, y, z floored conversions
     //------------------------------------
+    public double fDX() {
+        return MathHelper.floor_double_long(getX());
+    }
+
+    public double fDY() {
+        return MathHelper.floor_double_long(getY());
+    }
+
+    public double fDZ() {
+        return MathHelper.floor_double_long(getZ());
+    }
+
     public int fIX() {
         return MathHelper.floor_double(getX());
     }
@@ -636,6 +682,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Type conversions
     //------------------------------------
+    @Contract(" -> new")
+    public @NotNull IPosition asPosition() {
+        return new PositionImpl(getX(), getY(), getZ());
+    }
+
     @Contract(" -> new")
     public @NotNull ChunkPosition asChunkPosition() {
         return new ChunkPosition(iX(), iY(), iZ());
@@ -693,6 +744,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //region Type floored conversions
     //------------------------------------
     @Contract(" -> new")
+    public @NotNull IPosition asFlooredPosition() {
+        return new PositionImpl(fDX(), fDY(), fDZ());
+    }
+
+    @Contract(" -> new")
     public @NotNull ChunkPosition asFlooredChunkPosition() {
         return new ChunkPosition(fIX(), fIY(), fIZ());
     }
@@ -749,6 +805,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //region Relative AABB creation
     //------------------------------------
     @Contract("_ -> new")
+    public @NotNull AxisAlignedBB createAABB(@NotNull IPosition position) {
+        return createAABB(position.getX(), position.getY(), position.getZ());
+    }
+
+    @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABB(@NotNull ChunkPosition position) {
         return createAABB(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -794,28 +855,33 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //region Absolute AABB creation
     //------------------------------------
     @Contract("_ -> new")
+    public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull IPosition position) {
+        return createAABBAbsolute(position.getX(), position.getY(), position.getZ());
+    }
+
+    @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull ChunkPosition position) {
-        return createAABB(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
+        return createAABBAbsolute(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull Vec3 vec) {
-        return createAABB(vec.xCoord, vec.yCoord, vec.zCoord);
+        return createAABBAbsolute(vec.xCoord, vec.yCoord, vec.zCoord);
     }
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull ChunkCoordinates coordinates) {
-        return createAABB(coordinates.posX, coordinates.posY, coordinates.posZ);
+        return createAABBAbsolute(coordinates.posX, coordinates.posY, coordinates.posZ);
     }
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull ForgeDirection direction) {
-        return createAABB(direction.offsetX, direction.offsetY, direction.offsetZ);
+        return createAABBAbsolute(direction.offsetX, direction.offsetY, direction.offsetZ);
     }
 
     @Contract("_ -> new")
     public @NotNull AxisAlignedBB createAABBAbsolute(@NotNull Pos pos) {
-        return createAABB(pos.getX(), pos.getY(), pos.getZ());
+        return createAABBAbsolute(pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Contract("_ -> new")
@@ -835,6 +901,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
 
     //region Box iterates
     //------------------------------------
+    @Contract("_ -> new")
+    public @NotNull Iterable<Mutable> iterateBox(@NotNull IPosition position) {
+        return iterateBox((int) position.getX(), (int) position.getY(), (int) position.getZ());
+    }
+
     @Contract("_ -> new")
     public @NotNull Iterable<Mutable> iterateBox(@NotNull ChunkPosition position) {
         return iterateBox(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
@@ -899,6 +970,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //region Box streams
     //------------------------------------
     @Contract("_ -> new")
+    public @NotNull Stream<Mutable> streamBox(@NotNull IPosition position) {
+        return streamBox((int) position.getX(), (int) position.getY(), (int) position.getZ());
+    }
+
+    @Contract("_ -> new")
     public @NotNull Stream<Mutable> streamBox(@NotNull ChunkPosition position) {
         return streamBox(position.chunkPosX, position.chunkPosY, position.chunkPosZ);
     }
@@ -949,24 +1025,64 @@ public class Pos extends DTriplet implements Comparable<Object> {
     //------------------------------------
     //endregion
 
+    //region For each in box
+    //--------------------------
+    public void forEachBox(@NotNull IPosition oppositeCornerPosition, @NotNull Consumer<Mutable> action) {
+        forEachBox((int) oppositeCornerPosition.getX(), (int) oppositeCornerPosition.getY(),
+            (int) oppositeCornerPosition.getZ(), action);
+    }
+
+    public void forEachBox(@NotNull Pos oppositeCornerPos, @NotNull Consumer<Mutable> action) {
+        forEachBox(oppositeCornerPos.iX(), oppositeCornerPos.iY(), oppositeCornerPos.iZ(), action);
+    }
+
+    public void forEachBox(@NotNull ChunkCoordinates oppositeCornerCoordinates, @NotNull Consumer<Mutable> action) {
+        forEachBox(oppositeCornerCoordinates.posX, oppositeCornerCoordinates.posY, oppositeCornerCoordinates.posZ,
+            action);
+    }
+
+    public void forEachBox(@NotNull ChunkPosition oppositeCornerPosition, @NotNull Consumer<Mutable> action) {
+        forEachBox(oppositeCornerPosition.chunkPosX, oppositeCornerPosition.chunkPosY, oppositeCornerPosition.chunkPosZ,
+            action);
+    }
+
+    public void forEachBox(@NotNull ForgeDirection oppositeCornerDirection, @NotNull Consumer<Mutable> action) {
+        forEachBox(oppositeCornerDirection.offsetX, oppositeCornerDirection.offsetY, oppositeCornerDirection.offsetZ,
+            action);
+    }
+
+    public void forEachBox(@NotNull Vec3 oppositeCornerVec, @NotNull Consumer<Mutable> action) {
+        forEachBox((int) oppositeCornerVec.xCoord, (int) oppositeCornerVec.yCoord, (int) oppositeCornerVec.zCoord,
+            action);
+    }
+
+    public void forEachBox(@NotNull Triplet<? extends Number, ? extends Number, ? extends Number> oppositeCornerTriplet,
+                           @NotNull Consumer<Mutable> action) {
+        forEachBox(oppositeCornerTriplet.getX().intValue(), oppositeCornerTriplet.getY().intValue(),
+            oppositeCornerTriplet.getZ().intValue(), action);
+    }
+
+    public void forEachBox(int oppositeCornerX, int oppositeCornerY, int oppositeCornerZ,
+                           @NotNull Consumer<Mutable> action) {
+        val temp = new Mutable();
+        val stopX = Math.max(iX(), oppositeCornerX) + 1;
+        val stopY = Math.max(iY(), oppositeCornerY) + 1;
+        val stopZ = Math.max(iZ(), oppositeCornerZ) + 1;
+        for (var x = Math.min(iX(), oppositeCornerX); x < stopX; x++)
+            for (var y = Math.min(iY(), oppositeCornerY); y < stopY; y++)
+                for (var z = Math.min(iZ(), oppositeCornerZ); z < stopZ; z++) {
+                    temp.set(x, y, z);
+                    action.accept(temp);
+                }
+    }
+    //--------------------------
+    //endregion
+
     //region Object utility
     //------------------------------------
     @Contract(" -> new")
     public @NotNull Stream<Pos> stream() {
         return Stream.of(this);
-    }
-
-    public void forEachBox(@NotNull Pos oppositeCorner, @NotNull Consumer<Mutable> action) {
-        val temp = new Mutable();
-        val stopX = Math.max(iX(), oppositeCorner.iX()) + 1;
-        val stopY = Math.max(iY(), oppositeCorner.iY()) + 1;
-        val stopZ = Math.max(iZ(), oppositeCorner.iZ()) + 1;
-        for (var x = Math.min(iX(), oppositeCorner.iX()); x < stopX; x++)
-            for (var y = Math.min(iY(), oppositeCorner.iY()); y < stopY; y++)
-                for (var z = Math.min(iZ(), oppositeCorner.iZ()); z < stopZ; z++) {
-                    temp.set(x, y, z);
-                    action.accept(temp);
-                }
     }
 
     public boolean isInsideOfBox(@NotNull AxisAlignedBB aabb) {
@@ -991,6 +1107,10 @@ public class Pos extends DTriplet implements Comparable<Object> {
             x = pos.getX();
             y = pos.getY();
             z = pos.getZ();
+        } else if (o instanceof IPosition position) {
+            x = position.getX();
+            y = position.getY();
+            z = position.getZ();
         } else if (o instanceof ChunkCoordinates coordinates) {
             x = coordinates.posX;
             y = coordinates.posY;
@@ -1019,6 +1139,8 @@ public class Pos extends DTriplet implements Comparable<Object> {
         else if (o == this) return true;
         else if (o instanceof Pos pos)
             return getX().equals(pos.getX()) && getY().equals(pos.getY()) && getZ().equals(pos.getZ());
+        else if (o instanceof IPosition position)
+            return getX() == position.getX() && getY() == position.getY() && getZ() == position.getZ();
         else if (o instanceof ChunkCoordinates coordinates)
             return iX() == coordinates.posX && iY() == coordinates.posY && iZ() == coordinates.posZ;
         else if (o instanceof ChunkPosition position)
@@ -1042,6 +1164,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     @Contract(" -> new")
     public static @NotNull Mutable mutable() {
         return new Mutable();
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos mutableOf(@NotNull IPosition position) {
+        return mutableOf(position.getX(), position.getY(), position.getZ());
     }
 
     @Contract("_ -> new")
@@ -1080,6 +1207,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     }
 
     @Contract("_ -> new")
+    public static @NotNull Pos mutableOfFloor(@NotNull IPosition position) {
+        return mutableOfFloor(position.getX(), position.getY(), position.getZ());
+    }
+
+    @Contract("_ -> new")
     public static @NotNull Pos mutableOfFloor(@NotNull Pos pos) {
         return mutableOfFloor(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -1106,6 +1238,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     @Contract("_ -> new")
     public static @NotNull Pos of(@NotNull Pos pos) {
         return of(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos of(@NotNull IPosition position) {
+        return of(position.getX(), position.getY(), position.getZ());
     }
 
     @Contract("_ -> new")
@@ -1141,6 +1278,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
     @Contract("_ -> new")
     public static @NotNull Pos ofFloor(@NotNull Pos pos) {
         return ofFloor(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull Pos ofFloor(@NotNull IPosition position) {
+        return ofFloor(position.getX(), position.getY(), position.getZ());
     }
 
     @Contract("_ -> new")
@@ -1180,6 +1322,11 @@ public class Pos extends DTriplet implements Comparable<Object> {
         public @NotNull Mutable set(double x, double y, double z) {
             set((Double) x, (Double) y, (Double) z);
             return this;
+        }
+
+        @Contract("_ -> this")
+        public @NotNull Mutable set(@NotNull IPosition position) {
+            return set(position.getX(), position.getY(), position.getZ());
         }
 
         @Contract("_ -> this")

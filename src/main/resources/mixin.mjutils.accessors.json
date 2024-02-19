@@ -17,6 +17,8 @@
     "AccessorBlockChest",
     "AccessorBlockCrops",
     "AccessorBlockDispenser",
+    "AccessorBlockDoublePlant",
+    "AccessorBlockDragonEgg",
     "AccessorEntityPigZombie",
     "AccessorEnumHolder",
     "AccessorExplosion",

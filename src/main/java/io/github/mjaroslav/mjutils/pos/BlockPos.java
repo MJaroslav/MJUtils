@@ -155,7 +155,7 @@ public class BlockPos {
     public void dropBlockAsItem(@NotNull Block owner, @NotNull World world,
                                 @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
                                 @NotNull ItemStack stack) {
-        ((AccessorBlock) owner).invokeDropBlockAsItem(world, pos.getX().intValue(), pos.getY().intValue(),
+        ((AccessorBlock) owner).dropBlockAsItem(world, pos.getX().intValue(), pos.getY().intValue(),
             pos.getZ().intValue(), stack);
     }
 
@@ -791,10 +791,75 @@ public class BlockPos {
 
     //region BlockDispenser
     //--------------------------
+    public void dispenser$rotateBlockToFreeSide(@NotNull BlockDispenser owner, @NotNull World world,
+                                                @NotNull Triplet<? extends Number, ? extends Number,
+                                                    ? extends Number> pos) {
+        ((AccessorBlockDispenser) owner).rotateBlockToFreeSide(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
     public void dispenser$updateAndPlayEffects(@NotNull BlockDispenser owner, @NotNull World world,
                                                @NotNull Triplet<? extends Number, ? extends Number,
                                                    ? extends Number> pos) {
         ((AccessorBlockDispenser) owner).updateAndPlayEffects(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockDoor
+    //--------------------------
+    public final int DOOR$MASK_DIRECTION = 0b00011;
+    public final int DOOR$MASK_OPEN = 0b000100;
+    public final int DOOR$MASK_UPPER_BLOCK = 0b01000;
+    public final int DOOR$MASK_HINGE = 0b10000;
+
+    public int door$getRotation(@NotNull BlockDoor owner, @NotNull IBlockAccess world,
+                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.func_150013_e(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public boolean door$isOpen(@NotNull BlockDoor owner, @NotNull IBlockAccess world,
+                               @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.func_150015_f(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public void door$setOpen(@NotNull BlockDoor owner, @NotNull World world,
+                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                             boolean open) {
+        owner.func_150014_a(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), open);
+    }
+
+    public int door$getBits(@NotNull BlockDoor owner, @NotNull IBlockAccess world,
+                            @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.func_150012_g(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockDoublePlant
+    //--------------------------
+    public boolean doublePlant$dropBlockAndAddStat(@NotNull BlockDoublePlant owner, @NotNull World world,
+                                                   @NotNull Triplet<? extends Number, ? extends Number,
+                                                       ? extends Number> pos, int meta,
+                                                   @NotNull EntityPlayer harvester) {
+        return ((AccessorBlockDoublePlant) owner).dropBlockAndAddStat(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), meta, harvester);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockDragonEgg
+    //--------------------------
+    public void checkAndFall(@NotNull BlockDragonEgg owner, @NotNull World world,
+                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockDragonEgg) owner).checkAndFall(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void moveRandomly(@NotNull BlockDragonEgg owner, @NotNull World world,
+                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockDragonEgg) owner).moveRandomly(world, pos.getX().intValue(), pos.getY().intValue(),
             pos.getZ().intValue());
     }
     //--------------------------
