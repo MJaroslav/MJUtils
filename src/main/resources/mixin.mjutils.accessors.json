@@ -19,6 +19,8 @@
     "AccessorBlockDispenser",
     "AccessorBlockDoublePlant",
     "AccessorBlockDragonEgg",
+    "AccessorBlockDynamicLiquid",
+    "AccessorBlockLiquid",
     "AccessorEntityPigZombie",
     "AccessorEnumHolder",
     "AccessorExplosion",

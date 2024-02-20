@@ -7,6 +7,7 @@ import io.github.mjaroslav.sharedjava.tuple.Triplet;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -860,6 +861,104 @@ public class BlockPos {
     public void moveRandomly(@NotNull BlockDragonEgg owner, @NotNull World world,
                              @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
         ((AccessorBlockDragonEgg) owner).moveRandomly(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockDynamicLiquid
+    //--------------------------
+    public void dynamicLiquid$makeStill(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockDynamicLiquid) owner).makeStill(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void dynamicLiquid$spreadWaterAndDoActions(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                                      @NotNull Triplet<? extends Number, ? extends Number,
+                                                          ? extends Number> pos, int decay) {
+        ((AccessorBlockDynamicLiquid) owner).spreadWaterAndDoActions(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), decay);
+    }
+
+    public int dynamicLiquid$getDistanceToPit(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                              @NotNull Triplet<? extends Number, ? extends Number,
+                                                  ? extends Number> pos, int distance, int currentDecay) {
+        return ((AccessorBlockDynamicLiquid) owner).getDistanceToPit(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), distance, currentDecay);
+    }
+
+    public boolean @NotNull [] dynamicLiquid$getFlowDecayDirections(@NotNull BlockDynamicLiquid owner,
+                                                                    @NotNull World world,
+                                                                    @NotNull Triplet<? extends Number, ? extends Number,
+                                                                        ? extends Number> pos) {
+        return ((AccessorBlockDynamicLiquid) owner).getFlowDecayDirections(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public boolean dynamicLiquid$canNotFlowThrow(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                                 @NotNull Triplet<? extends Number, ? extends Number,
+                                                     ? extends Number> pos) {
+        return ((AccessorBlockDynamicLiquid) owner).canNotFlowThrow(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public int dynamicLiquid$continueFlowDecay(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                               @NotNull Triplet<? extends Number, ? extends Number,
+                                                   ? extends Number> pos, int currentDecay) {
+        return ((AccessorBlockDynamicLiquid) owner).continueFlowDecay(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), currentDecay);
+    }
+
+    public boolean dynamicLiquid$canFlowThrow(@NotNull BlockDynamicLiquid owner, @NotNull World world,
+                                              @NotNull Triplet<? extends Number, ? extends Number,
+                                                  ? extends Number> pos) {
+        return ((AccessorBlockDynamicLiquid) owner).canFlowThrow(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+
+    //region BlockLiquid
+    //--------------------------
+    public int liquid$getFlowDecay(@NotNull BlockLiquid owner, @NotNull World world,
+                                   @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockLiquid) owner).getFlowDecay(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public int liquid$getEffectiveFlowDecay(@NotNull BlockLiquid owner, @NotNull IBlockAccess world,
+                                            @NotNull Triplet<? extends Number, ? extends Number,
+                                                ? extends Number> pos) {
+        return ((AccessorBlockLiquid) owner).getEffectiveFlowDecay(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public @NotNull Pos liquid$getFlowVector(@NotNull BlockLiquid owner, @NotNull IBlockAccess world,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos) {
+        return Pos.of(((AccessorBlockLiquid) owner).getFlowVector(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue()));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public double liquid$getFlowDirection(@NotNull IBlockAccess world,
+                                          @NotNull Triplet<? extends Number, ? extends Number,
+                                              ? extends Number> pos, @NotNull Material material) {
+        return BlockLiquid.getFlowDirection(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
+            material);
+    }
+
+    public void liquid$tryFreezeLava(@NotNull BlockLiquid owner, @NotNull World world,
+                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockLiquid) owner).tryFreezeLava(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void liquid$playEffects(@NotNull BlockLiquid owner, @NotNull World world,
+                                   @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockLiquid) owner).playEffects(world, pos.getX().intValue(), pos.getY().intValue(),
             pos.getZ().intValue());
     }
     //--------------------------
