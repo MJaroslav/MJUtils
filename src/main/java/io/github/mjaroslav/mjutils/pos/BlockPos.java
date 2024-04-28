@@ -12,10 +12,14 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityFlowerPot;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.tileentity.TileEntityPiston;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
@@ -919,6 +923,186 @@ public class BlockPos {
     //--------------------------
     //endregion
 
+    //region BlockFalling
+    //--------------------------
+    public void falling$tryFall(@NotNull BlockFalling owner, @NotNull World world,
+                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockFalling) owner).tryFall(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public boolean falling$canFallOn(@NotNull World world,
+                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return BlockFalling.func_149831_e(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockFarmland
+    //--------------------------
+    public boolean farmland$isEmpty(@NotNull BlockFarmland owner, @NotNull World world,
+                                    @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockFarmland) owner).isEmpty(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public boolean farmland$isMoistened(@NotNull BlockFarmland owner, @NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockFarmland) owner).isMoistened(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockFire
+    //--------------------------
+    @Deprecated
+    public void fire$tryCatchFire(@NotNull BlockFire owner,
+                                  @NotNull World world,
+                                  @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                  int chance, @NotNull Random rand, int meta) {
+        ((AccessorBlockFire) owner).tryCatchFire(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), chance, rand, meta);
+    }
+
+    public void fire$tryCatchFire(@NotNull BlockFire owner,
+                                  @NotNull World world,
+                                  @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                  int chance, @NotNull Random rand, int meta, @NotNull ForgeDirection side) {
+        ((AccessorBlockFire) owner).tryCatchFire(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), chance, rand, meta, side);
+    }
+
+    public boolean fire$canNeighborBurn(@NotNull BlockFire owner, @NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockFire) owner).canNeighborBurn(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public int fire$getChanceOfNeighborsEncouragingFire(@NotNull BlockFire owner, @NotNull World world,
+                                                        @NotNull Triplet<? extends Number, ? extends Number,
+                                                            ? extends Number> pos) {
+        return ((AccessorBlockFire) owner).getChanceOfNeighborsEncouragingFire(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    @Deprecated
+    public boolean fire$canBlockCatchFire(@NotNull BlockFire owner, @NotNull IBlockAccess world,
+                                          @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.canBlockCatchFire(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    @Deprecated
+    public int fire$getChanceToEncourageFire(@NotNull BlockFire owner, @NotNull World world,
+                                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                             int oldChance) {
+        return owner.func_149846_a(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(),
+            oldChance);
+    }
+
+    public boolean fire$canCatchFire(@NotNull BlockFire owner, @NotNull IBlockAccess world,
+                                     @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                     @NotNull ForgeDirection face) {
+        return owner.canCatchFire(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), face);
+    }
+
+    public int fire$getChanceToEncourageFire(@NotNull BlockFire owner, @NotNull IBlockAccess world,
+                                             @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                             int oldChance, @NotNull ForgeDirection face) {
+        return owner.getChanceToEncourageFire(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), oldChance, face);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockFlowerPot
+    //--------------------------
+    public @Nullable TileEntityFlowerPot flowerPot$getFlowerPotTileEntity(@NotNull BlockFlowerPot owner,
+                                                                          @NotNull World world,
+                                                                          @NotNull Triplet<? extends Number,
+                                                                              ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockFlowerPot) owner).getFlowerPotTileEntity(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockFurnace
+    //--------------------------
+    public void furnace$rotateFaceToFreeSide(@NotNull BlockFurnace owner, @NotNull World world,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos) {
+        ((AccessorBlockFurnace) owner).rotateFaceToFreeSide(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public static void furnace$updateFurnaceBlockState(boolean lit, @NotNull World world,
+                                                       @NotNull Triplet<? extends Number, ? extends Number,
+                                                           ? extends Number> pos) {
+        BlockFurnace.updateFurnaceBlockState(lit, world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockHopper
+    //--------------------------
+    public void hopper$updateHopperBlockState(@NotNull BlockHopper owner, @NotNull World world,
+                                              @NotNull Triplet<? extends Number, ? extends Number,
+                                                  ? extends Number> pos) {
+        ((AccessorBlockHopper) owner).updateHopperBlockState(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public static TileEntityHopper hopper$getHopperTileEntity(@NotNull IBlockAccess world,
+                                                              @NotNull Triplet<? extends Number, ? extends Number,
+                                                                  ? extends Number> pos) {
+        return BlockHopper.func_149920_e(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockJukebox
+    //--------------------------
+    public void jukebox$setDisc(@NotNull BlockJukebox owner, @NotNull World world,
+                                @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                @Nullable ItemStack discStack) {
+        owner.func_149926_b(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), discStack);
+    }
+
+    public void jukebox$dropDisc(@NotNull BlockJukebox owner, @NotNull World world,
+                                 @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        owner.func_149925_e(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockLeaves
+    //--------------------------
+    public void leaves$removeLeaves(@NotNull BlockLeaves owner, @NotNull World world,
+                                    @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        ((AccessorBlockLeaves) owner).removeLeaves(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public void leaves$dropExtra(@NotNull BlockLeaves owner, @NotNull World world,
+                                 @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos, int meta,
+                                 int chance) {
+        ((AccessorBlockLeaves) owner).dropExtra(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), meta, chance);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockLever
+    //--------------------------
+    public boolean lever$checkAndDropBlock(@NotNull BlockLever owner, @NotNull World world,
+                                           @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return ((AccessorBlockLever) owner).checkAndDropBlock(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
 
     //region BlockLiquid
     //--------------------------
@@ -960,6 +1144,159 @@ public class BlockPos {
                                    @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
         ((AccessorBlockLiquid) owner).playEffects(world, pos.getX().intValue(), pos.getY().intValue(),
             pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockMushroom
+    //--------------------------
+    public boolean mushroom$growthBigMushroom(@NotNull BlockMushroom owner, @NotNull World world,
+                                              @NotNull Triplet<? extends Number, ? extends Number,
+                                                  ? extends Number> pos, @NotNull Random rand) {
+        return owner.func_149884_c(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), rand);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockPane
+    //--------------------------
+    public boolean pane$canPaneConnectTo(@NotNull BlockPane owner, @NotNull IBlockAccess world,
+                                         @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                         @NotNull ForgeDirection dir) {
+        return owner.canPaneConnectTo(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue(), dir);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockPistonBase
+    //--------------------------
+    public void pistonBase$updatePistonState(@NotNull BlockPistonBase owner, @NotNull World world,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos) {
+        ((AccessorBlockPistonBase) owner).updatePistonState(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public boolean pistonBase$isIndirectlyPowered(@NotNull BlockPistonBase owner, @NotNull World world,
+                                                  @NotNull Triplet<? extends Number, ? extends Number,
+                                                      ? extends Number> pos, int orientation) {
+        return ((AccessorBlockPistonBase) owner).isIndirectlyPowered(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), orientation);
+    }
+
+    public int pistonBase$determineOrientation(@NotNull World world,
+                                               @NotNull Triplet<? extends Number, ? extends Number,
+                                                   ? extends Number> pos, @NotNull EntityLivingBase placer) {
+        return BlockPistonBase.determineOrientation(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), placer);
+    }
+
+    public boolean pistonBase$canPushBlock(@NotNull Block blockToPush, @NotNull World world,
+                                           @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                           boolean moveFlag) {
+        return AccessorBlockPistonBase.canPushBlock(blockToPush, world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), moveFlag);
+    }
+
+    public boolean pistonBase$canExtend(@NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                        int orientation) {
+        return AccessorBlockPistonBase.canExtend(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), orientation);
+    }
+
+    public boolean pistonBase$tryExtend(@NotNull BlockPistonBase owner, @NotNull World world,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos,
+                                        int orientation) {
+        return ((AccessorBlockPistonBase) owner).tryExtend(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), orientation);
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockPistonMoving
+    //--------------------------
+    public @Nullable TileEntityPiston pistonMoving$getPistonMovingTileEntity(@NotNull BlockPistonMoving owner,
+                                                                             @NotNull IBlockAccess world,
+                                                                             @NotNull Triplet<? extends Number,
+                                                                                 ? extends Number,
+                                                                                 ? extends Number> pos) {
+        return ((AccessorBlockPistonMoving) owner).getPistonMovingTileEntity(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockPortal
+    //--------------------------
+    public boolean portal$tryPlacePortal(@NotNull BlockPortal owner, @NotNull World world,
+                                         @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.func_150000_e(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockRailBase
+    //--------------------------
+    public boolean railBase$isRail(@NotNull World world,
+                                   @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return BlockRailBase.func_150049_b_(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public void railBase$onRailNeighborBlockChange(@NotNull BlockRailBase owner, @NotNull World world,
+                                                   @NotNull Triplet<? extends Number, ? extends Number,
+                                                       ? extends Number> pos, int meta, int baseMeta,
+                                                   @NotNull Block block) {
+        ((AccessorBlockRailBase) owner).onRailNeighborBlockChange(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), meta, baseMeta, block);
+    }
+
+    public void railBase$updateRailBaseBlockState(@NotNull BlockRailBase owner, @NotNull World world,
+                                                  @NotNull Triplet<? extends Number, ? extends Number,
+                                                      ? extends Number> pos, boolean forceUpdate) {
+        ((AccessorBlockRailBase) owner).updateRailBaseBlockState(world, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue(), forceUpdate);
+    }
+
+    public boolean railBase$isFlexibleRail(@NotNull BlockRailBase owner, @NotNull IBlockAccess world,
+                                           @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.isFlexibleRail(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public boolean railBase$canMakeSlopes(@NotNull BlockRailBase owner, @NotNull IBlockAccess world,
+                                          @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.canMakeSlopes(world, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public int railBase$getBasicRailMetadata(@NotNull BlockRailBase owner, @NotNull IBlockAccess world,
+                                             @Nullable EntityMinecart cart,
+                                             @NotNull Triplet<? extends Number, ? extends Number,
+                                                 ? extends Number> pos) {
+        return owner.getBasicRailMetadata(world, cart, pos.getX().intValue(), pos.getY().intValue(),
+            pos.getZ().intValue());
+    }
+
+    public float railBase$getRailMaxSpeed(@NotNull BlockRailBase owner, @NotNull World world,
+                                          @Nullable EntityMinecart cart,
+                                          @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        return owner.getRailMaxSpeed(world, cart, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+
+    public void railBase$onMinecartPass(@NotNull BlockRailBase owner, @NotNull World world,
+                                        @NotNull EntityMinecart cart,
+                                        @NotNull Triplet<? extends Number, ? extends Number, ? extends Number> pos) {
+        owner.onMinecartPass(world, cart, pos.getX().intValue(), pos.getY().intValue(), pos.getZ().intValue());
+    }
+    //--------------------------
+    //endregion
+
+    //region BlockRailDetector
+    //--------------------------
+    public void railDetector$updateRailDetectorBlockState(@NotNull BlockRailDetector owner, @NotNull World world,
+                                                          @NotNull Triplet<? extends Number, ? extends Number,
+                                                              ? extends Number> pos, int meta) {
+        ((AccessorBlockRailDetector) owner).updateRailDetectorBlockState(world, pos.getX().intValue(),
+            pos.getY().intValue(), pos.getZ().intValue(), meta);
     }
     //--------------------------
     //endregion
