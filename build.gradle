@@ -30,6 +30,15 @@ repositories {
         name "Gregtech repo"
         url 'https://gregtech.overminddl1.com'
     }
+    // FG adds forge maven before central and forge maven contains only poms of lombok, not jars.
+    exclusiveContent {
+        forRepository {
+            mavenCentral()
+        }
+        filter {
+            includeGroup "org.projectlombok"
+        }
+    }
 }
 
 def buildprop = new Properties()
@@ -149,4 +158,3 @@ publishing {
         }
     }
 }
-
