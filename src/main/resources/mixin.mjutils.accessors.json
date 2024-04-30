@@ -54,6 +54,8 @@
     "AccessorExplosion",
     "AccessorFishingHooks",
     "AccessorFMLModContainer",
+    "AccessorItemHangingEntity",
+    "AccessorItemSlab",
     "AccessorWeightedRandomFishable"
   ],
   "client": [
