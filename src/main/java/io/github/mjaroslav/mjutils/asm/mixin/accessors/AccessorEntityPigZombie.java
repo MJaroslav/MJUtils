@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(EntityPigZombie.class)
 public interface AccessorEntityPigZombie {
-    @Invoker("becomeAngryAt")
-    void invokeBecomeAngryAt(Entity target);
+    @Invoker
+    void callBecomeAngryAt(Entity target);
 }

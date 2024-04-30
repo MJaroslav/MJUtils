@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockLeaves.class)
 public interface AccessorBlockLeaves {
-    @Invoker("removeLeaves")
-    void removeLeaves(@NotNull World world, int x, int y, int z);
+    @Invoker
+    void callRemoveLeaves(@NotNull World world, int x, int y, int z);
 
     @Invoker("func_150124_c")
     void dropExtra(@NotNull World world, int x, int y, int z, int meta, int chance);

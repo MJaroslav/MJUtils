@@ -2,6 +2,7 @@ package io.github.mjaroslav.mjutils.client;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.AxisAlignedBB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -76,5 +77,12 @@ public class GLHelper {
         glVertex3d(box.maxX, box.maxY, box.minZ);
         glVertex3d(box.maxX, box.minY, box.minZ);
         glVertex3d(box.maxX, box.minY, box.maxZ);
+    }
+
+    public void subtractCameraTranslation(float partial) {
+        val player = Minecraft.getMinecraft().thePlayer;
+        glTranslated(-(player.lastTickPosX + (player.posX - player.lastTickPosX) * partial),
+            -(player.lastTickPosY + (player.posY - player.lastTickPosY) * partial),
+            -(player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partial));
     }
 }

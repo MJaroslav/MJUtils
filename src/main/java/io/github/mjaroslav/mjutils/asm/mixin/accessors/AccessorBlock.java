@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Block.class)
 public interface AccessorBlock {
-    @Invoker("dropBlockAsItem")
-    void dropBlockAsItem(@NotNull World world, int x, int y, int z, @NotNull ItemStack stack);
+    @Invoker
+    void callDropBlockAsItem(@NotNull World world, int x, int y, int z, @NotNull ItemStack stack);
 }

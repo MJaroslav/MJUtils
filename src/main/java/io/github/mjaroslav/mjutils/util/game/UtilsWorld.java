@@ -35,7 +35,7 @@ public class UtilsWorld {
         List<EntityPigZombie> list = world.getEntitiesWithinAABB(EntityPigZombie.class,
             AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1).expand(expand, expand, expand));
         for (EntityPigZombie entity : list)
-            ((AccessorEntityPigZombie) entity).invokeBecomeAngryAt(target);
+            ((AccessorEntityPigZombie) entity).callBecomeAngryAt(target);
         return list.size();
     }
 

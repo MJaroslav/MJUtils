@@ -11,16 +11,16 @@ import java.util.Random;
 
 @Mixin(BlockFire.class)
 public interface AccessorBlockFire {
-    @Invoker("tryCatchFire")
-    void tryCatchFire(@NotNull World world, int x, int y, int z, int chance, @NotNull Random rand, int meta);
+    @Invoker
+    void callTryCatchFire(@NotNull World world, int x, int y, int z, int chance, @NotNull Random rand, int meta);
 
-    @Invoker("tryCatchFire")
-    void tryCatchFire(@NotNull World world, int x, int y, int z, int chance, @NotNull Random rand, int meta,
-                      @NotNull ForgeDirection side);
+    @Invoker(remap = false)
+    void callTryCatchFire(@NotNull World world, int x, int y, int z, int chance, @NotNull Random rand, int meta,
+                          @NotNull ForgeDirection side);
 
-    @Invoker("canNeighborBurn")
-    boolean canNeighborBurn(@NotNull World world, int x, int y, int z);
+    @Invoker
+    boolean callCanNeighborBurn(@NotNull World world, int x, int y, int z);
 
-    @Invoker("getChanceOfNeighborsEncouragingFire")
-    int getChanceOfNeighborsEncouragingFire(@NotNull World world, int x, int y, int z);
+    @Invoker
+    int callGetChanceOfNeighborsEncouragingFire(@NotNull World world, int x, int y, int z);
 }

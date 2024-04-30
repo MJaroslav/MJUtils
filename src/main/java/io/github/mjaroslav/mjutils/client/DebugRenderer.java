@@ -11,7 +11,6 @@ import io.github.mjaroslav.sharedjava.format.Colors;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.AxisAlignedBB;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,16 +24,16 @@ import static org.lwjgl.opengl.GL11.*;
 public class DebugRenderer {
     private int colorCounter = 0;
 
-    public void renderBlocksCollisions(@NotNull Pos pos, int blockRadius) {
+    public void renderBlocksCollisions(@NotNull Pos pos, int blockRadius, float partial) {
+        val player = Minecraft.getMinecraft().thePlayer;
         val world = Minecraft.getMinecraft().theWorld;
         val cache = GLHelper.glDisable(GL_LIGHTING, GL_TEXTURE_2D, GL_DEPTH_TEST, GL_CULL_FACE);
-
         glPushMatrix();
-        glTranslated(-RenderManager.renderPosX, -RenderManager.renderPosY, -RenderManager.renderPosZ);
+        GLHelper.subtractCameraTranslation(partial);
         glBegin(GL_LINES);
         val min = pos.sub(blockRadius);
         val max = pos.add(blockRadius + 1);
-        val mask = min.createAABB(max);
+        val mask = min.createAABBAbsolute(max);
         val list = new ArrayList<AxisAlignedBB>();
         min.forEachBox(max, i -> {
             list.clear();

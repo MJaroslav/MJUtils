@@ -35,8 +35,8 @@ public class ClientWorldEventListener {
         if (mov == null || world == null || player == null || (BlockCollisionHighlighting.enable.isShift()
             && !player.isSneaking())) return;
         val flag = BlockCollisionHighlighting.enable.isCursor();
-        DebugRenderer.renderBlocksCollisions(temp.set(flag ? mov.blockX : player.posX, flag ? mov.blockX : player.posX,
-            flag ? mov.blockX : player.posX), BlockCollisionHighlighting.range - 1);
+        DebugRenderer.renderBlocksCollisions(temp.set(flag ? mov.blockX : player.posX, flag ? mov.blockY : player.posY,
+            flag ? mov.blockZ : player.posZ), BlockCollisionHighlighting.range, event.partialTicks);
     }
 
     @SubscribeEvent

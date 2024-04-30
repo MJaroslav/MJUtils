@@ -9,23 +9,23 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockPistonBase.class)
 public interface AccessorBlockPistonBase {
-    @Invoker("updatePistonState")
-    void updatePistonState(@NotNull World world, int x, int y, int z);
+    @Invoker
+    void callUpdatePistonState(@NotNull World world, int x, int y, int z);
 
-    @Invoker("isIndirectlyPowered")
-    boolean isIndirectlyPowered(@NotNull World world, int x, int y, int z, int orientation);
+    @Invoker
+    boolean callIsIndirectlyPowered(@NotNull World world, int x, int y, int z, int orientation);
 
-    @Invoker("canPushBlock")
-    static boolean canPushBlock(@NotNull Block blockToPush, @NotNull World world, int x, int y, int z,
-                                boolean moveFlag) {
+    @Invoker
+    static boolean callCanPushBlock(@NotNull Block blockToPush, @NotNull World world, int x, int y, int z,
+                                    boolean moveFlag) {
         throw new AssertionError();
     }
 
-    @Invoker("canExtend")
-    static boolean canExtend(@NotNull World world, int x, int y, int z, int orientation) {
+    @Invoker
+    static boolean callCanExtend(@NotNull World world, int x, int y, int z, int orientation) {
         throw new AssertionError();
     }
 
-    @Invoker("tryExtend")
-    boolean tryExtend(@NotNull World world, int x, int y, int z, int orientation);
+    @Invoker
+    boolean callTryExtend(@NotNull World world, int x, int y, int z, int orientation);
 }

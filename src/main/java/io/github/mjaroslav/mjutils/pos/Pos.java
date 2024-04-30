@@ -1305,6 +1305,7 @@ public class Pos extends DTriplet implements Comparable<Object> {
     public static class Mutable extends Pos {
         protected Mutable() {
             super();
+            immutable = false;
         }
 
         protected Mutable(double x, double y, double z) {

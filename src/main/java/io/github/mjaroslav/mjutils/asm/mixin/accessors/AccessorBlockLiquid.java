@@ -13,11 +13,12 @@ public interface AccessorBlockLiquid {
     @Invoker("func_149804_e")
     int getFlowDecay(@NotNull World world, int x, int y, int z);
 
-    @Invoker("getEffectiveFlowDecay")
-    int getEffectiveFlowDecay(@NotNull IBlockAccess world, int x, int y, int z);
+    @Invoker
+    int callGetEffectiveFlowDecay(@NotNull IBlockAccess world, int x, int y, int z);
 
-    @Invoker("getFlowVector")
-    @NotNull Vec3 getFlowVector(@NotNull IBlockAccess world, int x, int y, int z);
+    @Invoker
+    @NotNull
+    Vec3 callGetFlowVector(@NotNull IBlockAccess world, int x, int y, int z);
 
     @Invoker("func_149805_n")
     void tryFreezeLava(@NotNull World world, int x, int y, int z);
