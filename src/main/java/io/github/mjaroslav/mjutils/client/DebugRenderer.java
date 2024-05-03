@@ -38,7 +38,7 @@ public class DebugRenderer {
         min.forEachBox(max, i -> {
             list.clear();
             colorCounter = 0;
-            BlockPos.addCollisionBoxesToList(WorldPos.getBlock(world, i), world, i, mask, list, null);
+            BlockPos.addCollisionBoxesToList(WorldPos.blockAccess$getBlock(world, i), world, i, mask, list, null);
             list.forEach(box -> {
                 cycleDebugLinesColor(BlockAABBSet.isDeadZoned(box, i.getX().intValue(), i.getY().intValue(),
                     i.getZ().intValue()));

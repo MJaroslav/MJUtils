@@ -38,40 +38,40 @@ public class DropChanceExplosion extends Explosion {
     public void doExplosionB(boolean addEffects) {
         val expPos = Pos.of(explosionX, explosionY, explosionZ);
         val world = ((AccessorExplosion) this).getWorldObj();
-        playSoundEffect(world, expPos, "random.explode", 4F, (1F + (world.rand.nextFloat() - world.rand.nextFloat())
+        world$playSoundEffect(world, expPos, "random.explode", 4F, (1F + (world.rand.nextFloat() - world.rand.nextFloat())
             * 0.2F) * 0.7F);
-        if (explosionSize >= 2.0F && isSmoking) spawnParticle(world, "hugeexplosion", expPos, Pos.X);
-        else spawnParticle(world, "largeexplode", expPos, Pos.X);
+        if (explosionSize >= 2.0F && isSmoking) world$spawnParticle(world, "hugeexplosion", expPos, Pos.X);
+        else world$spawnParticle(world, "largeexplode", expPos, Pos.X);
         val temp = Pos.mutable();
         Block block;
         if (isSmoking)
             for (val affectedBlockPosition : affectedBlockPositions) {
                 temp.set((ChunkPosition) affectedBlockPosition);
-                block = getBlock(world, temp);
+                block = blockAccess$getBlock(world, temp);
                 if (addEffects) {
                     val rand = temp.add(world.rand.nextFloat(), world.rand.nextFloat(), world.rand.nextFloat());
                     var velocity = rand.sub(explosionX, explosionY, explosionZ);
                     val len = velocity.length();
                     velocity = velocity.div(len).mul(0.5D / (len / explosionSize + 0.1D)).mul(world.rand.nextFloat() *
                         world.rand.nextFloat() + 0.3F);
-                    spawnParticle(world, "explode", rand.add(explosionX, explosionY, explosionZ).div(2d), velocity);
-                    spawnParticle(world, "smoke", rand, velocity);
+                    world$spawnParticle(world, "explode", rand.add(explosionX, explosionY, explosionZ).div(2d), velocity);
+                    world$spawnParticle(world, "smoke", rand, velocity);
                 }
                 temp.set((ChunkPosition) affectedBlockPosition); // Reset of .part
                 if (block.getMaterial() != Material.air) {
                     if (block.canDropFromExplosion(this))
-                        dropBlockAsItemWithChance(block, world, temp, getBlockMetadata(world, temp), dropChance, 0);
+                        dropBlockAsItemWithChance(block, world, temp, blockAccess$getBlockMetadata(world, temp), dropChance, 0);
                     onBlockExploded(block, world, temp, this);
                 }
             }
         if (isFlaming)
             for (val affectedBlockPosition : affectedBlockPositions) {
                 temp.set((ChunkPosition) affectedBlockPosition);
-                block = getBlock(world, temp);
-                val underBlock = getBlock(world, temp.minusY());
+                block = blockAccess$getBlock(world, temp);
+                val underBlock = blockAccess$getBlock(world, temp.minusY());
                 if (block.getMaterial() == Material.air && underBlock.func_149730_j() &&
                     ((AccessorExplosion) this).getExplosionRNG().nextInt(3) == 0)
-                    setBlock(world, temp, Blocks.fire);
+                    world$setBlock(world, temp, Blocks.fire);
             }
     }
 }
