@@ -70,7 +70,8 @@
     "AccessorFMLModContainer",
     "AccessorItemHangingEntity",
     "AccessorItemSlab",
-    "AccessorWeightedRandomFishable"
+    "AccessorWeightedRandomFishable",
+    "AccessorWorld"
   ],
   "client": [
   ],
