@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 
@@ -31,14 +32,18 @@ public abstract class MixinEnchantment {
     @ModifyVariable(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/enchantment/Enchantment;effectId:I",
         shift = Shift.BEFORE, ordinal = 0), ordinal = 0)
     private int mjtuils$init(int original) {
-        return IDManagerModule.ENCHANTMENTS.registerID(getClass(), original);
+        return IDManagerModule.ENCHANTMENTS.registerId(getClass(), original);
     }
 
+    @Inject(method = "setName", at = @At("HEAD"))
+    private void inject$addNameForReiteration(@NotNull String name, @NotNull CallbackInfoReturnable<Enchantment> ci) {
+        IDManagerModule.ENCHANTMENTS.setComment(effectId, name);
+    }
 
     // Extends enchantments array.
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void mjtuils$cinit(@NotNull CallbackInfo ci) {
         enchantmentsList = Arrays.copyOf(enchantmentsList, Enchantments.newArraySize);
-        MJUtilsInfo.LOG_LIB.debug("Enchantments array size changed to " + Enchantments.newArraySize);
+        MJUtilsInfo.LOG_LIB.debug("Enchantments array size changed to {}", Enchantments.newArraySize);
     }
 }

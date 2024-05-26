@@ -1,6 +1,5 @@
 package io.github.mjaroslav.mjutils.internal.common.modular;
 
-import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
@@ -23,13 +22,8 @@ public class IDManagerModule {
         range(48, 52)), range(61, 63)).boxed().collect(Collectors.toSet()), Enchantments.occupiedPolicy,
         Paths.get("config", "enchantments.properties"));
 
-    public void listen(@NotNull FMLConstructionEvent event) {
-        POTIONS.loadIDsFromFileIfEnabled();
-        ENCHANTMENTS.loadIDsFromFileIfEnabled();
-    }
-
     public void listen(@NotNull FMLLoadCompleteEvent event) {
-        POTIONS.saveIDsToFileIfEnabled();
-        ENCHANTMENTS.saveIDsToFileIfEnabled();
+        POTIONS.complete();
+        ENCHANTMENTS.complete();
     }
 }
