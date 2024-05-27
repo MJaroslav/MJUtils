@@ -22,7 +22,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'forge'
 apply plugin: 'maven-publish'
-apply from: 'https://raw.githubusercontent.com/tox1cozZ/mixin-booter-legacy/master/gradle/configurations/v1.gradle'
 apply from: 'https://raw.githubusercontent.com/MJaroslav/MCInGameTester/master/gradle/configurations/v1.gradle'
 apply plugin: 'bon2gradle'
 
@@ -101,10 +100,6 @@ minecraft {
     // srgExtra "PK: io/github/mjaroslav/sharedjava io/github/mjaroslav/mjutils/library/io/github/mjaroslav/sharedjava"
 }
 
-mixin {
-    mixinRefMapName = "mixin.${project.name.replace(" ", "").toLowerCase()}.refmap.json"
-}
-
 dependencies {
     shade "blue.endless:jankson:${buildprop.jankson_version}"
     shade "com.github.MJaroslav:Shared-Java:${buildprop.sharedjava_version}"
@@ -117,6 +112,10 @@ dependencies {
     implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     implementation "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev"
     implementation bon2.deobf("curse.maven:crafttweaker-239197:2838720")
+
+    implementation "com.github.LegacyModdingMC.UniMixins:unimixins-mixin-1.7.10:${buildprop.unimixins_version}"
+    annotationProcessor "com.github.LegacyModdingMC.UniMixins:unimixins-mixin-1.7.10:${buildprop.unimixins_version}"
+    implementation bon2.deobf("com.github.LegacyModdingMC.UniMixins:unimixins-mixinbooterlegacy-1.7.10:${buildprop.unimixins_version}")
 
     compileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
     testCompileOnly "org.jetbrains:annotations:${buildprop.jetbrains_annotations_version}"
@@ -132,6 +131,17 @@ dependencies {
 
     testImplementation "junit:junit:${buildprop.junit_version}"
 }
+
+runClient {
+    args += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
+}
+
+runServer {
+    args += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
+}
+
+def outSrgFile = "${tasks.compileJava.temporaryDir}/outSrg.srg"
+def outRefMapFile = "${tasks.compileJava.temporaryDir}/mixin.${project.name.replace(" ", "").toLowerCase()}.refmap.json"
 
 test {
     useJUnit()
@@ -154,10 +164,18 @@ jar {
             attributes "FMLCorePlugin": "${project.group}.${project.name.replace(" ", "").toLowerCase()}" +
                 ".asm.${project.name.replace(" ", "")}Plugin"
             attributes "FMLCorePluginContainsFMLMod": "true"
+            attributes "ForceLoadAsMod": "true"
         }
     configurations.shade.each { dep ->
         from project.zipTree(dep)
     }
+    from outRefMapFile
+}
+
+tasks.compileJava.options.compilerArgs += ["-AreobfSrgFile=${tasks.reobf.srg}", "-AoutSrgFile=${outSrgFile}", "-AoutRefMapFile=${outRefMapFile}"]
+
+reobf {
+    addExtraSrgFile outSrgFile
 }
 
 publishing {
