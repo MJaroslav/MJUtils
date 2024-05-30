@@ -140,6 +140,16 @@ runServer {
     args += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
 }
 
+testClient {
+    logOnlyTests = false
+    args += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
+}
+
+testServer {
+    logOnlyTests = false
+    args += ["--twealClass", "org.spongepowered.asm.launch.MixinTweaker"]
+}
+
 def outSrgFile = "${tasks.compileJava.temporaryDir}/outSrg.srg"
 def outRefMapFile = "${tasks.compileJava.temporaryDir}/mixin.${project.name.replace(" ", "").toLowerCase()}.refmap.json"
 
