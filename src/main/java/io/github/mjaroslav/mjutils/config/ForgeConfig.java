@@ -28,7 +28,7 @@ import static io.github.mjaroslav.mjutils.lib.MJUtilsInfo.*;
  */
 @Getter
 public class ForgeConfig extends Config {
-    protected final Set<Runnable> syncCallbacks = new HashSet<>();
+    protected final Set<Runnable> syncCallbacks = new LinkedHashSet<>();
     protected final Configuration properties;
 
     /**

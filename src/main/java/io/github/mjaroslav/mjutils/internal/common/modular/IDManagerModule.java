@@ -5,9 +5,13 @@ import io.github.mjaroslav.mjutils.asm.MixinPatches.Enchantments;
 import io.github.mjaroslav.mjutils.asm.MixinPatches.Potions;
 import io.github.mjaroslav.mjutils.internal.data.IDManager;
 import io.github.mjaroslav.mjutils.modular.SubscribeModule;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.*;
@@ -23,7 +27,11 @@ public class IDManagerModule {
         Paths.get("config", "enchantments.properties"));
 
     public void listen(@NotNull FMLLoadCompleteEvent event) {
+        Arrays.stream(Potion.potionTypes).filter(Objects::nonNull)
+            .forEach(potion -> POTIONS.setComment(potion.id, potion.getName()));
         POTIONS.complete();
+        Arrays.stream(Enchantment.enchantmentsList).filter(Objects::nonNull)
+            .forEach(enchantment -> ENCHANTMENTS.setComment(enchantment.effectId, enchantment.getName()));
         ENCHANTMENTS.complete();
     }
 }

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -28,8 +28,8 @@ import java.util.Set;
  */
 @Getter
 public abstract class Config {
-    protected final Set<Runnable> loadCallbacks = new HashSet<>();
-    protected final Set<Runnable> saveCallbacks = new HashSet<>();
+    protected final Set<Runnable> loadCallbacks = new LinkedHashSet<>();
+    protected final Set<Runnable> saveCallbacks = new LinkedHashSet<>();
     protected final @NotNull String modId;
     protected final @NotNull Path file;
     protected final @Nullable String version;
@@ -109,7 +109,7 @@ public abstract class Config {
             loadCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
             if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + "can't be load");
-            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be load", e, getFile());
+            else MJUtilsInfo.LOG_LIB.error("Configuration {} can't be load", getFile(), e);
         }
     }
 
@@ -122,7 +122,10 @@ public abstract class Config {
             saveCallbacks.forEach(Runnable::run);
         } catch (Exception e) {
             if (isShouldFailOnError()) UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be saved");
-            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be saved", e, getFile());
+            else {
+                MJUtilsInfo.LOG_LIB.error("Configuration {} can't be saved", getFile());
+                MJUtilsInfo.LOG_LIB.error(e);
+            }
         }
     }
 
@@ -135,7 +138,7 @@ public abstract class Config {
         } catch (Exception e) {
             if (isShouldFailOnError())
                 UtilsDesktop.crashGame(e, "Configuration " + getFile() + " can't be restored to default values");
-            else MJUtilsInfo.LOG_LIB.error("Configuration %s can't be restored to default values", e, getFile());
+            else MJUtilsInfo.LOG_LIB.error("Configuration {} can't be restored to default values", getFile(), e);
         }
     }
 

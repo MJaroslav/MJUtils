@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import io.github.mjaroslav.mjutils.config.PropertiesConfig;
 import io.github.mjaroslav.mjutils.lib.MJUtilsInfo;
 import io.github.mjaroslav.mjutils.util.UtilsDesktop;
+import lombok.Getter;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -23,6 +24,7 @@ public class IDManager {
     protected final Map<String, Integer> repetitions = new HashMap<>();
     protected final Map<Integer, String> comments = new HashMap<>();
     protected final Map<Integer, Set<String>> conflictedIds = new HashMap<>();
+    @Getter
     protected final Collection<Integer> ignoredIndexes = new HashSet<>();
     protected final String configComment;
 
@@ -70,21 +72,22 @@ public class IDManager {
     }
 
     public int registerId(@NotNull Class<?> type, int desiredId) {
-        if (!enabled || ignoredIndexes.contains(desiredId)) return desiredId;
         val name = getName(type);
-        if (policy == OccupiedPolicy.AUTO)
-            desiredId = config.getInt(name, desiredId);
-        if (ids.containsKey(desiredId)) {
-            if (policy == OccupiedPolicy.CRASH_DUMP) {
-                conflictedIds.putIfAbsent(desiredId, new HashSet<>());
-                conflictedIds.get(desiredId).add(name);
-                desiredId = getNextAvailableIdFromEnd();
+        if (enabled && !ignoredIndexes.contains(desiredId)) {
+            if (policy == OccupiedPolicy.AUTO)
+                desiredId = config.getInt(name, desiredId);
+            if (ids.containsKey(desiredId)) {
+                if (policy == OccupiedPolicy.CRASH_DUMP) {
+                    conflictedIds.putIfAbsent(desiredId, new HashSet<>());
+                    conflictedIds.get(desiredId).add(name);
+                    desiredId = getNextAvailableIdFromEnd();
+                }
+                if (policy == OccupiedPolicy.CRASH_FIRST)
+                    throw new IllegalArgumentException(String.format("Occupied %1$s id %2$s --> %3$s and " +
+                            "%4$s",
+                        classSimpleName, desiredId, name, ids.get(desiredId)));
+                else desiredId = getNextAvailableId();
             }
-            if (policy == OccupiedPolicy.CRASH_FIRST)
-                throw new IllegalArgumentException(String.format("Occupied %1$s id %2$s --> %3$s and " +
-                        "%4$s",
-                    classSimpleName, desiredId, name, ids.get(desiredId)));
-            else desiredId = getNextAvailableId();
         }
         ids.put(desiredId, name);
         config.setValue(name, desiredId);
