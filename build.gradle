@@ -147,7 +147,7 @@ testClient {
 
 testServer {
     logOnlyTests = false
-    args += ["--twealClass", "org.spongepowered.asm.launch.MixinTweaker"]
+    args += ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
 }
 
 def outSrgFile = "${tasks.compileJava.temporaryDir}/outSrg.srg"
